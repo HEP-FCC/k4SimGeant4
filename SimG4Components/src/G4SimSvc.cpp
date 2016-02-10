@@ -1,4 +1,4 @@
-#include "GeantSvc.h"
+#include "G4SimSvc.h"
 // Gaudi
 #include "GaudiKernel/IToolSvc.h"
 
@@ -6,18 +6,21 @@
 #include "G4Event.hh"
 #include "G4VModularPhysicsList.hh"
 
-DECLARE_SERVICE_FACTORY(GeantSvc)
+DECLARE_SERVICE_FACTORY(G4SimSvc)
 
-GeantSvc::GeantSvc(const std::string& aName, ISvcLocator* aSL): base_class(aName, aSL) {
-  declareProperty("config", m_geantConfigTool);
-  declarePrivateTool(m_geantConfigTool);
+G4SimSvc::G4SimSvc(const std::string& aName, ISvcLocator* aSL):
+  base_class(aName, aSL) {
   declareProperty("detector", m_detectorTool);
   declarePrivateTool(m_detectorTool);
+  declareProperty("physicslist", m_physicsListTool);
+  declarePrivateTool(m_physicsListTool);
+  declareProperty("actions", m_actionsTool);
+  declarePrivateTool(m_actionsTool);
 }
 
-GeantSvc::~GeantSvc(){}
+G4SimSvc::~G4SimSvc(){}
 
-StatusCode GeantSvc::initialize(){
+StatusCode G4SimSvc::initialize(){
   // Initialize necessary Gaudi components
   if (Service::initialize().isFailure()){
     error()<<"Unable to initialize Service()"<<endmsg;
@@ -28,25 +31,27 @@ StatusCode GeantSvc::initialize(){
     error()<<"Unable to locate Tool Service"<<endmsg;
     return StatusCode::FAILURE;
   }
-  if (!m_geantConfigTool.retrieve()) {
-    error()<<"Unable to retrieve Geant configuration"<<endmsg;
-    return StatusCode::FAILURE;
-  }
   if (!m_detectorTool.retrieve()) {
     error()<<"Unable to retrieve detector construction"<<endmsg;
+    return StatusCode::FAILURE;
+  }
+  if (!m_physicsListTool.retrieve()) {
+    error()<<"Unable to retrieve physics list"<<endmsg;
+    return StatusCode::FAILURE;
+  }
+  if (!m_actionsTool.retrieve()) {
+    error()<<"Unable to retrieve list of user actions"<<endmsg;
     return StatusCode::FAILURE;
   }
 
   // Initialize Geant run manager
   // Load physics list, deleted in ~G4RunManager()
-  m_runManager.SetUserInitialization(m_geantConfigTool->getPhysicsList());
+  m_runManager.SetUserInitialization(m_physicsListTool->getPhysicsList());
   // Take geometry (from DD4Hep), deleted in ~G4RunManager()
   m_runManager.SetUserInitialization(m_detectorTool->getDetectorConstruction());
   m_runManager.Initialize();
   // Attach user actions
-  m_runManager.SetUserInitialization(m_geantConfigTool->getActionInitialization());
-  // Apply other settings (eg. attach envelopes for fast simulation)
-  m_geantConfigTool->getOtherSettings();
+  m_runManager.SetUserInitialization(m_actionsTool->getUserActionInitialization());
 
   if( !m_runManager.start()) {
     error() << "Unable to initialize GEANT correctly." << endmsg;
@@ -54,7 +59,7 @@ StatusCode GeantSvc::initialize(){
   }
   return StatusCode::SUCCESS;
 }
-StatusCode GeantSvc::processEvent(G4Event& aEvent) {
+StatusCode G4SimSvc::processEvent(G4Event& aEvent) {
   bool status = m_runManager.processEvent( aEvent );
   if ( !status ) {
      error() << "Unable to process event in Geant" << endmsg;
@@ -62,15 +67,16 @@ StatusCode GeantSvc::processEvent(G4Event& aEvent) {
   }
   return StatusCode::SUCCESS;
 }
-StatusCode GeantSvc::retrieveEvent(G4Event*& aEvent) {
+StatusCode G4SimSvc::retrieveEvent(G4Event*& aEvent) {
   return m_runManager.retrieveEvent(aEvent);
 }
 
-StatusCode GeantSvc::terminateEvent() {
+StatusCode G4SimSvc::terminateEvent() {
   m_runManager.terminateEvent();
   return StatusCode::SUCCESS;
 }
-StatusCode GeantSvc::finalize() {
+
+StatusCode G4SimSvc::finalize() {
   m_runManager.finalize();
-  return StatusCode::SUCCESS;
+  return Service::finalize();
 }
