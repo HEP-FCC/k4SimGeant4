@@ -5,13 +5,13 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // FCCSW
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 class IGeoSvc;
 
 // datamodel
 namespace edm4hep {
-class CalorimeterHitCollection;
+class SimCalorimeterHitCollection;
 }
 
 /** @class SimG4SaveCalHits SimG4Components/src/SimG4SaveCalHits.h SimG4SaveCalHits.h
@@ -49,7 +49,7 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for calo hits
-  DataHandle<edm4hep::CalorimeterHitCollection> m_caloHits{"CaloHits", Gaudi::DataHandle::Writer, this};
+  DataHandle<edm4hep::SimCalorimeterHitCollection> m_caloHits{"CaloHits", Gaudi::DataHandle::Writer, this};
   /// Name of the readouts (hits collections) to save
   Gaudi::Property<std::vector<std::string>> m_readoutNames{
       this, "readoutNames", {}, "Name of the readouts (hits collections) to save"};

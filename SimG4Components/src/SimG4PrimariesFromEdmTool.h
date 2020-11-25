@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4PRIMARIESFROMEDMTOOL_H
 
 // from Gaudi
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiTool.h"
 
 #include "SimG4Interface/ISimG4EventProviderTool.h"

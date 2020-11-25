@@ -41,23 +41,21 @@ StatusCode SimG4SaveSmearedParticles::saveOutput(const G4Event& aEvent) {
       sim::ParticleInformation* info = dynamic_cast<sim::ParticleInformation*>(g4particle->GetUserInformation());
       if (info->smeared()) {
         const edm4hep::MCParticle& MCparticle = info->mcParticle();
-        edm4hep::Particle particle = particles->create();
+        edm4hep::ReconstructedParticle particle = particles->create();
         edm4hep::MCRecoParticleAssociation association = associations->create();
         association.setRec(particle);
         association.setSim(MCparticle);
-        particle.setPDG(g4particle->GetPDGcode());
-        particle.setGeneratorStatus(1);
         particle.setCharge(g4particle->GetCharge());
         particle.setMomentum({
-          info->endMomentum().x() * sim::g42edm::energy,
-          info->endMomentum().y() * sim::g42edm::energy,
-          info->endMomentum().z() * sim::g42edm::energy,
+          (float) (info->endMomentum().x() * sim::g42edm::energy),
+          (float) (info->endMomentum().y() * sim::g42edm::energy),
+          (float) (info->endMomentum().z() * sim::g42edm::energy),
         });
         particle.setMass(g4particle->GetMass() * sim::g42edm::energy);
-        particle.setVertex({
-            info->vertexPosition().x() * sim::g42edm::length;
-            info->vertexPosition().y() * sim::g42edm::length;
-            info->vertexPosition().z() * sim::g42edm::length;
+        particle.setReferencePoint({
+            (float) (info->vertexPosition().x() * sim::g42edm::length),
+            (float) (info->vertexPosition().y() * sim::g42edm::length),
+            (float) (info->vertexPosition().z() * sim::g42edm::length),
         });
         n_part++;
       }

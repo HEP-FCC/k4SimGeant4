@@ -43,13 +43,13 @@ StatusCode SimG4Alg::execute() {
     error() << "Unable to retrieve G4Event from " << m_eventTool << endmsg;
     return StatusCode::FAILURE;
   }
-  m_geantSvc->processEvent(*event);
+  m_geantSvc->processEvent(*event).ignore();
   G4Event* constevent;
-  m_geantSvc->retrieveEvent(constevent);
+  m_geantSvc->retrieveEvent(constevent).ignore();
   for (auto& tool : m_saveTools) {
-    tool->saveOutput(*constevent);
+    tool->saveOutput(*constevent).ignore();
   }
-  m_geantSvc->terminateEvent();
+  m_geantSvc->terminateEvent().ignore();
   return StatusCode::SUCCESS;
 }
 

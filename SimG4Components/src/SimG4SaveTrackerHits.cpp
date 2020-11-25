@@ -1,9 +1,9 @@
 #include "SimG4SaveTrackerHits.h"
 
 // FCCSW
-#include "DetInterface/IGeoSvc.h"
+#include "SimG4Interface/IGeoSvc.h"
 #include "SimG4Common/Units.h"
-#include "DetCommon/Geant4PreDigiTrackHit.h"
+#include "SimG4Common/Geant4PreDigiTrackHit.h"
 
 // Geant4
 #include "G4Event.hh"
@@ -23,7 +23,7 @@ SimG4SaveTrackerHits::SimG4SaveTrackerHits(const std::string& aType, const std::
       m_geoSvc("GeoSvc", aName)
     {
   declareInterface<ISimG4SaveOutputTool>(this);
-  declareProperty("SimTrackHits", m_positionedTrackHits, "Handle for tracker hits");
+  declareProperty("SimTrackHits", m_trackHits, "Handle for tracker hits");
   declareProperty("GeoSvc", m_geoSvc);
 }
 
@@ -56,9 +56,9 @@ StatusCode SimG4SaveTrackerHits::finalize() { return GaudiTool::finalize(); }
 StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
   G4HCofThisEvent* collections = aEvent.GetHCofThisEvent();
   G4VHitsCollection* collect;
-  edm4hep::Geant4PreDigiTrackHit* hit;
+  k4::Geant4PreDigiTrackHit* hit;
   if (collections != nullptr) {
-    edm4hep::SimTrackerHitCollection* edmHits = m_positionedTrackHits.createAndPut();
+    edm4hep::SimTrackerHitCollection* edmHits = m_trackHits.createAndPut();
     for (int iter_coll = 0; iter_coll < collections->GetNumberOfCollections(); iter_coll++) {
       collect = collections->GetHC(iter_coll);
       if (std::find(m_readoutNames.begin(), m_readoutNames.end(), collect->GetName()) != m_readoutNames.end()) {
@@ -66,7 +66,7 @@ StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
         verbose() << "\t" << n_hit << " hits are stored in a tracker collection #" << iter_coll << ": "
                << collect->GetName() << endmsg;
         for (size_t iter_hit = 0; iter_hit < n_hit; iter_hit++) {
-          hit = dynamic_cast<edm4hep::Geant4PreDigiTrackHit*>(collect->GetHit(iter_hit));
+          hit = dynamic_cast<k4::Geant4PreDigiTrackHit*>(collect->GetHit(iter_hit));
           edm4hep::SimTrackerHit edmHit = edmHits->create();
           edmHit.setCellID(hit->cellID);
           edmHit.setEDep(hit->energyDeposit * sim::g42edm::energy);
@@ -80,9 +80,9 @@ StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
           });
           CLHEP::Hep3Vector diff = hit->postPos - hit->prePos;
           edmHit.setMomentum({
-                               diff.x() * sim::g42edm::length,
-                               diff.y() * sim::g42edm::length,
-                               diff.z() * sim::g42edm::length,
+                               (float) (diff.x() * sim::g42edm::length),
+                               (float) (diff.y() * sim::g42edm::length),
+                               (float) (diff.z() * sim::g42edm::length),
           });
           edmHit.setPathLength(diff.mag());
 

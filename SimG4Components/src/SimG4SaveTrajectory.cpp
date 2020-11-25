@@ -1,7 +1,7 @@
 #include "SimG4SaveTrajectory.h"
 
 // FCCSW
-#include "DetInterface/IGeoSvc.h"
+#include "SimG4Interface/IGeoSvc.h"
 #include "SimG4Common/Units.h"
 
 // Geant4
@@ -19,7 +19,7 @@ SimG4SaveTrajectory::SimG4SaveTrajectory(const std::string& aType, const std::st
                                            const IInterface* aParent)
     : GaudiTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
   declareInterface<ISimG4SaveOutputTool>(this);
-  declareProperty("TrajectoryPoints", m_positionedTrackHits, "Handle for trajectory hits");
+  declareProperty("TrajectoryPoints", m_trackHits, "Handle for trajectory hits");
 }
 
 SimG4SaveTrajectory::~SimG4SaveTrajectory() {}
@@ -34,7 +34,7 @@ StatusCode SimG4SaveTrajectory::initialize() {
 StatusCode SimG4SaveTrajectory::finalize() { return GaudiTool::finalize(); }
 
 StatusCode SimG4SaveTrajectory::saveOutput(const G4Event& aEvent) {
-  auto edmPositions = m_positionedTrackHits.createAndPut();
+  auto edmPositions = m_trackHits.createAndPut();
   G4TrajectoryContainer* trajectoryContainer = aEvent.GetTrajectoryContainer();
   for (size_t trajectoryIndex = 0; trajectoryIndex < trajectoryContainer->size(); ++trajectoryIndex) {
     G4VTrajectory* theTrajectory =  (*trajectoryContainer)[trajectoryIndex];
@@ -42,12 +42,12 @@ StatusCode SimG4SaveTrajectory::saveOutput(const G4Event& aEvent) {
       auto trajectoryPoint = theTrajectory->GetPoint(pointIndex)->GetPosition();
       edm4hep::TrackerHit edmHit = edmPositions->create();
       edmHit.setCellID(0);
-      edmHit.setEnergy(0);
-      edmHit.setTime(0;
+      edmHit.setEDep(0);
+      edmHit.setTime(0);
       edmHit.setPosition({
-        trajectoryPoint.x() * sim::g42edm::length;
-        trajectoryPoint.y() * sim::g42edm::length;
-        trajectoryPoint.z() * sim::g42edm::length;
+        trajectoryPoint.x() * sim::g42edm::length,
+        trajectoryPoint.y() * sim::g42edm::length,
+        trajectoryPoint.z() * sim::g42edm::length,
       });
     }
   }

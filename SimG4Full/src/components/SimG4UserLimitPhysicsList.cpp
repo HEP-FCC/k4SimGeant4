@@ -22,7 +22,7 @@ StatusCode SimG4UserLimitPhysicsList::initialize() {
   if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
-  m_physicsListTool.retrieve();
+  m_physicsListTool.retrieve().ignore();
   return StatusCode::SUCCESS;
 }
 

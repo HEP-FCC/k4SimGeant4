@@ -10,6 +10,7 @@ find_package(Gaudi)
 find_package(k4FWCore)
 find_package(EDM4HEP)
 find_package(Geant4)
+find_package(DD4hep)
 #---------------------------------------------------------------
 
 include(GNUInstallDirs)
@@ -32,11 +33,11 @@ message(${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 message(${CMAKE_MODULE_PATH})
 
+add_subdirectory(SimG4Interface)
 add_subdirectory(SimG4Common)
-#add_subdirectory(SimG4Fast)
-#add_subdirectory(SimG4Interface)
-#add_subdirectory(SimG4Components)
-#add_subdirectory(SimG4Full)
+add_subdirectory(SimG4Fast)
+add_subdirectory(SimG4Components)
+add_subdirectory(SimG4Full)
 
 
 

@@ -53,7 +53,7 @@ StatusCode SimG4FastSimHistograms::execute() {
     CLHEP::Hep3Vector mom(mom_edm.x, mom_edm.y, mom_edm.z);
     m_eta->Fill(mom.eta());
     m_p->Fill(mom.mag());
-    m_pdg->Fill(core.pdgId);
+    m_pdg->Fill(assoc.getSim().getPDG());
     auto mom_edm_mc = assoc.getSim().getMomentum();
     CLHEP::Hep3Vector momMC(mom_edm_mc.x, mom_edm_mc.y, mom_edm_mc.z);
     m_diffP->Fill((momMC.mag() - mom.mag()) / momMC.mag());

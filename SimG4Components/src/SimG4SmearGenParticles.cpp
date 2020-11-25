@@ -44,18 +44,18 @@ StatusCode SimG4SmearGenParticles::execute() {
     // save only charged particles, visible in tracker
     verbose() << "Charge of input particles: " << MCparticle.getCharge() << endmsg;
 
-    if ( MCparticle.charge()!=0 || MCparticle.pdgId()==-211 || !m_simTracker){
+    if ( MCparticle.getCharge()!=0 || MCparticle.getPDG()==-211 || !m_simTracker){
       
       edm4hep::MCParticle particle = MCparticle.clone();
       // smear momentum according to trackers resolution
       auto edm_mom = MCparticle.getMomentum();
       CLHEP::Hep3Vector mom = CLHEP::Hep3Vector(edm_mom.x, edm_mom.y, edm_mom.z);
       //    m_smearTool->checkConditions(5000,10000000,6);
-      m_smearTool->smearMomentum(mom, MCparticle.pdgId());
+      m_smearTool->smearMomentum(mom, MCparticle.getPDG()).ignore();
       particle.setMomentum({
-                mom.x(),
-                mom.y(),
-                mom.z(),
+                (float) mom.x(),
+                (float) mom.y(),
+                (float) mom.z(),
       });
       
       n_part++;

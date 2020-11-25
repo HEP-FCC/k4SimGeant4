@@ -46,7 +46,7 @@ StatusCode SimG4ParticleSmearFormula::smearMomentum(CLHEP::Hep3Vector& aMom, int
     error() << "Unable to smear particle's momentum - no resolution given!" << endmsg;
     return StatusCode::FAILURE;
   }
-  m_randSvc->generator(Rndm::Gauss(1, m_resolutionMomentum.Eval(aMom.mag())), m_gauss);
+  m_randSvc->generator(Rndm::Gauss(1, m_resolutionMomentum.Eval(aMom.mag())), m_gauss).ignore();
   double tmp = m_gauss->shoot();
   aMom *= tmp;
   return StatusCode::SUCCESS;

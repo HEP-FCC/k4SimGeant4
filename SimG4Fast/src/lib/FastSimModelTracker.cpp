@@ -95,7 +95,7 @@ void FastSimModelTracker::DoIt(const G4FastTrack& aFastTrack, G4FastStep& aFastS
 
   // Smear particle's momentum according to the tracker resolution
   G4ThreeVector Psm = track->GetMomentum();
-  m_smearTool->smearMomentum(Psm);
+  m_smearTool->smearMomentum(Psm).ignore();
   G4ThreeVector DeltaP = track->GetMomentum() - Psm;
   G4double Ekinorg = track->GetKineticEnergy();
   aFastStep.ClearDebugFlag();  // to disable Geant checks on energy

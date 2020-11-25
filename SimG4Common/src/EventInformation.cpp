@@ -8,7 +8,7 @@
 
 namespace sim {
 EventInformation::EventInformation() { 
-  m_mcParticles = new edm4he[::MCParticleCollection();
+  m_mcParticles = new edm4hep::MCParticleCollection();
 }
 
 void EventInformation::setCollections(edm4hep::MCParticleCollection*& aMCParticleCollection) {
@@ -24,15 +24,16 @@ void EventInformation::addParticle(const G4Track* aSecondary) {
   mass = sqrt(fabs(mass));
   size_t g4ID = aSecondary->GetTrackID();
 
-  edmParticle.setMomentum({g4mom.x() * sim::g42edm::energy,
-        g4mom.y() * sim::g42edm::energy,
-        g4mom.z() * sim::g42edm::energy, });
+  edmParticle.setMomentum({
+         (float) g4mom.x() * (float) sim::g42edm::energy,
+         (float) g4mom.y() * (float) sim::g42edm::energy,
+         (float) g4mom.z() * (float) sim::g42edm::energy, });
   edmParticle.setMass(mass * sim::g42edm::energy);
   edmParticle.setSimulatorStatus(g4ID);
   edmParticle.setPDG(aSecondary->GetDynamicParticle()->GetDefinition()->GetPDGEncoding());
 
   auto g4EndPos = aSecondary->GetPosition();
-  edmParticle.setEndPoint({
+  edmParticle.setEndpoint({
     g4EndPos.x() * sim::g42edm::length,
     g4EndPos.y() * sim::g42edm::length,
     g4EndPos.z() * sim::g42edm::length,
@@ -41,10 +42,10 @@ void EventInformation::addParticle(const G4Track* aSecondary) {
 
   size_t motherID = aSecondary->GetParentID();
   auto g4StartPos = aSecondary->GetVertexPosition();
-  edmpParticle.setVertex({
-    g4StartPos.x() * sim::g42edm::length),
-    g4StartPos.y() * sim::g42edm::length),
-    g4StartPos.z() * sim::g42edm::length),
+  edmParticle.setVertex({
+    g4StartPos.x() * sim::g42edm::length,
+    g4StartPos.y() * sim::g42edm::length,
+    g4StartPos.z() * sim::g42edm::length,
     });
   // todo: no time at endpoint
 }

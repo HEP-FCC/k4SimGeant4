@@ -25,7 +25,7 @@ StatusCode SimG4ParticleSmearSimple::initialize() {
     error() << "Couldn't get RndmGenSvc" << endmsg;
     return StatusCode::FAILURE;
   }
-  m_gauss.initialize(m_randSvc, Rndm::Gauss(1, m_sigma));
+  m_gauss.initialize(m_randSvc, Rndm::Gauss(1, m_sigma)).ignore();
   info() << "Tool used for smearing particles initialized with constant sigma = " << m_sigma << endmsg;
   return StatusCode::SUCCESS;
 }

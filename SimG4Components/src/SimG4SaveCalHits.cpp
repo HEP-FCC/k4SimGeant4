@@ -1,8 +1,8 @@
 #include "SimG4SaveCalHits.h"
 
 // FCCSW
-#include "DetCommon/Geant4CaloHit.h"
-#include "DetInterface/IGeoSvc.h"
+#include "SimG4Common/Geant4CaloHit.h"
+#include "SimG4Interface/IGeoSvc.h"
 #include "SimG4Common/Units.h"
 
 // Geant4
@@ -52,9 +52,8 @@ StatusCode SimG4SaveCalHits::finalize() { return GaudiTool::finalize(); }
 StatusCode SimG4SaveCalHits::saveOutput(const G4Event& aEvent) {
   G4HCofThisEvent* collections = aEvent.GetHCofThisEvent();
   G4VHitsCollection* collect;
-  edm4hep::Geant4CaloHit* hit;
+  k4::Geant4CaloHit* hit;
   if (collections != nullptr) {
-    auto edmPositioned = m_positionedCaloHits.createAndPut();
     auto edmHits = m_caloHits.createAndPut();
     for (int iter_coll = 0; iter_coll < collections->GetNumberOfCollections(); iter_coll++) {
       collect = collections->GetHC(iter_coll);
@@ -63,16 +62,16 @@ StatusCode SimG4SaveCalHits::saveOutput(const G4Event& aEvent) {
         debug() << "\t" << n_hit << " hits are stored in a collection #" << iter_coll << ": " << collect->GetName()
                 << endmsg;
         for (size_t iter_hit = 0; iter_hit < n_hit; iter_hit++) {
-          hit = dynamic_cast<edm4hep::Geant4CaloHit*>(collect->GetHit(iter_hit));
+          hit = dynamic_cast<k4::Geant4CaloHit*>(collect->GetHit(iter_hit));
           edm4hep::SimCalorimeterHit edmHit = edmHits->create();
           edmHit.setCellID(hit->cellID);
           //todo
           //edmHitCore.bits = hit->trackId;
-          edmHit.setEDep(hit->energyDeposit * sim::g42edm::energy);
+          edmHit.setEnergy(hit->energyDeposit * sim::g42edm::energy);
           edmHit.setPosition({
-                       hit->position.x() * sim::g42edm::length,
-                       hit->position.y() * sim::g42edm::length,
-                       hit->position.z() * sim::g42edm::length,
+                       (float) hit->position.x() * (float) sim::g42edm::length,
+                       (float) hit->position.y() * (float) sim::g42edm::length,
+                       (float) hit->position.z() * (float) sim::g42edm::length,
           });
         }
       }

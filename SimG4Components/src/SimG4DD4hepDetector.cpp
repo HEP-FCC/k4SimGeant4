@@ -1,7 +1,7 @@
 #include "SimG4DD4hepDetector.h"
 
 // FCCSW
-#include "DetInterface/IGeoSvc.h"
+#include "SimG4Interface/IGeoSvc.h"
 
 // Geant4
 #include "G4VUserDetectorConstruction.hh"

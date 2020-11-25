@@ -16,7 +16,6 @@
 #include "G4ParticleTable.hh"
 
 // datamodel
-#include "edm4hep/GenVertexCollection.h"
 #include "edm4hep/MCParticleCollection.h"
 
 // Declaration of the Tool
@@ -93,7 +92,7 @@ G4Event* SimG4SingleParticleGeneratorTool::g4Event() {
   vertex->SetPrimary(part);
   theEvent->AddPrimaryVertex(vertex);
   if (m_saveEdm) {
-    saveToEdm(vertex, part);
+    saveToEdm(vertex, part).ignore();
   }
   return theEvent;
 }
@@ -112,9 +111,9 @@ StatusCode SimG4SingleParticleGeneratorTool::saveToEdm(const G4PrimaryVertex* aV
   particle.setPDG(aParticle->GetPDGcode());
   particle.setGeneratorStatus(1);
   particle.setMomentum({
-               aParticle->GetPx() * sim::g42edm::energy,
-               aParticle->GetPy() * sim::g42edm::energy,
-               aParticle->GetPz() * sim::g42edm::energy,
+               (float) (aParticle->GetPx() * sim::g42edm::energy),
+               (float) (aParticle->GetPy() * sim::g42edm::energy),
+               (float) (aParticle->GetPz() * sim::g42edm::energy),
     });
   particle.setMass(aParticle->GetMass() * sim::g42edm::energy);
 

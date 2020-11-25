@@ -5,7 +5,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // FCCSW
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "SimG4Common/EventInformation.h"
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 

@@ -5,7 +5,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // FCCSW
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 class ITHistSvc;
 
 // datamodel

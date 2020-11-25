@@ -40,7 +40,7 @@ G4Event* SimG4GeantinosFromEdmTool::g4Event() {
 
   const edm4hep::MCParticleCollection* mcparticles = m_genParticles.get();
   for (const auto& mcparticle : *mcparticles) {
-    auto v =  mcparticle.getPosition();
+    auto v =  mcparticle.getVertex();
     G4PrimaryVertex* g4Vertex = new G4PrimaryVertex(v.x * sim::edm2g4::length,
                                                     v.y * sim::edm2g4::length,
                                                     v.z * sim::edm2g4::length,
@@ -54,9 +54,9 @@ G4Event* SimG4GeantinosFromEdmTool::g4Event() {
       part = new G4PrimaryParticle(particleDefNeutral);
     }
 
-    part->SetMass(mcparticle.getMass);
+    part->SetMass(mcparticle.getMass());
     part->SetCharge(mcparticle.getCharge());
-    auto mom = mcparticle.getMomentum()
+    auto mom = mcparticle.getMomentum();
     double pX = mom.x * sim::edm2g4::energy;
     double pY = mom.y * sim::edm2g4::energy;
     double pZ = mom.z * sim::edm2g4::energy;

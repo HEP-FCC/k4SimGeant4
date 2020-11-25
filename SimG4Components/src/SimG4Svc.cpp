@@ -108,7 +108,7 @@ StatusCode SimG4Svc::initialize() {
   // configure the random service
   if (m_rndmFromGaudi) {
     std::vector<long> seedsVec;
-    m_randSvc->engine()->seeds(seedsVec);
+    m_randSvc->engine()->seeds(seedsVec).ignore();
     long seedsList[] = {seedsVec[0], seedsVec[1]};
     CLHEP::HepRandom::setTheSeeds(seedsList);
   }
@@ -134,7 +134,7 @@ StatusCode SimG4Svc::processEvent(G4Event& aEvent) {
 StatusCode SimG4Svc::retrieveEvent(G4Event*& aEvent) { return m_runManager.retrieveEvent(aEvent); }
 
 StatusCode SimG4Svc::terminateEvent() {
-  m_runManager.terminateEvent();
+  m_runManager.terminateEvent().ignore();
   return StatusCode::SUCCESS;
 }
 

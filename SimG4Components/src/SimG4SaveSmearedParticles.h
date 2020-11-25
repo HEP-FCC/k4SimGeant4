@@ -5,7 +5,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // FCCSW
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 
 // datamodel
@@ -44,7 +44,7 @@ private:
   /// Handle for the particles to be written
   DataHandle<edm4hep::ReconstructedParticleCollection> m_particles{"RecParticlesSmeared", Gaudi::DataHandle::Writer, this};
   /// Handle for the associations between particles and MC particles to be written
-  DataHandle<edm4hep::MCRecoParticleAssociation> m_particlesMCparticles{"SmearedParticlesToParticles",
+  DataHandle<edm4hep::MCRecoParticleAssociationCollection> m_particlesMCparticles{"SmearedParticlesToParticles",
                                                                                   Gaudi::DataHandle::Writer, this};
 };
 
