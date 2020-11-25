@@ -78,7 +78,7 @@ Simulation package contains following directories:
 ## Example
 
 ~~~{.sh}
-./run fccrun.py Examples/options/geant_fullsim.py
+fccrun Examples/options/geant_fullsim.py
 ~~~
 
 The configuration file (`Examples/options/geant_fullsim.py`) contains:
@@ -174,7 +174,7 @@ There is a possibility to create the detector with GDML instead of DD4hep. In th
 Simple example:
 
 ~~~{.sh}
-./run fccrun.py Sim/SimG4Components/tests/options/geant_fullsim_gdml.py
+fccrun Sim/SimG4Components/tests/options/geant_fullsim_gdml.py
 ~~~
 
 
