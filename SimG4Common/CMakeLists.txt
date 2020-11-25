@@ -1,19 +1,14 @@
 ################################################################################
 # Package: SimG4Common
 ################################################################################
-gaudi_subdir(SimG4Common v1r0)
-
-# this declaration will not be needed in the future
-gaudi_depends_on_subdirs(GaudiAlg)
 
 
-find_package(ROOT)
-find_package(FCCEDM)
-find_package(PODIO)
-
+file(GLOB _lib_sources src/*.cpp)
 gaudi_add_library(SimG4Common
-                 src/*.cpp
+                 SOURCES ${_lib_sources}
                  INCLUDE_DIRS FCCFWCore Geant4 ROOT FCCEDM PODIO
-                 LINK_LIBRARIES GaudiAlgLib ROOT  FCCEDM PODIO EDM4HEP::edm4hep
+                 LINK GaudiAlgLib k4FWCore::k4FWCore {Geant4_LIBRARIES} EDM4HEP::edm4hep
                  PUBLIC_HEADERS SimG4Common)
-target_link_libraries(SimG4Common ${Geant4_LIBRARIES})
+target_include_directories(SimG4Common PUBLIC ${Geant4_INCLUDE_DIRS}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
