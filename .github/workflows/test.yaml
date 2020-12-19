@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: cvmfs-contrib/github-action-cvmfs@main
+    - uses: cvmfs-contrib/github-action-cvmfs@v2
       with:
         cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
     - name: Start container
