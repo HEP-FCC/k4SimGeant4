@@ -91,6 +91,9 @@ private:
 
   Gaudi::Property<bool> m_interactiveMode{this, "InteractiveMode", false, "Enter the interactive mode"};
 
+  Gaudi::Property<long> m_seedValue{this, "seedValue", 1234567, "Seed to be used in RndmGenSvc engine (randomNumbersFromGaudi must be set to false)"};
+
+
   /// Run Manager
   sim::RunManager m_runManager;
 
