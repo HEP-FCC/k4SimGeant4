@@ -1,30 +1,26 @@
-name: linux_spacktest
-
+name: CITestsSpack
 on: [push, pull_request]
-
 jobs:
-  test:
-    runs-on: ubuntu-18.04
-    strategy:
-      fail-fast: false
-      matrix:
-        SETUP: ["init.sh"]
+  build:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: cvmfs-contrib/github-action-cvmfs@v2
       with:
-        cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org'
-
+        cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
     - name: Start container
       run: |
-        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package -v /cvmfs:/cvmfs:shared -d clicdp/cc7-lcg /bin/bash
+        docker run -it --name CI_container -v ${GITHUB_WORKSPACE}:/Package --env GITHUB_REPOSITORY=${GITHUB_REPOSITORY} -v /cvmfs:/cvmfs:shared -d clicdp/cc7-lcg /bin/bash
     - name: Setup container
       run: |
         docker exec CI_container /bin/bash -c " ln -s /usr/lib64/liblzma.so.5.2.2 /usr/lib64/liblzma.so;"
-
-    - name: Compile And Test
+    - name: Setup Spack
       run: |
-        docker exec CI_container /bin/bash -c 'cd ./Package;\
-        source /cvmfs/sw.hsf.org/contrib/spack/share/spack/setup-env.sh;\
-        spack dev-build --test=root k4simgeant4@main;\
-        '
+        docker exec CI_container /bin/bash -c 'cd ./Package; curl -L -o spack.tar.gz https://gitlab.cern.ch/key4hep/k4-deploy/-/jobs/artifacts/release/raw/key4hep-spack_centos7-cvmfs.tar.gz?job=setup_spack_push;\
+        tar xfz spack.tar.gz && rm spack.tar.gz;'
+    - name: Compile
+      run: |
+        docker exec CI_container /bin/bash -c 'cd ./Package;
+        source spack/share/spack/setup-env.sh;\
+        packagename=$(basename ${GITHUB_REPOSITORY,,});\
+        spack dev-build --test=root ${packagename}@main;' 
