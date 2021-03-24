@@ -1,7 +1,6 @@
 #include "MergeLayers.h"
 
 // FCCSW
-#include "DetCommon/DetUtils.h"
 #include "k4Interface/IGeoSvc.h"
 
 // datamodel
