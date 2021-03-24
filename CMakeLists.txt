@@ -33,6 +33,7 @@ message(${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 message(${CMAKE_MODULE_PATH})
 
+add_subdirectory(Detector)
 add_subdirectory(SimG4Interface)
 add_subdirectory(SimG4Common)
 add_subdirectory(SimG4Fast)
