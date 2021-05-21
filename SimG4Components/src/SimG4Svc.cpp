@@ -111,9 +111,14 @@ StatusCode SimG4Svc::initialize() {
     m_randSvc->engine()->seeds(seedsVec).ignore();
     long seedsList[] = {seedsVec[0], seedsVec[1]};
     CLHEP::HepRandom::setTheSeeds(seedsList);
+    info() << "Random numbers seeds: " << CLHEP::HepRandom::getTheSeeds()[0] << "\t" << CLHEP::HepRandom::getTheSeeds()[1] << endmsg;
   }
-  info() << "Random numbers seeds: " << CLHEP::HepRandom::getTheSeeds()[0] << "\t" << CLHEP::HepRandom::getTheSeeds()[1]
-         << endmsg;
+  else {
+    m_randSvc->engine()->setSeeds({m_seedValue}).ignore();
+    std::vector<long> seedsVec;
+    m_randSvc->engine()->seeds(seedsVec).ignore();
+    info() << "Random numbers seeds: " << seedsVec << endmsg;
+  }
 
   if (!m_runManager.start()) {
     error() << "Unable to initialize GEANT correctly." << endmsg;
