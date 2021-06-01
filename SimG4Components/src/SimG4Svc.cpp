@@ -85,6 +85,7 @@ StatusCode SimG4Svc::initialize() {
     G4HadronicProcessStore::Instance()->SetVerbose(0);
     UImanager->ApplyCommand("/run/verbose 0");
     UImanager->ApplyCommand("/process/em/verbose 0");
+    UImanager->ApplyCommand("/process/had/verbose 0");
   }
   // Create regions
   for (auto& toolname : m_regionToolNames) {
