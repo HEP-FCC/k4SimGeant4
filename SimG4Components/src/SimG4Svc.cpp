@@ -81,7 +81,7 @@ StatusCode SimG4Svc::initialize() {
 
   // Attach user actions
   m_runManager.SetUserInitialization(m_actionsTool->userActionInitialization());
-  if (!msgLevel(MSG::DEBUG)) {
+  if (msgLevel() < MSG::INFO) {
     G4HadronicProcessStore::Instance()->SetVerbose(0);
     UImanager->ApplyCommand("/run/verbose 0");
     UImanager->ApplyCommand("/process/em/verbose 0");
