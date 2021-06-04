@@ -5,6 +5,7 @@
 
 // datamodel
 #include "edm4hep/CalorimeterHitCollection.h"
+#include "edm4hep/SimCalorimeterHitCollection.h"
 
 // DD4hep
 #include "DD4hep/Detector.h"
@@ -82,9 +83,10 @@ StatusCode RedoSegmentation::execute() {
   dd4hep::DDSegmentation::CellID oldid = 0;
   uint debugIter = 0;
   for (const auto& hit : *inHits) {
-    edm4hep::CalorimeterHit newHit = outHits->create();
+    edm4hep::SimCalorimeterHit newHit = outHits->create();
     newHit.setEnergy(hit.getEnergy());
-    newHit.setTime(hit.getTime());
+    // SimCalorimeterHit type (needed for createCaloCells which runs after RedoSegmentation) has no time member
+    //newHit.setTime(hit.getTime());
     dd4hep::DDSegmentation::CellID cellId = hit.getCellID();
     if (debugIter < m_debugPrint) {
       debug() << "OLD: " << m_oldDecoder->valueString(cellId) << endmsg;
