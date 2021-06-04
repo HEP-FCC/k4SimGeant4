@@ -20,6 +20,7 @@ class Segmentation;
 // datamodel
 namespace edm4hep {
 class CalorimeterHitCollection;
+class SimCalorimeterHitCollection;
 }
 
 /** @class RedoSegmentation Detector/DetComponents/src/RedoSegmentation.h RedoSegmentation.h
@@ -65,7 +66,7 @@ private:
   /// Handle for the EDM positioned hits to be read
   DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
   /// Handle for the EDM hits to be written
-  DataHandle<edm4hep::CalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
+  DataHandle<edm4hep::SimCalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
   /// New segmentation
   dd4hep::DDSegmentation::Segmentation* m_segmentation;
   /// Name of the detector readout used in simulation
