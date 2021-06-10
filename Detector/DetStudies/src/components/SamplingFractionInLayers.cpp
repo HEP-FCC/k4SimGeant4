@@ -4,7 +4,7 @@
 #include "k4Interface/IGeoSvc.h"
 
 // datamodel
-#include "edm4hep/CalorimeterHitCollection.h"
+#include "edm4hep/SimCalorimeterHitCollection.h"
 
 #include "CLHEP/Vector/ThreeVector.h"
 #include "GaudiKernel/ITHistSvc.h"

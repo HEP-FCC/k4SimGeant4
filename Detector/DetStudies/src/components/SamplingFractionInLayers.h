@@ -11,7 +11,7 @@ class IGeoSvc;
 
 // datamodel
 namespace edm4hep {
-class CalorimeterHitCollection;
+class SimCalorimeterHitCollection;
 }
 
 class TH1F;
@@ -49,7 +49,7 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for the energy deposits
-  DataHandle<edm4hep::CalorimeterHitCollection> m_deposits{"rec/caloHits", Gaudi::DataHandle::Reader, this};
+  DataHandle<edm4hep::SimCalorimeterHitCollection> m_deposits{"rec/caloHits", Gaudi::DataHandle::Reader, this};
   /// Name of the active field
   Gaudi::Property<std::string> m_activeFieldName{this, "activeFieldName", "", "Identifier of active material"};
   /// Value of the active material
