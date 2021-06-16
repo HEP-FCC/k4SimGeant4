@@ -41,7 +41,7 @@ from Configurables import GeoSvc
 from os import environ, path
 detector_path = environ.get("FCCDETECTORS", "")
 detectors = ['Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectEmptyMaster.xml',
-             'Detector/DetFCCeeECalInclined/compact/FCCee_ECalBarrel_upstream.xml']
+             'Detector/DetFCCeeECalInclined/compact/FCCee_ECalBarrel_deadMaterial.xml']
 geoservice = GeoSvc("GeoSvc", detectors=[path.join(detector_path, detector) for detector in detectors],
                     OutputLevel = WARNING)
 
