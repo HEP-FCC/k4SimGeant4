@@ -64,9 +64,9 @@ dd4hep::Detector* GeoSvc::lcdd() { return (m_dd4hepgeo); }
 dd4hep::DetElement GeoSvc::getDD4HepGeo() { return (lcdd()->world()); }
 
 StatusCode GeoSvc::buildGeant4Geo() {
-  std::shared_ptr<G4VUserDetectorConstruction> detector(new det::GeoConstruction(*lcdd()));
+  std::shared_ptr<G4VUserDetectorConstruction> detector(new det::GeoConstruction(*lcdd(), m_sensitive_types));
   m_geant4geo = detector;
-  if (m_geant4geo) {
+  if (nullptr != m_geant4geo) {
     return StatusCode::SUCCESS;
   } else
     return StatusCode::FAILURE;

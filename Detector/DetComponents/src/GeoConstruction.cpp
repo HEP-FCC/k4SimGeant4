@@ -15,21 +15,25 @@
 
 namespace det {
   
-GeoConstruction::GeoConstruction(dd4hep::Detector& lcdd) : m_lcdd(lcdd) {}
+GeoConstruction::GeoConstruction(dd4hep::Detector& lcdd, std::map<std::string, std::string> sensitive_types) : m_lcdd(lcdd), m_sensitive_types(sensitive_types) {}
 
 GeoConstruction::~GeoConstruction() {}
 
 // method borrowed from dd4hep::sim::Geant4DetectorSensitivesConstruction
 //                             ::constructSensitives(Geant4DetectorConstructionContext* ctxt)
 void GeoConstruction::ConstructSDandField() {
-      typedef std::set<const TGeoVolume*> VolSet;
-      typedef std::map<dd4hep::SensitiveDetector, VolSet> _SV;
+  typedef std::set<const TGeoVolume*> VolSet;
+  typedef std::map<dd4hep::SensitiveDetector, VolSet> _SV;
   dd4hep::sim::Geant4GeometryInfo* p = dd4hep::sim::Geant4Mapping::instance().ptr();
   _SV& vols = p->sensitives;
 
   for (_SV::const_iterator iv = vols.begin(); iv != vols.end(); ++iv) {
     dd4hep::SensitiveDetector sd = (*iv).first;
-    std::string typ = sd.type(), nam = sd.name();
+    std::string typ = sd.type();
+    std::string nam = sd.name();
+    if (m_sensitive_types.find(typ) != m_sensitive_types.end()) {
+      typ = m_sensitive_types[typ];
+    }
     // Sensitive detectors are deleted in ~G4SDManager
     G4VSensitiveDetector* g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_lcdd);
     if (g4sd == nullptr) {
