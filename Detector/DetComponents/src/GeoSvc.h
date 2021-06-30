@@ -48,6 +48,8 @@ private:
   std::shared_ptr<G4VUserDetectorConstruction> m_geant4geo;
   /// XML-files with the detector description
   Gaudi::Property<std::vector<std::string>> m_xmlFileNames{this, "detectors", {}, "Detector descriptions XML-files"};
+  /// mapping of sensitive detector names
+  Gaudi::Property<std::map<std::string, std::string>> m_sensitive_types{this, "sensitiveTypes", {{"tracker", "SimpleTrackerSD"}, {"calorimeter", "SimpleCalorimeterSD"}}};
 };
 
 #endif  // GEOSVC_H
