@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import json
+import os
 
 
 def main():
@@ -17,6 +18,8 @@ def main():
                         help='additional note to be displayed in the plots')
     parser.add_argument('--theta-slice', type=float, default=90.,
                         help='select theta slice for the correction derivation')
+    parser.add_argument('--plot-file-format', type=str, default='pdf', help='plot output file format')
+    parser.add_argument('--plot-directory', type=str, default='./', help='Directory of the output plots')
 
     required_arguments = parser.add_argument_group('required arguments')
     required_arguments.add_argument('-i', '--input-file', type=str, required=True, help='Input file path')
@@ -34,6 +37,9 @@ def main():
         args.notes.append('electron')
         args.notes.append('#theta = %i deg' % (args.theta_slice))
         print('WARNING: Using default plot legend notes.')
+
+    if not os.path.isdir(args.plot_directory):
+        os.mkdir(args.plot_directory)
 
     from ROOT import gROOT
     gROOT.SetBatch(True)
@@ -216,8 +222,7 @@ def plot(obj, plotname, args=None):
     obj.Draw('APEL')
     legend.Draw()
     plotname += '_%ideg' % (args.theta_slice)
-    canvas.Print(plotname + '.pdf')
-
+    canvas.Print(os.path.join(args.plot_directory, plotname + '.' + args.plot_file_format))
 
 if __name__ == '__main__':
     main()

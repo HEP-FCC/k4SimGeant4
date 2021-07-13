@@ -52,6 +52,7 @@ def main():
                         help='additional note to be displayed in the plots')
     parser.add_argument('-o', '--output', type=str, default='fit_results.json', help='output JSON file name')
     parser.add_argument('--plot-file-format', type=str, default='pdf', help='plot output file format')
+    parser.add_argument('--plot-directory', type=str, default='./', help='Directory of the output plots')
 
     required_arguments = parser.add_argument_group('required arguments')
     required_arguments.add_argument('-i', '--input-file', type=str, required=True, help='input file path')
@@ -84,6 +85,9 @@ def main():
         print('WARNING: Input ROOT file not found!')
         print('         ' + args.input_file)
         exit(1)
+
+    if not os.path.isdir(args.plot_directory):
+        os.mkdir(args.plot_directory)
 
     from ROOT import gROOT, TFile, TH2D, TF1
     gROOT.SetBatch(True)
@@ -251,7 +255,7 @@ def plot(obj, plotname, args):
 
     obj.Draw(draw_options)
     legend.Draw()
-    canvas.Print(plotname + '.' + args.plot_file_format)
+    canvas.Print(os.path.join(args.plot_directory, plotname + '.' + args.plot_file_format))
 
 
 def count_bins_with_error(hist):
