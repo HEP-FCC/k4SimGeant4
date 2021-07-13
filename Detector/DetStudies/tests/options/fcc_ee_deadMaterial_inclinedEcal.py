@@ -1,34 +1,39 @@
-from Gaudi.Configuration import *
-
-from GaudiKernel.SystemOfUnits import MeV, GeV
+from Gaudi.Configuration import WARNING, VERBOSE, DEBUG
 
 # Electron momentum in GeV
 momentum = 50
-# Theta min and max in degrees                                                                                                      
-thetaMin = 85.
-thetaMax = 95.
+# Theta and its spread in degrees
+theta = 90.
+thetaSpread = 10.
+
+samplingFractions = [0.303451138049] * 1 + [0.111872504159] * 1 + [0.135806495306] * 1 + [0.151772636618] * 1 + \
+                    [0.163397436122] * 1 + [0.172566977313] * 1 + [0.179855253903] * 1 + [0.186838417657] * 1 + \
+                    [0.192865946689] * 1 + [0.197420241611] * 1 + [0.202066552306] * 1 + [0.22646764465] * 1
+
+#----------------------------------------------------------------------------------------------------------------------
 
 # Data service
 from Configurables import FCCDataSvc
 podioevent = FCCDataSvc("EventDataSvc")
 
-################## Particle gun setup
-_pi = 3.14159
+# Particle gun setup
+from Configurables import MomentumRangeParticleGun
+from GaudiKernel.SystemOfUnits import GeV
+from math import pi
 
-from Configurables import  MomentumRangeParticleGun
 pgun = MomentumRangeParticleGun("ParticleGun_Electron")
 pgun.PdgCodes = [11]
 pgun.MomentumMin = momentum * GeV
 pgun.MomentumMax = momentum * GeV
 pgun.PhiMin = 0
-pgun.PhiMax = 2 * _pi
+pgun.PhiMax = 2 * pi
 # theta = 90 degrees (eta = 0)
-pgun.ThetaMin = thetaMin * _pi / 180.       
-pgun.ThetaMax = thetaMax * _pi / 180.       
+pgun.ThetaMin = (theta - thetaSpread/2.) * pi / 180.
+pgun.ThetaMax = (theta + thetaSpread/2.) * pi / 180.
 
 from Configurables import GenAlg
 genalg_pgun = GenAlg()
-genalg_pgun.SignalProvider = pgun 
+genalg_pgun.SignalProvider = pgun
 genalg_pgun.hepmc.Path = "hepmc"
 
 from Configurables import HepMCToEDMConverter
@@ -82,12 +87,7 @@ energy_in_layers = EnergyInCaloLayers("energyInLayers",
                                       numLayers=12,
                                       # sampling fraction is given as the energy correction will be applied on
                                       # calibrated cells
-                                      samplingFractions=[0.303451138049] * 1 + [0.111872504159] * 1 +
-                                                        [0.135806495306] * 1 + [0.151772636618] * 1 +
-                                                        [0.163397436122] * 1 + [0.172566977313] * 1 +
-                                                        [0.179855253903] * 1 + [0.186838417657] * 1 +
-                                                        [0.192865946689] * 1 + [0.197420241611] * 1 +
-                                                        [0.202066552306] * 1 + [0.22646764465] * 1,
+                                      samplingFractions=samplingFractions,
                                       OutputLevel=VERBOSE)
 energy_in_layers.deposits.Path = "ECalBarrelCells"
 energy_in_layers.particle.Path = "GenParticles"
@@ -100,11 +100,12 @@ audsvc.Auditors = [chra]
 geantsim.AuditExecute = True
 energy_in_layers.AuditExecute = True
 
+import uuid
 from Configurables import PodioOutput
 ### PODIO algorithm
-out = PodioOutput("out",OutputLevel=DEBUG)
-out.outputCommands = ["keep *"]
-out.filename = "fccee_deadMaterial_inclinedEcal.root"
+out = PodioOutput("out", OutputLevel=DEBUG)
+out.outputCommands = ["drop *", "keep energyInLayer", "keep energyInCryo"]
+out.filename = "fccee_energyInCaloLayers_%ideg_%igev_%s.root" % (theta, momentum, uuid.uuid4().hex[0:16])
 
 # ApplicationMgr
 from Configurables import ApplicationMgr
