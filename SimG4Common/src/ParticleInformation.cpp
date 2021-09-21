@@ -3,6 +3,8 @@
 namespace sim {
 ParticleInformation::ParticleInformation(const edm4hep::MCParticle& aMCpart) : m_mcParticle(aMCpart), m_smeared(false) {}
 
+ParticleInformation::ParticleInformation(edm4hep::ConstMCParticle& aMCpart) : m_smeared(false) {
+  m_mcParticle = aMCpart.clone();}
 ParticleInformation::~ParticleInformation() {}
 
 void ParticleInformation::Print() const {}

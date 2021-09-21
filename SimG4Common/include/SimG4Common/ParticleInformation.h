@@ -29,6 +29,7 @@ public:
    *  @param[in] aMCpart EDM MCParticle.
    */
   explicit ParticleInformation(const edm4hep::MCParticle& aMCpart);
+  explicit ParticleInformation(edm4hep::ConstMCParticle& aMCpart);
   /// A destructor
   virtual ~ParticleInformation();
   /// A printing method
