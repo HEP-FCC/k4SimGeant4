@@ -7,7 +7,7 @@
 file(GLOB _lib_sources src/*.cpp)
 gaudi_add_module(SimG4Components
                  SOURCES ${_lib_sources}
-                 LINK Gaudi::GaudiAlgLib k4FWCore::k4FWCore SimG4Common EDM4HEP::edm4hep DD4hep::DDCore SimG4Interface)
+                 LINK Gaudi::GaudiAlgLib k4FWCore::k4FWCore SimG4Common EDM4HEP::edm4hep DD4hep::DDCore DD4hep::DDG4 SimG4Interface)
 
 
 #include(CTest)
