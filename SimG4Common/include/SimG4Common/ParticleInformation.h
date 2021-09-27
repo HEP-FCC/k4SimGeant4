@@ -37,7 +37,7 @@ public:
   /** Getter of the MCParticle.
    *  @returns EDM MCParticle.
    */
-  const edm4hep::MCParticle& mcParticle() const;
+  edm4hep::ConstMCParticle& mcParticle();
   /** Setter of the end-of-tracking momentum (used for fast simulation).
    *  @param[in] aMom Particle momentum.
    */
@@ -73,7 +73,7 @@ public:
 
 private:
   /// EDM MC particle
-  const edm4hep::MCParticle m_mcParticle;
+  edm4hep::ConstMCParticle m_mcParticle;
   /// Particle momentum at the end of tracking (filled for fast-sim)
   CLHEP::Hep3Vector m_endMomentum;
   /// Particle vertex position saved at the end of tracking (filled for fast-sim)

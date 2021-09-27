@@ -31,7 +31,7 @@ StatusCode SimG4PrimariesFromEdmTool::initialize() { return GaudiTool::initializ
 G4Event* SimG4PrimariesFromEdmTool::g4Event() {
   auto theEvent = new G4Event();
   const edm4hep::MCParticleCollection* mcparticles = m_genParticles.get();
-  for (const auto& mcparticle : *mcparticles) {
+  for (auto mcparticle : *mcparticles) {
     const edm4hep::Vector3d v = mcparticle.getVertex();
     G4PrimaryVertex* g4Vertex = new G4PrimaryVertex(v.x * sim::edm2g4::length,
                                                     v.y * sim::edm2g4::length,

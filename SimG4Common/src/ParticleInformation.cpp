@@ -9,7 +9,7 @@ ParticleInformation::~ParticleInformation() {}
 
 void ParticleInformation::Print() const {}
 
-const edm4hep::MCParticle& ParticleInformation::mcParticle() const { return m_mcParticle; }
+edm4hep::ConstMCParticle& ParticleInformation::mcParticle() { return m_mcParticle; }
 void ParticleInformation::setEndMomentum(const CLHEP::Hep3Vector& aMom) { m_endMomentum = aMom; }
 const CLHEP::Hep3Vector& ParticleInformation::endMomentum() const { return m_endMomentum; }
 void ParticleInformation::setVertexPosition(const CLHEP::Hep3Vector& aPos) { m_vertexPosition = aPos; }
