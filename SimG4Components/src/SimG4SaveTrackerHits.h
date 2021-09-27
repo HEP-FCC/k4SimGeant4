@@ -49,6 +49,9 @@ public:
 private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
+  /// Pointer to Podio and Event Data Services
+  PodioDataSvc* m_podioDataSvc;
+  ServiceHandle<IDataProviderSvc> m_eventDataSvc;
   /// Handle for tracker hits
   DataHandle<edm4hep::SimTrackerHitCollection> m_trackHits{"TrackerHits", Gaudi::DataHandle::Writer, this};
   /// Handle for tracker hits including position information
