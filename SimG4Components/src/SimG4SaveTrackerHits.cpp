@@ -14,13 +14,18 @@
 // DD4hep
 #include "DD4hep/Detector.h"
 
+#include "DDG4/Geant4HitCollection.h"
+#include "DDG4/Geant4SensDetAction.h"
+#include "DDG4/Geant4DataConversion.h"
+
 
 DECLARE_COMPONENT(SimG4SaveTrackerHits)
 
 SimG4SaveTrackerHits::SimG4SaveTrackerHits(const std::string& aType, const std::string& aName,
                                            const IInterface* aParent)
     : GaudiTool(aType, aName, aParent),
-      m_geoSvc("GeoSvc", aName)
+      m_geoSvc("GeoSvc", aName),
+      m_eventDataSvc("EventDataSvc", "SimG4SaveTrackerHits")
     {
   declareInterface<ISimG4SaveOutputTool>(this);
   declareProperty("SimTrackHits", m_trackHits, "Handle for tracker hits");
@@ -48,6 +53,14 @@ StatusCode SimG4SaveTrackerHits::initialize() {
       debug() << "Hits will be saved to EDM from the collection " << readoutName << endmsg;
     }
   }
+
+  StatusCode sc = m_eventDataSvc.retrieve();
+  m_podioDataSvc = dynamic_cast<PodioDataSvc*>(m_eventDataSvc.get());
+  if (sc == StatusCode::FAILURE) {
+    error() << "Error retrieving Event Data Service" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -61,6 +74,15 @@ StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
     edm4hep::SimTrackerHitCollection* edmHits = m_trackHits.createAndPut();
     for (int iter_coll = 0; iter_coll < collections->GetNumberOfCollections(); iter_coll++) {
       collect = collections->GetHC(iter_coll);
+      try {
+        dd4hep::sim::Geant4HitCollection* coll = dynamic_cast<dd4hep::sim::Geant4HitCollection*>(collect);
+        dd4hep::sim::Geant4Sensitive* sd = coll->sensitive();
+        std::string sd_enc = dd4hep::sim::Geant4ConversionHelper::encoding(sd->sensitiveDetector());
+        auto& collmd = m_podioDataSvc->getProvider().getCollectionMetaData( m_trackHits.get()->getID() );
+        collmd.setValue("CellIDEncodingString", sd_enc);
+      } catch (const std::exception& e) {
+        std::cout << e.what();
+      }
       if (std::find(m_readoutNames.begin(), m_readoutNames.end(), collect->GetName()) != m_readoutNames.end()) {
         size_t n_hit = collect->GetSize();
         verbose() << "\t" << n_hit << " hits are stored in a tracker collection #" << iter_coll << ": "
