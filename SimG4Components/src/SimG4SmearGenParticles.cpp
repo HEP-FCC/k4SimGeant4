@@ -39,19 +39,31 @@ StatusCode SimG4SmearGenParticles::execute() {
   info() << "Input particle collection size: " << coll->size() << endmsg;
   
   int n_part = 0;
-  for (const auto& j : *coll) {
-    const edm4hep::MCParticle& MCparticle = j;
+  for (auto j : *coll) {
     // save only charged particles, visible in tracker
-    verbose() << "Charge of input particles: " << MCparticle.getCharge() << endmsg;
+    verbose() << "Charge of input particles: " << j.getCharge() << endmsg;
 
-    if ( MCparticle.getCharge()!=0 || MCparticle.getPDG()==-211 || !m_simTracker){
+    if ( j.getCharge()!=0 || j.getPDG()==-211 || !m_simTracker){
       
-      edm4hep::MCParticle particle = MCparticle.clone();
+      // todo: replace with copy / ctor method when available in podio
+      // relations currently  not set!
+      edm4hep::MCParticle particle;
+      particle.setCharge(j.getCharge());
+      particle.setPDG(j.getPDG());
+      particle.setMass(j.getMass());
+      particle.setTime(j.getTime());
+      particle.setSimulatorStatus(j.getSimulatorStatus());
+      particle.setMomentumAtEndpoint(j.getMomentumAtEndpoint());
+      particle.setSpin(j.getSpin());
+      particle.setColorFlow(j.getColorFlow());
+      particle.setVertex(j.getVertex());
+
+
       // smear momentum according to trackers resolution
-      auto edm_mom = MCparticle.getMomentum();
+      auto edm_mom = j.getMomentum();
       CLHEP::Hep3Vector mom = CLHEP::Hep3Vector(edm_mom.x, edm_mom.y, edm_mom.z);
       //    m_smearTool->checkConditions(5000,10000000,6);
-      m_smearTool->smearMomentum(mom, MCparticle.getPDG()).ignore();
+      m_smearTool->smearMomentum(mom, j.getPDG()).ignore();
       particle.setMomentum({
                 (float) mom.x(),
                 (float) mom.y(),

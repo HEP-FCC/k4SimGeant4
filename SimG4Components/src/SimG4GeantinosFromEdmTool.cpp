@@ -39,7 +39,7 @@ G4Event* SimG4GeantinosFromEdmTool::g4Event() {
   G4ParticleDefinition* particleDefNeutral = particleTable->FindParticle("geantino");
 
   const edm4hep::MCParticleCollection* mcparticles = m_genParticles.get();
-  for (const auto& mcparticle : *mcparticles) {
+  for (auto mcparticle : *mcparticles) {
     auto v =  mcparticle.getVertex();
     G4PrimaryVertex* g4Vertex = new G4PrimaryVertex(v.x * sim::edm2g4::length,
                                                     v.y * sim::edm2g4::length,
