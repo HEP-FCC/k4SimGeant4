@@ -66,16 +66,15 @@ StatusCode SimG4SaveCalHits::saveOutput(const G4Event& aEvent) {
     auto edmHits = m_caloHits.createAndPut();
     for (int iter_coll = 0; iter_coll < collections->GetNumberOfCollections(); iter_coll++) {
       collect = collections->GetHC(iter_coll);
-
-      // Add CellID encoding string to collection metadata
-      auto lcdd = m_geoSvc->lcdd();
-      auto allReadouts = lcdd->readouts();
-      auto idspec = lcdd->idSpecification(collect->GetName());
-      auto field_str = idspec.fieldDescription();
-      auto& coll_md = m_podioDataSvc->getProvider().getCollectionMetaData( m_caloHits.get()->getID() );
-      coll_md.setValue("CellIDEncodingString", field_str);
-
       if (std::find(m_readoutNames.begin(), m_readoutNames.end(), collect->GetName()) != m_readoutNames.end()) {
+        // Add CellID encoding string to collection metadata
+        auto lcdd = m_geoSvc->lcdd();
+        auto allReadouts = lcdd->readouts();
+        auto idspec = lcdd->idSpecification(collect->GetName());
+        auto field_str = idspec.fieldDescription();
+        auto& coll_md = m_podioDataSvc->getProvider().getCollectionMetaData( m_caloHits.get()->getID() );
+        coll_md.setValue("CellIDEncodingString", field_str);
+
         size_t n_hit = collect->GetSize();
         debug() << "\t" << n_hit << " hits are stored in a collection #" << iter_coll << ": " << collect->GetName()
                 << endmsg;
