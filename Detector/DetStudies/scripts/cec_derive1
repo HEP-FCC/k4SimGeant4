@@ -121,7 +121,7 @@ def main():
 
             corr_params = []
             try:
-                with open('corr_params_1d.json') as infile:
+                with open(os.path.join(args.plot_directory, 'corr_params_1d.json')) as infile:
                     data = json.load(infile)
                     if data.get('corr_params'):
                         corr_params = data['corr_params']
@@ -143,7 +143,7 @@ def main():
                                                               p['type'] == param_dict['type'])]
                 corr_params.append(param_dict)
 
-            with open('corr_params_1d.json', 'w') as outfile:
+            with open(os.path.join(args.plot_directory, 'corr_params_1d.json'), 'w') as outfile:
                 json.dump({'corr_params': corr_params}, outfile, indent=4)
 
         plot(graph, graph.GetName(), args)
