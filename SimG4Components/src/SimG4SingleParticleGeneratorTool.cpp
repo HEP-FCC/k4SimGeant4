@@ -100,7 +100,7 @@ G4Event* SimG4SingleParticleGeneratorTool::g4Event() {
 StatusCode SimG4SingleParticleGeneratorTool::saveToEdm(const G4PrimaryVertex* aVertex,
                                                        const G4PrimaryParticle* aParticle) {
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
-  edm4hep::MCParticle particle = particles->create();
+  auto particle = particles->create();
   particle.setVertex({
        aVertex->GetX0() * sim::g42edm::length,
        aVertex->GetY0() * sim::g42edm::length,

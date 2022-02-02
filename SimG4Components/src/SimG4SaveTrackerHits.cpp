@@ -85,7 +85,7 @@ StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
                << collect->GetName() << endmsg;
         for (size_t iter_hit = 0; iter_hit < n_hit; iter_hit++) {
           hit = dynamic_cast<k4::Geant4PreDigiTrackHit*>(collect->GetHit(iter_hit));
-          edm4hep::SimTrackerHit edmHit = edmHits->create();
+          auto edmHit = edmHits->create();
           edmHit.setCellID(hit->cellID);
           edmHit.setEDep(hit->energyDeposit * sim::g42edm::energy);
           /// workaround, store trackid in an unrelated field

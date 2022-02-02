@@ -79,7 +79,7 @@ StatusCode RewriteBitfield::execute() {
   uint64_t oldid = 0;
   uint debugIter = 0;
   for (const auto& hit : *inHits) {
-    edm4hep::CalorimeterHit newHit = outHits->create();
+    auto newHit = outHits->create();
     newHit.setEnergy(hit.getEnergy());
     newHit.setTime(hit.getTime());
     dd4hep::DDSegmentation::CellID cID = hit.getCellID();
