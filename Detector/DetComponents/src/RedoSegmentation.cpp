@@ -83,7 +83,7 @@ StatusCode RedoSegmentation::execute() {
   dd4hep::DDSegmentation::CellID oldid = 0;
   uint debugIter = 0;
   for (const auto& hit : *inHits) {
-    edm4hep::SimCalorimeterHit newHit = outHits->create();
+    auto newHit = outHits->create();
     newHit.setEnergy(hit.getEnergy());
     // SimCalorimeterHit type (needed for createCaloCells which runs after RedoSegmentation) has no time member
     //newHit.setTime(hit.getTime());

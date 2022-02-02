@@ -47,7 +47,7 @@ StatusCode SimG4SmearGenParticles::execute() {
       
       // todo: replace with copy / ctor method when available in podio
       // relations currently  not set!
-      edm4hep::MCParticle particle;
+      auto particle = particles->create();
       particle.setCharge(j.getCharge());
       particle.setPDG(j.getPDG());
       particle.setMass(j.getMass());
@@ -71,7 +71,6 @@ StatusCode SimG4SmearGenParticles::execute() {
       });
       
       n_part++;
-      particles->push_back(particle);
     }
   }
   

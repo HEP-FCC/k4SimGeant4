@@ -80,7 +80,7 @@ StatusCode SimG4SaveCalHits::saveOutput(const G4Event& aEvent) {
                 << endmsg;
         for (size_t iter_hit = 0; iter_hit < n_hit; iter_hit++) {
           hit = dynamic_cast<k4::Geant4CaloHit*>(collect->GetHit(iter_hit));
-          edm4hep::SimCalorimeterHit edmHit = edmHits->create();
+          auto edmHit = edmHits->create();
           edmHit.setCellID(hit->cellID);
           //todo
           //edmHitCore.bits = hit->trackId;

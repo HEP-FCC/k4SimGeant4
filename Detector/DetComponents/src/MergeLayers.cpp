@@ -80,7 +80,7 @@ StatusCode MergeLayers::execute() {
   unsigned int debugIter = 0;
 
   for (const auto& hit : *inHits) {
-    edm4hep::CalorimeterHit newHit = outHits->create();
+    auto newHit = outHits->create();
     newHit.setEnergy(hit.getEnergy());
     newHit.setEnergyError(hit.getEnergyError());
     newHit.setPosition(hit.getPosition());

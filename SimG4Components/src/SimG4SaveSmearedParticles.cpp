@@ -40,9 +40,9 @@ StatusCode SimG4SaveSmearedParticles::saveOutput(const G4Event& aEvent) {
       const G4PrimaryParticle* g4particle = aEvent.GetPrimaryVertex(i)->GetPrimary(j);
       sim::ParticleInformation* info = dynamic_cast<sim::ParticleInformation*>(g4particle->GetUserInformation());
       if (info->smeared()) {
-        edm4hep::ConstMCParticle& MCparticle = info->mcParticle();
-        edm4hep::ReconstructedParticle particle = particles->create();
-        edm4hep::MCRecoParticleAssociation association = associations->create();
+        auto & MCparticle = info->mcParticle();
+        auto particle = particles->create();
+        auto association = associations->create();
         association.setRec(particle);
         association.setSim(MCparticle);
         particle.setCharge(g4particle->GetCharge());

@@ -40,7 +40,7 @@ StatusCode SimG4SaveTrajectory::saveOutput(const G4Event& aEvent) {
     G4VTrajectory* theTrajectory =  (*trajectoryContainer)[trajectoryIndex];
     for (int pointIndex = 0; pointIndex < theTrajectory->GetPointEntries(); ++pointIndex) {
       auto trajectoryPoint = theTrajectory->GetPoint(pointIndex)->GetPosition();
-      edm4hep::TrackerHit edmHit = edmPositions->create();
+      auto edmHit = edmPositions->create();
       edmHit.setCellID(0);
       edmHit.setEDep(0);
       edmHit.setTime(0);
