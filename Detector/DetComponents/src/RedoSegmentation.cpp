@@ -13,7 +13,7 @@
 
 DECLARE_COMPONENT(RedoSegmentation)
 
-RedoSegmentation::RedoSegmentation(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
+RedoSegmentation::RedoSegmentation(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName), m_eventDataSvc("EventDataSvc", "RedoSegmentation") {
   declareProperty("inhits", m_inHits, "Hit collection with old segmentation (input)");
   declareProperty("outhits", m_outHits, "Hit collection with modified segmentation (output)");
 }
@@ -39,6 +39,12 @@ StatusCode RedoSegmentation::initialize() {
   }
   // Take readout, bitfield from GeoSvc
   m_oldDecoder = m_geoSvc->lcdd()->readout(m_oldReadoutName).idSpec().decoder();
+  StatusCode sc_dataSvc = m_eventDataSvc.retrieve();
+  m_podioDataSvc = dynamic_cast<PodioDataSvc*>(m_eventDataSvc.get());
+  if (sc_dataSvc == StatusCode::FAILURE) {
+    error() << "Error retrieving Event Data Service" << endmsg;
+    return StatusCode::FAILURE;
+  }
   // segmentation identifiers to be overwritten
   if (m_oldIdentifiers.size() == 0) {
     // it is not an error, maybe no segmentation was used previously
@@ -107,6 +113,9 @@ StatusCode RedoSegmentation::execute() {
       debugIter++;
     }
   }
+  // Define the metadata
+  auto& coll_md = m_podioDataSvc->getProvider().getCollectionMetaData(m_outHits.get()->getID());
+  coll_md.setValue("CellIDEncodingString", m_segmentation->decoder()->fieldDescription());
   return StatusCode::SUCCESS;
 }
 
