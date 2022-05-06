@@ -16,6 +16,8 @@ find_package(DD4hep)
 include(GNUInstallDirs)
 include(CTest)
 
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOL "RPATH USE LINK PATH")
+
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/InstallArea/ CACHE PATH
     "Install path prefix, prepended onto install directories." FORCE )
