@@ -12,7 +12,8 @@
 #include "edm4hep/SimCalorimeterHitCollection.h"
 
 // DD4hep
-#include "DDG4/Geant4Hits.h"
+#include "DD4hep/Detector.h"
+#include "DD4hep/Segmentations.h"
 
 
 DECLARE_COMPONENT(SimG4SaveCalHits)
