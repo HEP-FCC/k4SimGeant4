@@ -11,7 +11,7 @@
 #include "edm4hep/MCParticleCollection.h"
 
 // DD4hep
-#include "DDG4/Geant4Hits.h"
+#include "DD4hep/Segmentations.h"
 
 DECLARE_COMPONENT(SimG4SmearGenParticles)
 
@@ -26,10 +26,10 @@ StatusCode SimG4SmearGenParticles::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   // Use smearing tool                                                                                                                                                                                     
   if (!m_smearTool.retrieve()) {
-    info() << "Generated particels will not be smeared!!!" << endmsg;
+    info() << "Generated particles will not be smeared!!!" << endmsg;
     return StatusCode::SUCCESS;
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode SimG4SmearGenParticles::execute() {

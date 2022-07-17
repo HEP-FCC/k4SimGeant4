@@ -26,7 +26,7 @@ public:
   /** Get the physics list.
    *  @return pointer to G4VModularPhysicsList (ownership is transferred to the caller)
    */
-  virtual G4VModularPhysicsList* physicsList();
+  virtual G4VModularPhysicsList* physicsList() override final;
 
 };
 
