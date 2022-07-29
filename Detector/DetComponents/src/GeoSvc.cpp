@@ -53,8 +53,9 @@ StatusCode GeoSvc::buildDD4HepGeo() {
     info() << "loading geometry from file:  '" << filename << "'" << endmsg;
     m_dd4hepgeo->fromCompact(filename);
   }
-  m_dd4hepgeo->volumeManager();
-  m_dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
+  if(not m_dd4hepgeo->volumeManager().isValid()) {
+    m_dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
+  }
 
   return StatusCode::SUCCESS;
 }
