@@ -76,7 +76,9 @@ G4VPhysicalVolume* GeoConstruction::Construct() {
   g4map.attach(geo_info);
   // All volumes are deleted in ~G4PhysicalVolumeStore()
   G4VPhysicalVolume* m_world = geo_info->world();
-  m_lcdd.apply("DD4hepVolumeManager", 0, 0);
+  if(not m_lcdd.volumeManager().isValid()) {
+    m_lcdd.apply("DD4hepVolumeManager", 0, 0);
+  }
   // Create Geant4 volume manager
   g4map.volumeManager();
   return m_world;
