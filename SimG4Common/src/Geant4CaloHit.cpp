@@ -10,7 +10,7 @@ Geant4CaloHit::~Geant4CaloHit() {}
 // Default Constructor
 Geant4CaloHit::Geant4CaloHit() {}
 // Constructor setting some members
-Geant4CaloHit::Geant4CaloHit(unsigned int aTrackId, unsigned int aPdgId, double aEnergyDeposit, double aTime)
+Geant4CaloHit::Geant4CaloHit(unsigned int aTrackId, int aPdgId, double aEnergyDeposit, double aTime)
     : trackId(aTrackId), pdgId(aPdgId), energyDeposit(aEnergyDeposit), time(aTime) {}
 
 // comparison operator

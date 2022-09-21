@@ -20,7 +20,7 @@ public:
   /// Default constructor
   Geant4CaloHit();
   /// Constructor setting some members
-  Geant4CaloHit(unsigned int aTrackId, unsigned int aPdgId, double aEnergyDeposit, double aTime);
+  Geant4CaloHit(unsigned int aTrackId, int aPdgId, double aEnergyDeposit, double aTime);
   // Destructor
   virtual ~Geant4CaloHit();
 

@@ -27,7 +27,7 @@ public:
   /// Default constructor
   Geant4PreDigiTrackHit();
   /// Constructor setting some members
-  Geant4PreDigiTrackHit(unsigned int aTrackId, unsigned int aPdgId, double aEnergyDeposit, double aTime);
+  Geant4PreDigiTrackHit(unsigned int aTrackId, int aPdgId, double aEnergyDeposit, double aTime);
   // Destructor
   virtual ~Geant4PreDigiTrackHit();
 
