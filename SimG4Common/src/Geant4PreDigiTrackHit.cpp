@@ -10,7 +10,7 @@ Geant4PreDigiTrackHit::~Geant4PreDigiTrackHit() {}
 // Default Constructor
 Geant4PreDigiTrackHit::Geant4PreDigiTrackHit() {}
 // Constructor setting some members
-Geant4PreDigiTrackHit::Geant4PreDigiTrackHit(unsigned int aTrackId, unsigned int aPdgId, double aEnergyDeposit,
+Geant4PreDigiTrackHit::Geant4PreDigiTrackHit(unsigned int aTrackId, int aPdgId, double aEnergyDeposit,
                                              double aTime)
     : trackId(aTrackId), pdgId(aPdgId), energyDeposit(aEnergyDeposit), time(aTime) {}
 
