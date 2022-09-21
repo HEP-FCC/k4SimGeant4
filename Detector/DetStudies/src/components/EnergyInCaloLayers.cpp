@@ -7,16 +7,6 @@
 #include "edm4hep/CalorimeterHitCollection.h"
 #include "edm4hep/MCParticleCollection.h"
 
-// Gaudi
-// #include "CLHEP/Vector/ThreeVector.h"
-// #include "GaudiKernel/GaudiException.h"
-
-// ROOT
-// #include "TH1F.h"
-// #include "TH2F.h"
-// #include "TGraph.h"
-// #include "TVector2.h"
-
 // DD4hep
 #include "DD4hep/Detector.h"
 #include "DD4hep/Readout.h"

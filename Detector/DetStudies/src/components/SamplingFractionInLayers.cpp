@@ -6,7 +6,6 @@
 // datamodel
 #include "edm4hep/SimCalorimeterHitCollection.h"
 
-#include "CLHEP/Vector/ThreeVector.h"
 #include "GaudiKernel/ITHistSvc.h"
 #include "TH1F.h"
 #include "TVector2.h"
