@@ -45,6 +45,8 @@ class SimG4CrossingAngleBoost : public GaudiAlgorithm {
   DataHandle<edm4hep::MCParticleCollection> m_inParticles{"InParticles", Gaudi::DataHandle::Reader, this};
   /// Handle for the particles to be written
   DataHandle<edm4hep::MCParticleCollection> m_outParticles{"OutParticles", Gaudi::DataHandle::Writer, this};
+  /// Value of the crossing angle in radians
+  Gaudi::Property<double> m_alpha{this, "CrossingAngle", 0., "Crossing angle (alpha) in radians"};
 };
 
 #endif /* SIMG4COMPONENTS_CROSSINGANGLEBOOST_H */
