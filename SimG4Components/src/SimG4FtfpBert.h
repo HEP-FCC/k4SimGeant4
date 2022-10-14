@@ -29,6 +29,8 @@ public:
    *  @return pointer to G4VModularPhysicsList (ownership is transferred to the caller)
    */
   virtual G4VModularPhysicsList* physicsList();
+private:
+  Gaudi::Property<int> m_G4PhysicsVerbosityLevel{this, "G4PhysicsVerbosityLevel", 0, "Verbosity of G4 Physics printouts. 0: no printouts. 1: Verbose Printouts"};
 };
 
 #endif /* SIMG4COMPONENTS_G4FTFPBERT_H */
