@@ -15,6 +15,7 @@ gaudi_add_module(DetComponents
                       ROOT::Hist
                       DD4hep::DDCore
                       DD4hep::DDG4
+                      DD4hep::DDRec
                 )
 
 install(TARGETS DetComponents
