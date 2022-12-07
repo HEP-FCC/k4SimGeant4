@@ -34,13 +34,12 @@ StatusCode SimG4CrossingAngleBoost::initialize() {
   StatusCode sc;
 
   if (m_alpha != 0.) {
-    debug() << "Boosting particle according to crossing angle alpha = "
+    debug() << "Boosting particle according to the crossing angle alpha = "
             << m_alpha << "rad" << endmsg;
     sc = GaudiAlgorithm::initialize();
   } else {
-    error() << "Crossing angle alpha = " << m_alpha.value() << "." << endmsg;
-    error() << "There is no need to run this Algorithm." << endmsg;
-    sc = StatusCode::FAILURE;
+    warning() << "Crossing angle alpha = " << m_alpha.value() << " rad." << endmsg;
+    warning() << "There is no need to run this algorithm." << endmsg;
   }
 
   return sc;
