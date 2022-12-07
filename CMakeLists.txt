@@ -11,6 +11,7 @@ find_package(k4FWCore)
 find_package(EDM4HEP)
 find_package(Geant4)
 find_package(DD4hep)
+find_package(CLHEP)
 #---------------------------------------------------------------
 
 include(GNUInstallDirs)
