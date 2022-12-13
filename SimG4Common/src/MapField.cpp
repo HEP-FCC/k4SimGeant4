@@ -3,6 +3,14 @@
 // Geant 4
 #include "G4SystemOfUnits.hh"
 
+/**
+ * Field map loaded from 6 std::vectors
+ * Inspiration:
+ *   https://github.com/iLCSoft/lcgeo/blob/master/detector/other/FieldMapXYZ.cpp
+ *   https://gitlab.cern.ch/geant4/geant4/-/blob/master/examples/advanced/purging_magnet/src/PurgMagTabulatedField3D.cc
+ */
+
+
 namespace sim {
   MapField::MapField(const std::vector<double>& bX,
                      const std::vector<double>& bY,
@@ -180,7 +188,7 @@ namespace sim {
         m_fieldZ[indexX+1][indexY+1][indexZ  ] *    localX  *    localY  * (1-localZ) +
         m_fieldZ[indexX+1][indexY+1][indexZ+1] *    localX  *    localY  *    localZ;
 
-      //std::cout << "Bx, By, Bz: " << bField[0] << " " << bField[1] << " " << bField[2] << "\n";
+      // std::cout << "Bx, By, Bz: " << bField[0] << " " << bField[1] << " " << bField[2] << "\n";
 
     } else {
       bField[0] = 0.;
