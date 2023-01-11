@@ -5,6 +5,7 @@
 #include "SimG4Common/MapField.h"
 
 // ROOT
+#include "TSystem.h"
 #include "TFile.h"
 #include "TTree.h"
 
@@ -51,6 +52,12 @@ StatusCode SimG4MagneticFieldFromMapTool::initialize() {
       return StatusCode::FAILURE;
     }
 
+    if(gSystem->AccessPathName(m_mapFilePath.value().c_str())) {
+      error() << "Fieldmap file does not exist!" << endmsg;
+      error() << "    " << m_mapFilePath.value() << endmsg;
+      return StatusCode::FAILURE;
+    }
+
     std::unique_ptr<TFile> inFile(TFile::Open(m_mapFilePath.value().c_str(), "READ"));
     if (inFile->IsZombie()) {
       error() << "Can't open the file with fieldmap!" << endmsg;
@@ -83,7 +90,7 @@ StatusCode SimG4MagneticFieldFromMapTool::initialize() {
     debug() << "Loaded map with " << m_fieldPositionX.size() << " datapoints."
             << endmsg;
     if (m_fieldComponentX.size() < 1) {
-      error() << "No datapoints loaded!" << endmsg;
+      error() << "No mapfield datapoints loaded!" << endmsg;
     }
 
     m_field = new sim::MapField(m_fieldComponentX,
