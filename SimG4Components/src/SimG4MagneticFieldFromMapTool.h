@@ -52,7 +52,7 @@ public:
 
 private:
   /// Pointer to the actual Geant4 magnetic field
-  sim::MapField* m_field;
+  sim::MapField* m_field = nullptr;
   /// Switch to turn field on or off (default is off). Set with property FieldOn
   Gaudi::Property<bool> m_fieldOn{this, "FieldOn", false, "Switch to turn field off"};
   /// Minimum epsilon (relative error of position / momentum, see G4 doc for more details). Set with property
@@ -75,18 +75,10 @@ private:
   /// Path to the input file containing fieldmap
   Gaudi::Property<std::string> m_mapFilePath{this, "MapFile", "", "Path to file containing fieldmap"};
 
-  /// Field component in X direction.
-  std::vector<double> m_fieldComponentX;
-  /// Field component in Y direction.
-  std::vector<double> m_fieldComponentY;
-  /// Field component in Z direction.
-  std::vector<double> m_fieldComponentZ;
-  /// Position in X direction.
-  std::vector<double> m_fieldPositionX;
-  /// Position in Y direction.
-  std::vector<double> m_fieldPositionY;
-  /// Position in Z direction.
-  std::vector<double> m_fieldPositionZ;
+  /// Load map from the ROOT file
+  StatusCode loadRootMap();
+  /// Load map from the COMSOL export file
+  StatusCode loadComsolMap();
 };
 
 #endif
