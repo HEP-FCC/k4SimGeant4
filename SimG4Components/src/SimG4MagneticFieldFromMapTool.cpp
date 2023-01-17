@@ -1,8 +1,13 @@
 // local
 #include "SimG4MagneticFieldFromMapTool.h"
 
+// STD
+#include <string>
+#include <fstream>
+
 // FCCSW
-#include "SimG4Common/MapField.h"
+#include "SimG4Common/MapField3DRegular.h"
+#include "SimG4Common/MapField2DRegular.h"
 
 // ROOT
 #include "TSystem.h"
@@ -44,7 +49,7 @@ StatusCode SimG4MagneticFieldFromMapTool::initialize() {
     return sc;
   }
 
-  if (m_fieldOn) {
+  if (!m_fieldOn) {
     return StatusCode::SUCCESS;
   }
 
@@ -135,6 +140,7 @@ StatusCode SimG4MagneticFieldFromMapTool::loadRootMap() {
   std::unique_ptr<TFile> inFile(TFile::Open(m_mapFilePath.value().c_str(), "READ"));
   if (inFile->IsZombie()) {
     error() << "Can't open the file with fieldmap!" << endmsg;
+    error() << "    " << m_mapFilePath.value() << endmsg;
     return StatusCode::FAILURE;
   } else {
     debug() << "Loading magnetic field map from file: " << endmsg;
@@ -151,41 +157,119 @@ StatusCode SimG4MagneticFieldFromMapTool::loadRootMap() {
   inTree->SetBranchAddress("By", &by);
   inTree->SetBranchAddress("Bz", &bz);
 
-  std::vector<double> m_fieldComponentX;
-  std::vector<double> m_fieldComponentY;
-  std::vector<double> m_fieldComponentZ;
-  std::vector<double> m_fieldPositionX;
-  std::vector<double> m_fieldPositionY;
-  std::vector<double> m_fieldPositionZ;
+  std::vector<double> fieldComponentX;
+  std::vector<double> fieldComponentY;
+  std::vector<double> fieldComponentZ;
+  std::vector<double> fieldPositionX;
+  std::vector<double> fieldPositionY;
+  std::vector<double> fieldPositionZ;
 
   int nEntries = inTree->GetEntries();
   for (int i = 0; i < nEntries; ++i) {
     inTree->GetEntry(i);
-    m_fieldPositionX.emplace_back(x);
-    m_fieldPositionY.emplace_back(y);
-    m_fieldPositionZ.emplace_back(z);
-    m_fieldComponentX.emplace_back(bx);
-    m_fieldComponentY.emplace_back(by);
-    m_fieldComponentZ.emplace_back(bz);
+    fieldPositionX.emplace_back(x * millimeter);
+    fieldPositionY.emplace_back(y * millimeter);
+    fieldPositionZ.emplace_back(z * millimeter);
+    fieldComponentX.emplace_back(bx * tesla);
+    fieldComponentY.emplace_back(by * tesla);
+    fieldComponentZ.emplace_back(bz * tesla);
   }
-  debug() << "Loaded map with " << m_fieldPositionX.size() << " datapoints."
+  debug() << "Loaded map with " << fieldPositionX.size() << " nodes."
           << endmsg;
-  if (m_fieldComponentX.size() < 1) {
-    error() << "No mapfield datapoints loaded!" << endmsg;
+  if (fieldComponentX.size() < 1) {
+    error() << "Could not load any mapfield nodes!" << endmsg;
   }
 
-  m_field = new sim::MapField(m_fieldComponentX,
-                              m_fieldComponentY,
-                              m_fieldComponentZ,
-                              m_fieldPositionX,
-                              m_fieldPositionY,
-                              m_fieldPositionZ);
+  m_field = new sim::MapField3DRegular(fieldComponentX,
+                                       fieldComponentY,
+                                       fieldComponentZ,
+                                       fieldPositionX,
+                                       fieldPositionY,
+                                       fieldPositionZ);
 
   return StatusCode::SUCCESS;
 }
 
 
 StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
+  std::ifstream inFile;
+  inFile.open(m_mapFilePath.value());
+
+  if (!inFile.is_open()) {
+    error() << "Can't open the file with fieldmap!" << endmsg;
+    error() << "    " << m_mapFilePath.value() << endmsg;
+    return StatusCode::FAILURE;
+  }
+  debug() << "Loading magnetic field map from file: " << endmsg;
+  debug() << "    " << m_mapFilePath.value() << endmsg;
+
+  std::string inLine;
+  size_t nLinesExpected;
+  std::vector<double> fieldPositionR;
+  std::vector<double> fieldPositionZ;
+  std::vector<double> fieldComponentR;
+  std::vector<double> fieldComponentZ;
+  while(getline(inFile, inLine)) {
+    if (inLine.empty()) {
+      continue;
+    }
+
+    std::istringstream inLineStream(inLine);
+
+    inLineStream >> std::ws;
+    char c = inLineStream.peek();
+    if (c == '%') {
+      inLineStream.get();
+      std::string key, val;
+      inLineStream >> key >> val;
+      if (key == "Dimension:") {
+        int nDim = std::stoi(val);
+        if (nDim != 2) {
+          error() << "Expected 2D map, got map with " << val << " dimensions!"
+                  << endmsg;
+          return StatusCode::FAILURE;
+        }
+      }
+      if (key == "Nodes:") {
+        nLinesExpected = std::stoi(val);
+      }
+      continue;
+    }
+    // debug() << nLines << ": " << inLine << endmsg;
+
+    double r, z, Br, Bphi, Bz, normB;
+    inLineStream >> r >> z >> Br >> Bphi >> Bz >> normB;
+    /*
+    r *= 100;
+    r = std::round(r);
+    r /= 100;
+    z *= 1000;
+    z = std::round(z);
+    z /= 1000;
+    */
+    fieldPositionR.emplace_back(r * meter);
+    fieldPositionZ.emplace_back(z * meter);
+    fieldComponentR.emplace_back(Br * tesla);
+    fieldComponentZ.emplace_back(Bz * tesla);
+  }
+
+  if (fieldPositionR.size() != nLinesExpected) {
+    error() << "Expected " << nLinesExpected << " nodes, got: "
+            << fieldPositionR.size() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  inFile.close();
+
+  debug() << "Loaded map with " << fieldPositionR.size() << " nodes." << endmsg;
+  if (fieldComponentR.size() < 1) {
+    error() << "Could not load any mapfield nodes!" << endmsg;
+  }
+
+  m_field = new sim::MapField2DRegular(fieldComponentR,
+                                       fieldComponentZ,
+                                       fieldPositionR,
+                                       fieldPositionZ);
 
   return StatusCode::SUCCESS;
 }

@@ -9,15 +9,18 @@
 
 // Geant4
 #include "G4SystemOfUnits.hh"
+#include "G4MagneticField.hh"
 
 // Forward declarations:
 // Geant 4 classes
 class G4MagIntegratorStepper;
 
 // FCCSW
+/*
 namespace sim {
   class MapField;
 }
+*/
 
 /** @class SimG4MagneticFieldFromMapTool SimG4Components/src/SimG4MagneticFieldFromMapTool.h
 * SimG4MagneticFieldFromMapTool.h
@@ -52,7 +55,7 @@ public:
 
 private:
   /// Pointer to the actual Geant4 magnetic field
-  sim::MapField* m_field = nullptr;
+  G4MagneticField* m_field = nullptr;
   /// Switch to turn field on or off (default is off). Set with property FieldOn
   Gaudi::Property<bool> m_fieldOn{this, "FieldOn", false, "Switch to turn field off"};
   /// Minimum epsilon (relative error of position / momentum, see G4 doc for more details). Set with property

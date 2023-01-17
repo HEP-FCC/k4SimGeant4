@@ -1,10 +1,11 @@
-#include "SimG4Common/MapField.h"
+#include "SimG4Common/MapField3DRegular.h"
 
 // Geant 4
 #include "G4SystemOfUnits.hh"
 
 /**
- * Field map loaded from 6 std::vectors
+ * Field map loaded from 6 std::vectors.
+ * Expects nodes to be at the corners of the "boxes".
  * Inspiration:
  *   https://github.com/iLCSoft/lcgeo/blob/master/detector/other/FieldMapXYZ.cpp
  *   https://gitlab.cern.ch/geant4/geant4/-/blob/master/examples/advanced/purging_magnet/src/PurgMagTabulatedField3D.cc
@@ -12,12 +13,12 @@
 
 
 namespace sim {
-  MapField::MapField(const std::vector<double>& bX,
-                     const std::vector<double>& bY,
-                     const std::vector<double>& bZ,
-                     const std::vector<double>& posX,
-                     const std::vector<double>& posY,
-                     const std::vector<double>& posZ) {
+  MapField3DRegular::MapField3DRegular(const std::vector<double>& bX,
+                                       const std::vector<double>& bY,
+                                       const std::vector<double>& bZ,
+                                       const std::vector<double>& posX,
+                                       const std::vector<double>& posY,
+                                       const std::vector<double>& posZ) {
     // Finding the extend of the map
     m_maxX = *max_element(posX.begin(), posX.end());
     m_minX = *min_element(posX.begin(), posX.end());
@@ -68,7 +69,7 @@ namespace sim {
       }
     }
 
-    // Determining number of datapoints on each axis
+    // Determining number of nodes on each axis
     m_nX = std::round(((m_maxX - m_minX) / stepX) + 1);
     m_nY = std::round(((m_maxY - m_minY) / stepY) + 1);
     m_nZ = std::round(((m_maxZ - m_minZ) / stepZ) + 1);
@@ -119,7 +120,7 @@ namespace sim {
     }
   }
 
-  void MapField::GetFieldValue(const G4double point[4], double* bField) const {
+  void MapField3DRegular::GetFieldValue(const G4double point[4], double* bField) const {
     double x = point[0];
     double y = point[1];
     double z = point[2];
