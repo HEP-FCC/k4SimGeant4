@@ -167,6 +167,12 @@ StatusCode SimG4MagneticFieldFromMapTool::loadRootMap() {
   int nEntries = inTree->GetEntries();
   for (int i = 0; i < nEntries; ++i) {
     inTree->GetEntry(i);
+
+    double r = std::sqrt(std::pow(x, 2) + std::pow(y, 2));
+    if (m_addFieldMaxR.value() > 0 && r < m_addFieldMaxR.value()) {
+      bz += m_addFieldBz.value();
+    }
+
     fieldPositionX.emplace_back(x * millimeter);
     fieldPositionY.emplace_back(y * millimeter);
     fieldPositionZ.emplace_back(z * millimeter);
@@ -247,6 +253,11 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
     z = std::round(z);
     z /= 1000;
     */
+
+    if (m_addFieldMaxR.value() > 0 && r < m_addFieldMaxR.value()) {
+      Bz += m_addFieldBz.value();
+    }
+
     fieldPositionR.emplace_back(r * meter);
     fieldPositionZ.emplace_back(z * meter);
     fieldComponentR.emplace_back(Br * tesla);
