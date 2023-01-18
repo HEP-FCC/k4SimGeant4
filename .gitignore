@@ -27,6 +27,7 @@ QMTest/
 InstallArea/
 patches/
 test_results/
+testfield.txt
 
 *-slc[56]-*/
 i686-winxp-vc9-dbg/
