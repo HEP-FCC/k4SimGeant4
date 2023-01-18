@@ -168,17 +168,25 @@ StatusCode SimG4MagneticFieldFromMapTool::loadRootMap() {
   for (int i = 0; i < nEntries; ++i) {
     inTree->GetEntry(i);
 
+    // Apply units
+    x *= millimeter;
+    y *= millimeter;
+    z *= millimeter;
+    bx *= tesla;
+    by *= tesla;
+    bz *= tesla;
+
     double r = std::sqrt(std::pow(x, 2) + std::pow(y, 2));
     if (m_addFieldMaxR.value() > 0 && r < m_addFieldMaxR.value()) {
       bz += m_addFieldBz.value();
     }
 
-    fieldPositionX.emplace_back(x * millimeter);
-    fieldPositionY.emplace_back(y * millimeter);
-    fieldPositionZ.emplace_back(z * millimeter);
-    fieldComponentX.emplace_back(bx * tesla);
-    fieldComponentY.emplace_back(by * tesla);
-    fieldComponentZ.emplace_back(bz * tesla);
+    fieldPositionX.emplace_back(x);
+    fieldPositionY.emplace_back(y);
+    fieldPositionZ.emplace_back(z);
+    fieldComponentX.emplace_back(bx);
+    fieldComponentY.emplace_back(by);
+    fieldComponentZ.emplace_back(bz);
   }
   debug() << "Loaded map with " << fieldPositionX.size() << " nodes."
           << endmsg;
@@ -245,23 +253,21 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
 
     double r, z, Br, Bphi, Bz, normB;
     inLineStream >> r >> z >> Br >> Bphi >> Bz >> normB;
-    /*
-    r *= 100;
-    r = std::round(r);
-    r /= 100;
-    z *= 1000;
-    z = std::round(z);
-    z /= 1000;
-    */
+
+    // Applying units
+    r *= meter;
+    z *= meter;
+    Br *= tesla;
+    Bz *= tesla;
 
     if (m_addFieldMaxR.value() > 0 && r < m_addFieldMaxR.value()) {
       Bz += m_addFieldBz.value();
     }
 
-    fieldPositionR.emplace_back(r * meter);
-    fieldPositionZ.emplace_back(z * meter);
-    fieldComponentR.emplace_back(Br * tesla);
-    fieldComponentZ.emplace_back(Bz * tesla);
+    fieldPositionR.emplace_back(r);
+    fieldPositionZ.emplace_back(z);
+    fieldComponentR.emplace_back(Br);
+    fieldComponentZ.emplace_back(Bz);
   }
 
   if (fieldPositionR.size() != nLinesExpected) {

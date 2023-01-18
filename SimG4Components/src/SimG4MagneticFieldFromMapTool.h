@@ -78,9 +78,9 @@ private:
   /// Path to the input file containing fieldmap
   Gaudi::Property<std::string> m_mapFilePath{this, "MapFile", "", "Path to file containing fieldmap"};
   /// Additional constant field, z component (spans whole z range of the map)
-  Gaudi::Property<double> m_addFieldBz{this, "AddFieldBz", 0., "Additional constant field, z component [T]"};
+  Gaudi::Property<double> m_addFieldBz{this, "AddFieldBz", 0., "Additional constant field, z component"};
   /// Maximum radius of the additional constant field (default: no limit)
-  Gaudi::Property<double> m_addFieldMaxR{this, "AddFieldMaxR", -1., "Maximum radius of additional constant field [mm] (default: no limit)"};
+  Gaudi::Property<double> m_addFieldMaxR{this, "AddFieldMaxR", -1., "Maximum radius of additional constant field (default: no limit)"};
 
   /// Load map from the ROOT file
   StatusCode loadRootMap();
