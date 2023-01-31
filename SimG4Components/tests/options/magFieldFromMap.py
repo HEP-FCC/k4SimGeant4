@@ -73,10 +73,6 @@ hepmc_converter.GenParticles.Path = "GenParticles"
 ApplicationMgr().TopAlg += [hepmc_converter]
 
 
-
-
-
-
 from Configurables import SimG4CrossingAngleBoost
 xAngleBoost = SimG4CrossingAngleBoost('xAngleBoost')
 xAngleBoost.InParticles = 'GenParticles'
