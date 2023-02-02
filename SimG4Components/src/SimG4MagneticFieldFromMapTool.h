@@ -71,16 +71,22 @@ private:
   Gaudi::Property<double> m_deltaOneStep{this, "DeltaOneStep", 0, "Delta(one-step)"};
   /// Upper limit of the step size, see G4 doc for more details. Set with property MaximumStep
   Gaudi::Property<double> m_maxStep{this, "MaximumStep", 1. * m, "Maximum step length in field (see G4 documentation)"};
-  /// Lower limit of the step size, see G4 doc for more details. Set with property MaximumStep
-  Gaudi::Property<double> m_minStep{this, "MinimumStep", 0.01 * mm, "Maximum step length in field (see G4 documentation)"};
+  /// Lower limit of the step size, see G4 doc for more details. Set with property MinimumStep
+  Gaudi::Property<double> m_minStep{this, "MinimumStep", 0.01 * mm, "Minimum step length in field (see G4 documentation)"};
   /// Name of the integration stepper, defaults to NystromRK4.
   Gaudi::Property<std::string> m_integratorStepper{this, "IntegratorStepper", "NystromRK4", "Integrator stepper name"};
   /// Path to the input file containing fieldmap
   Gaudi::Property<std::string> m_mapFilePath{this, "MapFile", "", "Path to file containing fieldmap"};
   /// Additional constant field, z component (spans whole z range of the map)
-  Gaudi::Property<double> m_addFieldBz{this, "AddFieldBz", 0., "Additional constant field, z component"};
+  Gaudi::Property<double> m_addFieldBz{this, "AddFieldBz", 0., "Additional constant field, z component (default: 0.)"};
   /// Maximum radius of the additional constant field (default: no limit)
   Gaudi::Property<double> m_addFieldMaxR{this, "AddFieldMaxR", -1., "Maximum radius of additional constant field (default: no limit)"};
+  /// Maximum z coordinate of the additional constant field (default: no limit)
+  Gaudi::Property<double> m_addFieldMaxZ{this, "AddFieldMaxZ", -1., "Maximum z coordinate of additional constant field (default: no limit)"};
+  /// Maximum field radius (default: no limit)
+  Gaudi::Property<double> m_fieldMaxR{this, "FieldMaxR", -1., "Field maximum radius (default: no limit)"};
+  /// Maximum field z coordinate (default: no limit)
+  Gaudi::Property<double> m_fieldMaxZ{this, "FieldMaxZ", -1., "Field maximum z coordinate (default: no limit)"};
 
   /// Load map from the ROOT file
   StatusCode loadRootMap();

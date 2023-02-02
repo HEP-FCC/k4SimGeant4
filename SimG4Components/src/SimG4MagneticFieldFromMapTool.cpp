@@ -76,6 +76,7 @@ StatusCode SimG4MagneticFieldFromMapTool::initialize() {
     }
   } else {
     error() << "Fieldmap file extension not recognized!" << endmsg;
+    error() << "    Allowed file extensions: '.root', '.txt'" << endmsg;
     error() << "    " << m_mapFilePath.value() << endmsg;
     return StatusCode::FAILURE;
   }
@@ -98,6 +99,26 @@ StatusCode SimG4MagneticFieldFromMapTool::initialize() {
   if (m_deltaOneStep > 0) fieldManager->SetDeltaOneStep(m_deltaOneStep);
   if (m_minEps > 0) fieldManager->SetMinimumEpsilonStep(m_minEps);
   if (m_maxEps > 0) fieldManager->SetMaximumEpsilonStep(m_maxEps);
+
+  if (m_fieldMaxR >= 0) {
+    debug() << "Using cut on maximal R of the field from fieldmap: "
+            << m_fieldMaxR << " mm" << endmsg;
+  }
+
+  if (m_fieldMaxZ >= 0) {
+    debug() << "Using cut on maximal z coordinate of the field from fieldmap: "
+            << m_fieldMaxZ << " mm" << endmsg;
+  }
+
+  if (m_addFieldMaxR >= 0) {
+    debug() << "Using cut on maximal R of the additional constant field: "
+            << m_addFieldMaxR << " mm" << endmsg;
+  }
+
+  if (m_addFieldMaxZ >= 0) {
+    debug() << "Using cut on maximal z coordinate of the additional constant field: "
+            << m_addFieldMaxZ << " mm" << endmsg;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -176,8 +197,33 @@ StatusCode SimG4MagneticFieldFromMapTool::loadRootMap() {
     by *= tesla;
     bz *= tesla;
 
+    if (m_fieldMaxR.value() > 0 && abs(x) > m_fieldMaxR.value()) {
+      continue;
+    }
+
+    if (m_fieldMaxR.value() > 0 && abs(y) > m_fieldMaxR.value()) {
+      continue;
+    }
+
+    if (m_fieldMaxZ.value() > 0 && abs(z) > m_fieldMaxZ.value()) {
+      continue;
+    }
+
     double r = std::sqrt(std::pow(x, 2) + std::pow(y, 2));
-    if (m_addFieldMaxR.value() > 0 && r < m_addFieldMaxR.value()) {
+
+    if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() > 0) {
+      if(r < m_addFieldMaxR.value() && abs(z) < m_addFieldMaxZ.value()) {
+        bz += m_addFieldBz.value();
+      }
+    } else if (m_addFieldMaxR.value() <= 0 && m_addFieldMaxZ.value() > 0) {
+      if (abs(z) < m_addFieldMaxZ.value()) {
+        bz += m_addFieldBz.value();
+      }
+    } else if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() <= 0) {
+      if (r < m_addFieldMaxR.value()) {
+        bz += m_addFieldBz.value();
+      }
+    } else {
       bz += m_addFieldBz.value();
     }
 
@@ -218,6 +264,7 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
   debug() << "    " << m_mapFilePath.value() << endmsg;
 
   std::string inLine;
+  size_t nLines = 0;
   size_t nLinesExpected;
   std::vector<double> fieldPositionR;
   std::vector<double> fieldPositionZ;
@@ -253,6 +300,7 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
 
     double r, z, Br, Bphi, Bz, normB;
     inLineStream >> r >> z >> Br >> Bphi >> Bz >> normB;
+    nLines++;
 
     // Applying units
     r *= meter;
@@ -260,7 +308,27 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
     Br *= tesla;
     Bz *= tesla;
 
-    if (m_addFieldMaxR.value() > 0 && r < m_addFieldMaxR.value()) {
+    if (m_fieldMaxR.value() > 0 && r > m_fieldMaxR.value()) {
+      continue;
+    }
+
+    if (m_fieldMaxZ.value() > 0 && abs(z) > m_fieldMaxZ.value()) {
+      continue;
+    }
+
+    if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() > 0) {
+      if(r < m_addFieldMaxR.value() && abs(z) < m_addFieldMaxZ.value()) {
+        Bz += m_addFieldBz.value();
+      }
+    } else if (m_addFieldMaxR.value() <= 0 && m_addFieldMaxZ.value() > 0) {
+      if (abs(z) < m_addFieldMaxZ.value()) {
+        Bz += m_addFieldBz.value();
+      }
+    } else if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() <= 0) {
+      if (r < m_addFieldMaxR.value()) {
+        Bz += m_addFieldBz.value();
+      }
+    } else {
       Bz += m_addFieldBz.value();
     }
 
@@ -270,9 +338,9 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
     fieldComponentZ.emplace_back(Bz);
   }
 
-  if (fieldPositionR.size() != nLinesExpected) {
-    error() << "Expected " << nLinesExpected << " nodes, got: "
-            << fieldPositionR.size() << endmsg;
+  if (nLines != nLinesExpected) {
+    error() << "Expected " << nLinesExpected << " nodes, found: "
+            << nLines << endmsg;
     return StatusCode::FAILURE;
   }
 

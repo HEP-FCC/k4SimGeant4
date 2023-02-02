@@ -21,16 +21,20 @@ namespace sim {
     m_maxR = *max_element(posR.begin(), posR.end());
     m_minR = *min_element(posR.begin(), posR.end());
     m_widthR = m_maxR - m_minR;
-    std::cout << "minR: " << m_minR << "\n";
-    std::cout << "maxR: " << m_maxR << "\n";
-    std::cout << "widthR: " << m_widthR << "\n";
 
     m_maxZ = *max_element(posZ.begin(), posZ.end());
     m_minZ = *min_element(posZ.begin(), posZ.end());
     m_widthZ = m_maxZ - m_minZ;
+
+    /*
+    std::cout << "minR: " << m_minR << "\n";
+    std::cout << "maxR: " << m_maxR << "\n";
+    std::cout << "widthR: " << m_widthR << "\n";
+
     std::cout << "minZ: " << m_minZ << "\n";
     std::cout << "maxZ: " << m_maxZ << "\n";
     std::cout << "widthZ: " << m_widthZ << "\n";
+    */
 
     // Guessing the step size of the map
     double stepR = -1.;
@@ -52,11 +56,13 @@ namespace sim {
     m_nR = std::round(((m_maxR - m_minR) / stepR) + 1);
     m_nZ = std::round(((m_maxZ - m_minZ) / stepZ) + 1);
 
+    /*
     std::cout << "r Step: " << stepR << "\n";
     std::cout << "z Step: " << stepZ << "\n";
 
     std::cout << "n pos R: " << m_nR << "\n";
     std::cout << "n pos Z: " << m_nZ << "\n";
+    */
 
     // Preparing the map with all zeroes
     m_fieldR.resize(m_nR);
