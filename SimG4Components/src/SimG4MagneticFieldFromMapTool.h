@@ -1,5 +1,5 @@
-#ifndef SIMG4COMPONENTS_G4CONSTANTMAGNETICFIELDTOOL_H
-#define SIMG4COMPONENTS_G4CONSTANTMAGNETICFIELDTOOL_H
+#ifndef SIMG4COMPONENTS_G4MAGNETICFIELDFROMMAPTOOL_H
+#define SIMG4COMPONENTS_G4MAGNETICFIELDFROMMAPTOOL_H
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -9,32 +9,35 @@
 
 // Geant4
 #include "G4SystemOfUnits.hh"
+#include "G4MagneticField.hh"
 
 // Forward declarations:
 // Geant 4 classes
 class G4MagIntegratorStepper;
 
 // FCCSW
+/*
 namespace sim {
-class ConstantField;
+  class MapField;
 }
-
-/** @class SimG4ConstantMagneticFieldTool SimG4Components/src/SimG4ConstantMagneticFieldTool.h
-* SimG4ConstantMagneticFieldTool.h
-*
-*  Implementation of ISimG4MagneticFieldTool that generates a constant field
-*
-*  @author Andrea Dell'Acqua
-*  @date   2016-02-22
 */
 
-class SimG4ConstantMagneticFieldTool : public GaudiTool, virtual public ISimG4MagneticFieldTool {
+/** @class SimG4MagneticFieldFromMapTool SimG4Components/src/SimG4MagneticFieldFromMapTool.h
+* SimG4MagneticFieldFromMapTool.h
+*
+*  Implementation of ISimG4MagneticFieldTool that generates field from fieldmap
+*
+*  @author Juraj Smiesko
+*  @date   2022-11-29
+*/
+
+class SimG4MagneticFieldFromMapTool : public GaudiTool, virtual public ISimG4MagneticFieldTool {
 public:
   /// Standard constructor
-  SimG4ConstantMagneticFieldTool(const std::string& type, const std::string& name, const IInterface* parent);
+  SimG4MagneticFieldFromMapTool(const std::string& type, const std::string& name, const IInterface* parent);
 
   /// Destructor
-  virtual ~SimG4ConstantMagneticFieldTool();
+  virtual ~SimG4MagneticFieldFromMapTool();
 
   /// Initialize method
   virtual StatusCode initialize() final;
@@ -51,8 +54,8 @@ public:
   G4MagIntegratorStepper* stepper(const std::string&, G4MagneticField*) const;
 
 private:
-  /// Pointer to the actual Geant 4 magnetic field
-  sim::ConstantField* m_field;
+  /// Pointer to the actual Geant4 magnetic field
+  G4MagneticField* m_field = nullptr;
   /// Switch to turn field on or off (default is off). Set with property FieldOn
   Gaudi::Property<bool> m_fieldOn{this, "FieldOn", false, "Switch to turn field off"};
   /// Minimum epsilon (relative error of position / momentum, see G4 doc for more details). Set with property
@@ -68,21 +71,27 @@ private:
   Gaudi::Property<double> m_deltaOneStep{this, "DeltaOneStep", 0, "Delta(one-step)"};
   /// Upper limit of the step size, see G4 doc for more details. Set with property MaximumStep
   Gaudi::Property<double> m_maxStep{this, "MaximumStep", 1. * m, "Maximum step length in field (see G4 documentation)"};
-  /// Lower limit of the step size, see G4 doc for more details. Set with property MaximumStep
+  /// Lower limit of the step size, see G4 doc for more details. Set with property MinimumStep
   Gaudi::Property<double> m_minStep{this, "MinimumStep", 0.01 * mm, "Minimum step length in field (see G4 documentation)"};
   /// Name of the integration stepper, defaults to NystromRK4.
   Gaudi::Property<std::string> m_integratorStepper{this, "IntegratorStepper", "NystromRK4", "Integrator stepper name"};
+  /// Path to the input file containing fieldmap
+  Gaudi::Property<std::string> m_mapFilePath{this, "MapFile", "", "Path to file containing fieldmap"};
+  /// Additional constant field, z component (spans whole z range of the map)
+  Gaudi::Property<double> m_addFieldBz{this, "AddFieldBz", 0., "Additional constant field, z component (default: 0.)"};
+  /// Maximum radius of the additional constant field (default: no limit)
+  Gaudi::Property<double> m_addFieldMaxR{this, "AddFieldMaxR", -1., "Maximum radius of additional constant field (default: no limit)"};
+  /// Maximum z coordinate of the additional constant field (default: no limit)
+  Gaudi::Property<double> m_addFieldMaxZ{this, "AddFieldMaxZ", -1., "Maximum z coordinate of additional constant field (default: no limit)"};
+  /// Maximum field radius (default: no limit)
+  Gaudi::Property<double> m_fieldMaxR{this, "FieldMaxR", -1., "Field maximum radius (default: no limit)"};
+  /// Maximum field z coordinate (default: no limit)
+  Gaudi::Property<double> m_fieldMaxZ{this, "FieldMaxZ", -1., "Field maximum z coordinate (default: no limit)"};
 
-  /// Field component in X direction. Set with property FieldComponentX
-  Gaudi::Property<double> m_fieldComponentX{this, "FieldComponentX", 0, "Field X component"};
-  /// Field component in Y direction. Set with property FieldComponentY
-  Gaudi::Property<double> m_fieldComponentY{this, "FieldComponentY", 0, "Field Y component"};
-  /// Field component in Z direction. Set with property FieldComponentZ
-  Gaudi::Property<double> m_fieldComponentZ{this, "FieldComponentZ", -4 * tesla, "Field Z component"};
-  /// Size of the field in radial direction. Set with property FieldRMax
-  Gaudi::Property<double> m_fieldRadMax{this, "FieldRMax", 6 * m, "Field max radius"};
-  /// Size of the field along the beam line. Set with property FieldZMax
-  Gaudi::Property<double> m_fieldZMax{this, "FieldZMax", 20. * m, "Field max Z"};
+  /// Load map from the ROOT file
+  StatusCode loadRootMap();
+  /// Load map from the COMSOL export file
+  StatusCode loadComsolMap();
 };
 
 #endif

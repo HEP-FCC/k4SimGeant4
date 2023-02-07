@@ -39,6 +39,12 @@ add_test(NAME CrossingAngleBoost
 )
 set_test_env(CrossingAngleBoost)
 
+add_test(NAME MagFieldFromMap
+         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+         COMMAND k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldFromMap.py
+)
+set_test_env(MagFieldFromMap)
+
 #gaudi_add_test(GeantFullSimGdml
 #               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 #               FRAMEWORK tests/options/geant_fullsim_gdml.py)
