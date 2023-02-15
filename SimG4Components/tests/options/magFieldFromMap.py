@@ -1,3 +1,5 @@
+import os
+
 testfile = open("testfield.txt", "w")
 testfile.write("% Dimension:          2\n")
 testfile.write("% Nodes:              3\n")
@@ -23,8 +25,7 @@ path_to_detectors = os.environ.get("FCCDETECTORS", "")
 detectors_to_use = [
     'Detector/DetFCCeeIDEA-LAr/compact/FCCee_DectMaster.xml',
 ]
-geoservice.detectors = [os.path.join(path_to_detectors, _det) for _det
-                        in detectors_to_use]
+geoservice.detectors = [os.path.join(path_to_detectors, _det) for _det in detectors_to_use]
 geoservice.OutputLevel = INFO
 ApplicationMgr().ExtSvc += [geoservice]
 
@@ -42,48 +43,3 @@ geantservice = SimG4Svc("SimG4Svc")
 geantservice.magneticField = field
 geantservice.OutputLevel = DEBUG
 ApplicationMgr().ExtSvc += [geantservice]
-
-
-from Configurables import k4DataSvc
-podioevent = k4DataSvc("EventDataSvc")
-ApplicationMgr().ExtSvc += [podioevent]
-
-
-from Configurables import MomentumRangeParticleGun
-guntool = MomentumRangeParticleGun()
-guntool.ThetaMin = 45 * constants.pi / 180.
-guntool.ThetaMax = 135 * constants.pi / 180.
-guntool.PhiMin = 0.
-guntool.PhiMax = 2. * constants.pi
-guntool.MomentumMin = 10. * units.GeV
-guntool.MomentumMax = 10. * units.GeV
-guntool.PdgCodes = [11]
-
-from Configurables import GenAlg
-gun = GenAlg()
-gun.SignalProvider = guntool
-gun.hepmc.Path = "hepmc"
-ApplicationMgr().TopAlg += [gun]
-
-
-from Configurables import HepMCToEDMConverter
-hepmc_converter = HepMCToEDMConverter()
-hepmc_converter.hepmc.Path = "hepmc"
-hepmc_converter.GenParticles.Path = "GenParticles"
-ApplicationMgr().TopAlg += [hepmc_converter]
-
-
-from Configurables import SimG4CrossingAngleBoost
-xAngleBoost = SimG4CrossingAngleBoost('xAngleBoost')
-xAngleBoost.InParticles = 'GenParticles'
-xAngleBoost.OutParticles = 'BoostedParticles'
-xAngleBoost.CrossingAngle = 0.015  # rad
-xAngleBoost.OutputLevel = DEBUG
-ApplicationMgr().TopAlg += [xAngleBoost]
-
-
-from Configurables import PodioOutput
-output = PodioOutput("output")
-output.filename = "output_xAngleBoost.root"
-output.outputCommands = ["keep *"]
-ApplicationMgr().TopAlg += [output]
