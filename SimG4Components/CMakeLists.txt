@@ -16,34 +16,15 @@ gaudi_add_module(SimG4Components
                       CLHEP::CLHEP
                       SimG4Interface)
 
-
-include(CTest)
-
-set(GAUDI_GENCONF_DIR "genConfDir")
-if (${Gaudi_VERSION} VERSION_LESS 35.1)
-  set(GAUDI_GENCONF_DIR "genConf")
-endif()
-
-function(set_test_env _testname)
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
-    LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:$<TARGET_FILE_DIR:SimG4Components>:$<TARGET_FILE_DIR:DetComponents>:$<TARGET_FILE_DIR:ROOT::Core>:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:podio::podio>:$ENV{LD_LIBRARY_PATH}
-    PYTHONPATH=$<TARGET_FILE_DIR:DetComponents>/${GAUDI_GENCONF_DIR}:$<TARGET_FILE_DIR:SimG4Components>/${GAUDI_GENCONF_DIR}:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../python:$<TARGET_FILE_DIR:SimG4Components>/../python:$ENV{PYTHONPATH}
-    PATH=$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../bin:$ENV{PATH}
-    K4SIMGEANT4=${CMAKE_CURRENT_LIST_DIR}/
-    )
-endfunction()
-
 add_test(NAME CrossingAngleBoost
-         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-         COMMAND k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/xAngleBoost.py
-)
-set_test_env(CrossingAngleBoost)
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMAND bash -c "source k4simgeant4env.sh; k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/xAngleBoost.py"
+        )
 
 add_test(NAME MagFieldFromMap
-         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-         COMMAND k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldFromMap.py
-)
-set_test_env(MagFieldFromMap)
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMAND bash -c "source k4simgeant4env.sh;  k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldFromMap.py"
+        )
 
 #gaudi_add_test(GeantFullSimGdml
 #               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
