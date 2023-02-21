@@ -27,17 +27,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - uses: cvmfs-contrib/github-action-cvmfs@v2
       - name: Checkout
         uses: actions/checkout@v3
       - name: Start container
-        uses: cvmfs-contrib/github-action-cvmfs@v2
         run: |
           docker run -it --name CI_container \
                      -v ${GITHUB_WORKSPACE}:/Package \
                      -v /cvmfs:/cvmfs:shared \
                      -d ghcr.io/aidasoft/centos7:latest /bin/bash
       - name: Configure
-        uses: cvmfs-contrib/github-action-cvmfs@v2
         run: |
           docker exec CI_container /bin/bash -c 'cd Package; \
             mkdir -p build install; \
@@ -48,7 +47,6 @@ jobs:
                   -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
                   -G Ninja ..;'
       - name: Build docs
-        uses: cvmfs-contrib/github-action-cvmfs@v2
         run: |
           docker exec CI_container /bin/bash -c 'cd ./Package;\
             source ${{ matrix.SETUP }}; \
