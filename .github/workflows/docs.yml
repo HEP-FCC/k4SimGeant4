@@ -38,17 +38,19 @@ jobs:
                      -d ghcr.io/aidasoft/centos7:latest /bin/bash
       - name: Configure
         run: |
-          docker exec CI_container /bin/bash -c 'cd Package; \
-            mkdir -p build install; \
-            source /cvmfs/sw.hsf.org/key4hep/setup.sh \
-            cd build; \
-            cmake -DCMAKE_INSTALL_PREFIX=../install -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " -G Ninja ..;'
+          docker exec CI_container /bin/bash -c 'cd Package
+            mkdir -p build
+            source /cvmfs/sw.hsf.org/key4hep/setup.sh
+            cd build
+            cmake -DCMAKE_CXX_STANDARD=17 \
+                  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
+                  -G Ninja ..'
       - name: Build docs
         run: |
-          docker exec CI_container /bin/bash -c 'cd ./Package;\
-            source ${{ matrix.SETUP }}; \
-            cd build; \
-            ninja -k0 docs;'
+          docker exec CI_container /bin/bash -c 'cd ./Package
+            source /cvmfs/sw.hsf.org/key4hep/setup.sh
+            cd build
+            ninja -k0 docs'
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
