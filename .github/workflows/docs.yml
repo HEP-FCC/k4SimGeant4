@@ -1,0 +1,65 @@
+# Workflow for deploying doxygen generated reference documentation
+name: Deploy reference documentation to GitHub Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main", "doxygen"]
+
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Start container
+        uses: cvmfs-contrib/github-action-cvmfs@v2
+        run: |
+          docker run -it --name CI_container \
+                     -v ${GITHUB_WORKSPACE}:/Package \
+                     -v /cvmfs:/cvmfs:shared \
+                     -d ghcr.io/aidasoft/centos7:latest /bin/bash
+      - name: Configure
+        uses: cvmfs-contrib/github-action-cvmfs@v2
+        run: |
+          docker exec CI_container /bin/bash -c 'cd Package; \
+            mkdir -p build install; \
+            source /cvmfs/sw.hsf.org/key4hep/setup.sh \
+            cd build; \
+            cmake -DCMAKE_INSTALL_PREFIX=../install \
+                  -DCMAKE_CXX_STANDARD=17 \
+                  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
+                  -G Ninja ..;'
+      - name: Build docs
+        uses: cvmfs-contrib/github-action-cvmfs@v2
+        run: |
+          docker exec CI_container /bin/bash -c 'cd ./Package;\
+            source ${{ matrix.SETUP }}; \
+            cd build; \
+            ninja -k0 docs;'
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './build/doxygen/html'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
