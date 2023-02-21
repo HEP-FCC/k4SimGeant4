@@ -2,6 +2,11 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 
 project(k4SimGeant4)
 
+#---------------------------------------------------------------
+# Options
+option(BUILD_DOCS "Whether or not to create doxygen doc target." ON)
+#---------------------------------------------------------------
+
 find_package(ROOT COMPONENTS RIO Tree)
 
 #---------------------------------------------------------------
@@ -44,8 +49,12 @@ add_subdirectory(SimG4Components)
 add_subdirectory(SimG4Full)
 
 
-
-
+#---------------------------------------------------------------
+# Build documentation
+if(BUILD_DOCS)
+  include(cmake/k4SimGeant4Doxygen.cmake)
+endif()
+#---------------------------------------------------------------
 
 
 install(EXPORT ${PROJECT_NAME}Targets
