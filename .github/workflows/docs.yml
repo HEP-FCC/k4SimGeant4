@@ -42,9 +42,9 @@ jobs:
             mkdir -p build install; \
             source /cvmfs/sw.hsf.org/key4hep/setup.sh \
             cd build; \
-            cmake -DCMAKE_INSTALL_PREFIX=../install \
-                  -DCMAKE_CXX_STANDARD=17 \
-                  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
+            cmake -DCMAKE_INSTALL_PREFIX=../install \\
+                  -DCMAKE_CXX_STANDARD=17 \\
+                  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \\
                   -G Ninja ..;'
       - name: Build docs
         run: |
