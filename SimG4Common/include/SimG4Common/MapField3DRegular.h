@@ -3,6 +3,7 @@
 
 // Geant 4
 #include "G4MagneticField.hh"
+#include <vector>
 
 /** @class sim::MapField3DRegular SimG4Common/SimG4Common/MapField3DRegular.h MapField3DRegular.h
 *

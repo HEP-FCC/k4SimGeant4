@@ -2,6 +2,7 @@
 
 // Geant 4
 #include "G4SystemOfUnits.hh"
+#include <algorithm>
 
 /**
  * Field map loaded from 6 std::vectors.
@@ -20,16 +21,16 @@ namespace sim {
                                        const std::vector<double>& posY,
                                        const std::vector<double>& posZ) {
     // Finding the extend of the map
-    m_maxX = *max_element(posX.begin(), posX.end());
-    m_minX = *min_element(posX.begin(), posX.end());
+    m_maxX = *std::max_element(posX.begin(), posX.end());
+    m_minX = *std::min_element(posX.begin(), posX.end());
     m_widthX = m_maxX - m_minX;
 
-    m_maxY = *max_element(posY.begin(), posY.end());
-    m_minY = *min_element(posY.begin(), posY.end());
+    m_maxY = *std::max_element(posY.begin(), posY.end());
+    m_minY = *std::min_element(posY.begin(), posY.end());
     m_widthY = m_maxY - m_minY;
 
-    m_maxZ = *max_element(posZ.begin(), posZ.end());
-    m_minZ = *min_element(posZ.begin(), posZ.end());
+    m_maxZ = *std::max_element(posZ.begin(), posZ.end());
+    m_minZ = *std::min_element(posZ.begin(), posZ.end());
     m_widthZ = m_maxZ - m_minZ;
 
     /*
