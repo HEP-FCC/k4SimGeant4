@@ -20,7 +20,9 @@ SimG4FullSimDCHRegion::SimG4FullSimDCHRegion(const std::string& type, const std:
 
 SimG4FullSimDCHRegion::~SimG4FullSimDCHRegion() 
 {
-  delete fStepLimit;
+  if (fStepLimit) {
+    delete fStepLimit;
+  }
 }
 
 StatusCode SimG4FullSimDCHRegion::initialize() {
