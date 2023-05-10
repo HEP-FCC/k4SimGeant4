@@ -55,7 +55,7 @@ private:
   /// Names of the parametrised volumes (set by job options)
   Gaudi::Property<std::vector<std::string>> m_volumeNames{this, "volumeNames", {}, "Names of the parametrised volumes"};
   Gaudi::Property<double> m_maxStepLength{this, "max_step_length", 0, "Step length for the region."};
-  G4UserLimits*      fStepLimit;       // pointer to user step limits
+  G4UserLimits*      fStepLimit{nullptr};       // pointer to user step limits
 };
 
 #endif /* SIMG4FAST_SIMG4FULLSIMDCHREGION_H */
