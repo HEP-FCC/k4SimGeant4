@@ -74,6 +74,8 @@ private:
   /// Name of the detector readout used in simulation
   Gaudi::Property<std::string> m_oldReadoutName{this, "oldReadoutName", "",
                                                 "Name of the detector readout used in simulation"};
+  /// Old segmentation
+  dd4hep::DDSegmentation::Segmentation* m_oldSegmentation;
   /// Name of the new detector readout
   Gaudi::Property<std::string> m_newReadoutName{this, "newReadoutName", "", "Name of the new detector readout"};
   /// Old bitfield decoder

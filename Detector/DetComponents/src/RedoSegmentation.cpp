@@ -77,7 +77,8 @@ StatusCode RedoSegmentation::initialize() {
   info() << "Old bitfield:\t" << m_oldDecoder->fieldDescription() << endmsg;
   info() << "New bitfield:\t" << m_segmentation->decoder()->fieldDescription() << endmsg;
   info() << "New segmentation is of type:\t" << m_segmentation->type() << endmsg;
-
+  m_oldSegmentation = m_geoSvc->lcdd()->readout(m_oldReadoutName).segmentation().segmentation();
+  info() << "Old segmentation is of type:\t" << m_oldSegmentation->type() << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -92,16 +93,32 @@ StatusCode RedoSegmentation::execute() {
     auto newHit = outHits->create();
     newHit.setEnergy(hit.getEnergy());
     // SimCalorimeterHit type (needed for createCaloCells which runs after RedoSegmentation) has no time member
-    //newHit.setTime(hit.getTime());
+    // newHit.setTime(hit.getTime());
     dd4hep::DDSegmentation::CellID cellId = hit.getCellID();
     if (debugIter < m_debugPrint) {
       debug() << "OLD: " << m_oldDecoder->valueString(cellId) << endmsg;
     }
-    // factor 10 to convert mm to cm // TODO: check
-    auto pos = hit.getPosition();
-    dd4hep::DDSegmentation::Vector3D position(pos.x / 10., pos.y / 10., pos.z / 10.);
+    dd4hep::DDSegmentation::Vector3D position;
+    if (m_oldSegmentation->type() == "FCCSWGridModuleThetaMerged") {
+      position = m_oldSegmentation->position(cellId);
+    }
+    else {
+      auto pos = hit.getPosition();
+      // factor 10 to convert mm to cm
+      position = dd4hep::DDSegmentation::Vector3D (pos.x / 10., pos.y / 10., pos.z / 10.);
+    }
+
     // first calculate proper segmentation fields
-    dd4hep::DDSegmentation::CellID newCellId = m_segmentation->cellID(position, position, 0);
+    // pass volumeID: we need layer / module information
+    // (which is easier/safer to get from cellID than infer from position)
+    dd4hep::DDSegmentation::VolumeID vID = volumeID(cellId);
+    // for module-theta merged segmentation in which we are replacing
+    // initial module number with merged module number, we still want
+    // to pass the initial module number to segmentation->cellID(..)
+    // as part of the volume ID
+    if (m_segmentation->type() == "FCCSWGridModuleThetaMerged")
+      m_segmentation->decoder()->set(vID, "module", m_oldDecoder->get(cellId, "module"));
+    dd4hep::DDSegmentation::CellID newCellId = m_segmentation->cellID(position, position, vID);
     // now rewrite all other fields (detector ID)
     for (const auto& detectorField : m_detectorIdentifiers) {
       oldid = m_oldDecoder->get(cellId, detectorField);
