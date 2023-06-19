@@ -149,7 +149,7 @@ StatusCode SimG4SaveCalHits::saveOutput(const G4Event& aEvent) {
         debug() << "    x: " << edmHitContrib.getStepPosition().x << endmsg;
         debug() << "    y: " << edmHitContrib.getStepPosition().y << endmsg;
         debug() << "    z: " << edmHitContrib.getStepPosition().z << endmsg;
-        debug() << "  track ID" << contrib->trackId << endmsg;
+        debug() << "  track ID: " << contrib->trackId << endmsg;
       }
 
     }
