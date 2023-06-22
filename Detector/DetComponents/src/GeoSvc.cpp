@@ -20,40 +20,62 @@ GeoSvc::~GeoSvc() {
 }
 
 StatusCode GeoSvc::initialize() {
-  StatusCode sc = Service::initialize();
-  if (!sc.isSuccess()) return sc;
+  {
+    StatusCode sc = Service::initialize();
+    if (!sc.isSuccess()) {
+      return sc;
+    }
+  }
+
   // Turn off TGeo printouts if appropriate for the msg level
   if (msgLevel() >= MSG::INFO) {
     TGeoManager::SetVerboseLevel(0);
   }
   uint printoutLevel = msgLevel();
   dd4hep::setPrintLevel(dd4hep::PrintLevel(printoutLevel));
-  if (buildDD4HepGeo().isFailure())
-    error() << "Could not build DD4Hep geometry" << endmsg;
-  else
-    info() <<  "DD4Hep geometry SUCCESSFULLY built" << endmsg;
 
-  if (buildGeant4Geo().isFailure())
-    error() << "Could not build Geant4 geometry" << endmsg;
-  else
-    info() << "Geant4 geometry SUCCESSFULLY built" << endmsg;
-  // TODO: return failure
+  // Build DD4Hep Geometry
+  {
+    StatusCode sc = buildDD4HepGeo();
+    if (sc.isFailure()) {
+      error() << "Could not build DD4Hep geometry!" << endmsg;
+      return sc;
+    } else {
+      info() <<  "DD4Hep geometry SUCCESSFULLY built." << endmsg;
+    }
+  }
+
+  // Build Geant4 Geometry
+  {
+    StatusCode sc = buildGeant4Geo();
+    if (sc.isFailure()) {
+      error() << "Could not build Geant4 geometry!" << endmsg;
+    } else {
+      info() << "Geant4 geometry SUCCESSFULLY built." << endmsg;
+    }
+  }
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode GeoSvc::finalize() { return StatusCode::SUCCESS; }
 
 StatusCode GeoSvc::buildDD4HepGeo() {
-  // we retrieve the the static instance of the DD4HEP::Geometry
+  // Retrieve the static instance of the DD4HEP::Geometry
   m_dd4hepgeo = &(dd4hep::Detector::getInstance());
   m_dd4hepgeo->addExtension<IGeoSvc>(this);
 
-  // load geometry
+  // Load geometry
+  info() << "Detector geometry will be loaded from the following file(s):"
+         << endmsg;
   for (auto& filename : m_xmlFileNames) {
-    info() << "loading geometry from file:  '" << filename << "'" << endmsg;
+    info() << "  - " << filename << endmsg;
+  }
+  for (auto& filename : m_xmlFileNames) {
+    info() << "Loading geometry from file: " << filename << endmsg;
     m_dd4hepgeo->fromCompact(filename);
   }
-  if(not m_dd4hepgeo->volumeManager().isValid()) {
+  if (not m_dd4hepgeo->volumeManager().isValid()) {
     m_dd4hepgeo->apply("DD4hepVolumeManager", 0, 0);
   }
 
@@ -69,9 +91,9 @@ StatusCode GeoSvc::buildGeant4Geo() {
   m_geant4geo = detector;
   if (nullptr != m_geant4geo) {
     return StatusCode::SUCCESS;
-  } else
-    return StatusCode::FAILURE;
+  }
+
+  return StatusCode::FAILURE;
 }
 
 G4VUserDetectorConstruction* GeoSvc::getGeant4Geo() { return (m_geant4geo.get()); }
-
