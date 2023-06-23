@@ -4,9 +4,9 @@
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// k4SimGeant4
-#include "SimG4Interface/ISimG4MagneticFieldTool.h"
-#include "SimG4Interface/IGeoSvc.h"
+// k4FWCore
+#include "k4Interface/ISimG4MagneticFieldTool.h"
+#include "k4Interface/IGeoSvc.h"
 
 // Geant4
 #include "G4SystemOfUnits.hh"
