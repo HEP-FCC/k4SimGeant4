@@ -15,6 +15,11 @@
  *  Service probes the Geant4 magnetic field on initialize.
  *  This service outputs a ROOT file containing resulting histograms.
  *
+ *  There are three probe types:
+ *  * XYPlane probe with parameters: xMax, yMax and z
+ *  * ZPlane probe with parameters: zMin, zMax, rMax and phi (angle from x-axis)
+ *  * Tube probe with parameters: zMin, zMax and r
+ *
  *  @author J. Smiesko
  *  @date 2023-06-23
  */
@@ -41,10 +46,50 @@ private:
                                              "Output file path"};
 
   /// Probes
-  Gaudi::Property<std::vector<std::vector<std::string>>> m_probes{this,
-                                                                  "probes",
-                                                                  {},
-                                                                  "Probe definitions"};
+  Gaudi::Property<std::vector<std::vector<double>>> m_xyPlaneProbes{
+      this,
+      "xyPlaneProbes",
+      {},
+      "xy-plane probe definitions"};
+
+  Gaudi::Property<std::vector<std::vector<double>>> m_zPlaneProbes{
+      this,
+      "zPlaneProbes",
+      {},
+      "z-plane probe definitions"};
+
+  Gaudi::Property<std::vector<std::vector<double>>> m_tubeProbes{
+      this,
+      "tubeProbes",
+      {},
+      "Tube probe definitions"};
+
+
+  struct XYPlaneProbe {
+    const double xMax;
+    const double yMax;
+    const double z;
+  };
+
+  struct ZPlaneProbe {
+    const double zMin;
+    const double zMax;
+    const double rMax;
+    const double phi;
+  };
+
+  struct TubeProbe {
+    const double zMin;
+    const double zMax;
+    const double r;
+  };
+
+  friend std::ostream& operator<<(std::ostream& outStream,
+                                  const XYPlaneProbe& probe);
+  friend std::ostream& operator<<(std::ostream& outStream,
+                                  const ZPlaneProbe& probe);
+  friend std::ostream& operator<<(std::ostream& outStream,
+                                  const TubeProbe& probe);
 };
 
 #endif /* MAGFIELDPROBE_H */

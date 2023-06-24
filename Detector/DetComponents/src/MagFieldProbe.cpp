@@ -3,92 +3,17 @@
 // Geant4
 #include "G4TransportationManager.hh"
 #include "G4FieldManager.hh"
+#include "G4SystemOfUnits.hh"
 
 // ROOT
 #include "TH2D.h"
 #include "TFile.h"
-
-struct XYPlaneProbe {
-  double xMax;
-  double yMax;
-  double z;
-};
-
-struct ZPlaneProbe {
-  double zMin;
-  double zMax;
-  double rMax;
-  double phi;
-};
-
-struct CylinderProbe {
-  double r;
-  double zMin;
-  double zMax;
-};
-
-inline bool parseXYPlaneProbe(const std::vector<std::string>& probeDef,
-                              XYPlaneProbe& probe) {
-  if (probeDef.size() != 4) {
-    return true;
-  }
-  probe.xMax = std::stod(probeDef.at(1));
-  probe.yMax = std::stod(probeDef.at(2));
-  probe.z = std::stod(probeDef.at(3));
-
-  return false;
-}
-
-inline bool parseZPlaneProbe(const std::vector<std::string>& probeDef,
-                             ZPlaneProbe& probe) {
-  if (probeDef.size() != 5) {
-    return true;
-  }
-  probe.zMin = std::stod(probeDef.at(1));
-  probe.zMax = std::stod(probeDef.at(2));
-  probe.rMax = std::stod(probeDef.at(3));
-  probe.phi = std::stod(probeDef.at(4));
-
-  return false;
-}
-
-inline bool parseCylinderProbe(const std::vector<std::string>& probeDef,
-                               CylinderProbe& probe) {
-  if (probeDef.size() != 4) {
-    return true;
-  }
-  probe.r = std::stod(probeDef.at(1));
-  probe.zMin = std::stod(probeDef.at(2));
-  probe.zMax = std::stod(probeDef.at(3));
-
-  return false;
-}
-
-std::ostream& operator<<(std::ostream& outStream, const XYPlaneProbe& probe) {
-  return outStream << "xyPlane: xMax = " << probe.xMax
-                   << ", yMax = " << probe.yMax
-                   << ", z = " << probe.z;
-}
-
-std::ostream& operator<<(std::ostream& outStream, const ZPlaneProbe& probe) {
-  return outStream << "zPlane: zMin = " << probe.zMin
-                   << ", zMax = " << probe.zMax
-                   << ", rMax = " << probe.rMax
-                   << ", phi = " << probe.phi;
-}
-
-std::ostream& operator<<(std::ostream& outStream, const CylinderProbe& probe) {
-  return outStream << "cylinder: r = " << probe.r
-                   << ", zMin = " << probe.zMin
-                   << ", zMax = " << probe.zMax;
-}
 
 
 MagFieldProbe::MagFieldProbe(const std::string& name,
                              ISvcLocator* svcLoc) : Service(name, svcLoc),
                                                     m_geoSvc("GeoSvc", name),
                                                     m_simG4Svc("SimG4Svc", name) {}
-
 
 
 StatusCode MagFieldProbe::initialize() {
@@ -131,36 +56,44 @@ StatusCode MagFieldProbe::initialize() {
   debug() << "  " << m_outFilePath.value() << endmsg;
 
   std::vector<XYPlaneProbe> xyPlaneProbes;
-  std::vector<ZPlaneProbe> zPlaneProbes;
-  std::vector<CylinderProbe> cylinderProbes;
-  for (const auto& probeDef : m_probes.value()) {
-    if (probeDef.size() == 0) {
+  for (const auto& probeDef : m_xyPlaneProbes.value()) {
+    if (probeDef.size() != 3) {
       continue;
     }
-
-    if (probeDef.at(0) == "xyPlane") {
-      XYPlaneProbe xyPlaneProbe;
-      bool err = parseXYPlaneProbe(probeDef, xyPlaneProbe);
-      if (!err) {
-        xyPlaneProbes.emplace_back(xyPlaneProbe);
-      }
-    } else if (probeDef.at(0) == "zPlane") {
-      ZPlaneProbe zPlaneProbe;
-      bool err = parseZPlaneProbe(probeDef, zPlaneProbe);
-      if (!err) {
-        zPlaneProbes.emplace_back(zPlaneProbe);
-      }
-    } else if (probeDef.at(0) == "Cylinder") {
-      CylinderProbe cylinderProbe;
-      bool err = parseCylinderProbe(probeDef, cylinderProbe);
-      if (!err) {
-        cylinderProbes.emplace_back(cylinderProbe);
-      }
-    } else {
-      warning() << "Probe of type '" << probeDef.at(0) << "' not recognized!"
-                << endmsg;
-    }
+    const XYPlaneProbe xyPlaneProbe{probeDef[0], probeDef[1], probeDef[2]};
+    xyPlaneProbes.emplace_back(xyPlaneProbe);
   }
+
+  std::vector<ZPlaneProbe> zPlaneProbes;
+  for (const auto& probeDef : m_zPlaneProbes.value()) {
+    if (probeDef.size() != 4) {
+      continue;
+    }
+    if (probeDef[2] <= 0.) {
+      warning() << "zPlane probe defined with negative or zero rMax!" << endmsg;
+      continue;
+    }
+    if (std::fabs(probeDef[3]) > 2 * CLHEP::pi) {
+      warning() << "zPlane probe defined with phi larger than 2*pi!" << endmsg;
+    }
+    const ZPlaneProbe zPlaneProbe{probeDef[0], probeDef[1], probeDef[2],
+                                  probeDef[3]};
+    zPlaneProbes.emplace_back(zPlaneProbe);
+  }
+
+  std::vector<TubeProbe> tubeProbes;
+  for (const auto& probeDef : m_tubeProbes.value()) {
+    if (probeDef.size() != 3) {
+      continue;
+    }
+    if (probeDef[2] <= 0.) {
+      warning() << "Tube probe defined with negative or zero r!" << endmsg;
+      continue;
+    }
+    const TubeProbe tubeProbe{probeDef[0], probeDef[1], probeDef[2]};
+    tubeProbes.emplace_back(tubeProbe);
+  }
+
 
   if (xyPlaneProbes.size()) {
     info() << "Defined xyPlane probes:" << endmsg;
@@ -168,15 +101,17 @@ StatusCode MagFieldProbe::initialize() {
       info() << probe << endmsg;
     }
   }
-  if (xyPlaneProbes.size()) {
+
+  if (zPlaneProbes.size()) {
     info() << "Defined zPlane probes:" << endmsg;
     for (const auto& probe : zPlaneProbes) {
       info() << probe << endmsg;
     }
   }
-  if (xyPlaneProbes.size()) {
-    info() << "Defined cylinder probes:" << endmsg;
-    for (const auto& probe : cylinderProbes) {
+
+  if (tubeProbes.size()) {
+    info() << "Defined tube probes:" << endmsg;
+    for (const auto& probe : tubeProbes) {
       info() << probe << endmsg;
     }
   }
@@ -226,15 +161,138 @@ StatusCode MagFieldProbe::initialize() {
     auto& histX = xyPlaneProbeHistosX.at(iProbe);
     for (int i = 1; i <= histX.GetXaxis()->GetNbins(); ++i) {
       for (int j = 1; j <= histX.GetYaxis()->GetNbins(); ++j) {
-        double point[] = {0., 0., 0., 0.};
-        point[0] = histX.GetXaxis()->GetBinCenter(i);
-        point[1] = histX.GetYaxis()->GetBinCenter(j);
-        point[2] = xyPlaneProbes.at(iProbe).z;
+        const double point[] = {histX.GetXaxis()->GetBinCenter(i),
+                                histX.GetYaxis()->GetBinCenter(j),
+                                xyPlaneProbes.at(iProbe).z,
+                                0.};
         double field[] = {0., 0., 0.};
         magField->GetFieldValue(point, field);
-        histX.SetBinContent(i, j, field[0]);
-        xyPlaneProbeHistosY.at(iProbe).SetBinContent(i, j, field[1]);
-        xyPlaneProbeHistosZ.at(iProbe).SetBinContent(i, j, field[2]);
+        histX.SetBinContent(i, j, field[0] / tesla);
+        xyPlaneProbeHistosY.at(iProbe).SetBinContent(i, j, field[1] / tesla);
+        xyPlaneProbeHistosZ.at(iProbe).SetBinContent(i, j, field[2] / tesla);
+      }
+    }
+  }
+
+  std::vector<TH2D> zPlaneProbeHistosX;
+  std::vector<TH2D> zPlaneProbeHistosY;
+  std::vector<TH2D> zPlaneProbeHistosZ;
+  for (const auto& probe : zPlaneProbes) {
+    std::string histName = "zPlane_";
+    histName += std::to_string((int) probe.zMin) + "_";
+    histName += std::to_string((int) probe.zMax) + "_";
+    histName += std::to_string((int) probe.rMax) + "_";
+    histName += std::to_string((int) probe.phi) + "_bField";
+    std::string histTitle = "zPlane, phi = ";
+    histTitle += std::to_string((int) probe.phi) + ", bField";
+
+    auto histX = TH2D((histName + "_x").c_str(),
+                      (histTitle + "(x)").c_str(),
+                      500, probe.zMin, probe.zMax,
+                      500, 0., probe.rMax);
+    histX.GetXaxis()->SetTitle("z [mm]");
+    histX.GetYaxis()->SetTitle("r [mm]");
+    histX.GetZaxis()->SetTitle("B_{x} [T]");
+
+    auto histY = TH2D((histName + "_y").c_str(),
+                      (histTitle + "(y)").c_str(),
+                      500, probe.zMin, probe.zMax,
+                      500, 0., probe.rMax);
+    histY.GetXaxis()->SetTitle("z [mm]");
+    histY.GetYaxis()->SetTitle("r [mm]");
+    histY.GetZaxis()->SetTitle("B_{y} [T]");
+
+
+    auto histZ = TH2D((histName + "_z").c_str(),
+                      (histTitle + "(z)").c_str(),
+                      500, probe.zMin, probe.zMax,
+                      500, 0., probe.rMax);
+    histZ.GetXaxis()->SetTitle("z [mm]");
+    histZ.GetYaxis()->SetTitle("r [mm]");
+    histZ.GetZaxis()->SetTitle("B_{z} [T]");
+
+    zPlaneProbeHistosX.emplace_back(histX);
+    zPlaneProbeHistosY.emplace_back(histY);
+    zPlaneProbeHistosZ.emplace_back(histZ);
+  }
+
+  for (size_t iProbe = 0; iProbe < zPlaneProbes.size(); ++iProbe) {
+    auto& histX = zPlaneProbeHistosX.at(iProbe);
+    const auto& probe = zPlaneProbes.at(iProbe);
+    for (int i = 1; i <= histX.GetXaxis()->GetNbins(); ++i) {
+      for (int j = 1; j <= histX.GetYaxis()->GetNbins(); ++j) {
+        const double z = histX.GetXaxis()->GetBinCenter(i);
+        const double r = histX.GetYaxis()->GetBinCenter(j);
+        const double point[] = {r * std::cos(probe.phi),
+                                r * std::sin(probe.phi),
+                                z,
+                                0};
+        double field[] = {0., 0., 0.};
+        magField->GetFieldValue(point, field);
+        histX.SetBinContent(i, j, field[0] / tesla);
+        zPlaneProbeHistosY.at(iProbe).SetBinContent(i, j, field[1] / tesla);
+        zPlaneProbeHistosZ.at(iProbe).SetBinContent(i, j, field[2] / tesla);
+      }
+    }
+  }
+
+  std::vector<TH2D> tubeProbeHistosX;
+  std::vector<TH2D> tubeProbeHistosY;
+  std::vector<TH2D> tubeProbeHistosZ;
+  for (const auto& probe : tubeProbes) {
+    std::string histName = "tube_";
+    histName += std::to_string((int) probe.zMin) + "_";
+    histName += std::to_string((int) probe.zMax) + "_";
+    histName += std::to_string((int) probe.r) + "_bField";
+    std::string histTitle = "Tube, r = ";
+    histTitle += std::to_string((int) probe.r) + " mm, bField";
+
+    auto histX = TH2D((histName + "_x").c_str(),
+                      (histTitle + "(x)").c_str(),
+                      500, probe.zMin, probe.zMax,
+                      500, 0., 2 * CLHEP::pi);
+    histX.GetXaxis()->SetTitle("z [mm]");
+    histX.GetYaxis()->SetTitle("#phi");
+    histX.GetZaxis()->SetTitle("B_{x} [T]");
+
+    auto histY = TH2D((histName + "_y").c_str(),
+                      (histTitle + "(y)").c_str(),
+                      500, probe.zMin, probe.zMax,
+                      500, 0., 2 * CLHEP::pi);
+    histY.GetXaxis()->SetTitle("z [mm]");
+    histY.GetYaxis()->SetTitle("#phi");
+    histY.GetZaxis()->SetTitle("B_{y} [T]");
+
+
+    auto histZ = TH2D((histName + "_z").c_str(),
+                      (histTitle + "(z)").c_str(),
+                      500, probe.zMin, probe.zMax,
+                      500, 0., 2 * CLHEP::pi);
+    histZ.GetXaxis()->SetTitle("z [mm]");
+    histZ.GetYaxis()->SetTitle("#phi");
+    histZ.GetZaxis()->SetTitle("B_{z} [T]");
+
+    tubeProbeHistosX.emplace_back(histX);
+    tubeProbeHistosY.emplace_back(histY);
+    tubeProbeHistosZ.emplace_back(histZ);
+  }
+
+  for (size_t iProbe = 0; iProbe < tubeProbes.size(); ++iProbe) {
+    auto& histX = tubeProbeHistosX.at(iProbe);
+    const auto& probe = tubeProbes.at(iProbe);
+    for (int i = 1; i <= histX.GetXaxis()->GetNbins(); ++i) {
+      for (int j = 1; j <= histX.GetYaxis()->GetNbins(); ++j) {
+        const double z = histX.GetXaxis()->GetBinCenter(i);
+        const double phi = histX.GetYaxis()->GetBinCenter(j);
+        const double point[] = {probe.r * std::cos(phi),
+                                probe.r * std::sin(phi),
+                                z,
+                                0};
+        double field[] = {0., 0., 0.};
+        magField->GetFieldValue(point, field);
+        histX.SetBinContent(i, j, field[0] / tesla);
+        tubeProbeHistosY.at(iProbe).SetBinContent(i, j, field[1] / tesla);
+        tubeProbeHistosZ.at(iProbe).SetBinContent(i, j, field[2] / tesla);
       }
     }
   }
@@ -249,6 +307,24 @@ StatusCode MagFieldProbe::initialize() {
   for (const auto& hist : xyPlaneProbeHistosZ) {
     hist.Write();
   }
+  for (const auto& hist : zPlaneProbeHistosX) {
+    hist.Write();
+  }
+  for (const auto& hist : zPlaneProbeHistosY) {
+    hist.Write();
+  }
+  for (const auto& hist : zPlaneProbeHistosZ) {
+    hist.Write();
+  }
+  for (const auto& hist : tubeProbeHistosX) {
+    hist.Write();
+  }
+  for (const auto& hist : tubeProbeHistosY) {
+    hist.Write();
+  }
+  for (const auto& hist : tubeProbeHistosZ) {
+    hist.Write();
+  }
   outFile.Write();
   outFile.Close();
 
@@ -257,6 +333,31 @@ StatusCode MagFieldProbe::initialize() {
 
 
 StatusCode MagFieldProbe::finalize() { return StatusCode::SUCCESS; }
+
+
+std::ostream& operator<<(std::ostream& outStream,
+                         const MagFieldProbe::XYPlaneProbe& probe) {
+  return outStream << "xyPlane: xMax = " << probe.xMax
+                   << " mm, yMax = " << probe.yMax
+                   << " mm, z = " << probe.z << " mm";
+}
+
+
+std::ostream& operator<<(std::ostream& outStream,
+                         const MagFieldProbe::ZPlaneProbe& probe) {
+  return outStream << "zPlane: zMin = " << probe.zMin
+                   << " mm, zMax = " << probe.zMax
+                   << " mm, rMax = " << probe.rMax
+                   << " mm, phi = " << probe.phi;
+}
+
+
+std::ostream& operator<<(std::ostream& outStream,
+                         const MagFieldProbe::TubeProbe& probe) {
+  return outStream << "tube: zMin = " << probe.zMin
+                   << " mm, zMax = " << probe.zMax
+                   << " mm, r = " << probe.r << " mm";
+}
 
 
 DECLARE_COMPONENT(MagFieldProbe)
