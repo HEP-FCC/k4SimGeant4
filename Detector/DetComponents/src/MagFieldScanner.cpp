@@ -1,4 +1,4 @@
-#include "MagFieldProbe.h"
+#include "MagFieldScanner.h"
 
 // Geant4
 #include "G4TransportationManager.hh"
@@ -10,13 +10,13 @@
 #include "TFile.h"
 
 
-MagFieldProbe::MagFieldProbe(const std::string& name,
-                             ISvcLocator* svcLoc) : Service(name, svcLoc),
-                                                    m_geoSvc("GeoSvc", name),
-                                                    m_simG4Svc("SimG4Svc", name) {}
+MagFieldScanner::MagFieldScanner(const std::string& name,
+                                 ISvcLocator* svcLoc) : Service(name, svcLoc),
+                                                        m_geoSvc("GeoSvc", name),
+                                                        m_simG4Svc("SimG4Svc", name) {}
 
 
-StatusCode MagFieldProbe::initialize() {
+StatusCode MagFieldScanner::initialize() {
   {
     StatusCode sc = Service::initialize();
     if (sc.isFailure()) {
@@ -332,11 +332,11 @@ StatusCode MagFieldProbe::initialize() {
 }
 
 
-StatusCode MagFieldProbe::finalize() { return StatusCode::SUCCESS; }
+StatusCode MagFieldScanner::finalize() { return StatusCode::SUCCESS; }
 
 
 std::ostream& operator<<(std::ostream& outStream,
-                         const MagFieldProbe::XYPlaneProbe& probe) {
+                         const MagFieldScanner::XYPlaneProbe& probe) {
   return outStream << "xyPlane: xMax = " << probe.xMax
                    << " mm, yMax = " << probe.yMax
                    << " mm, z = " << probe.z << " mm";
@@ -344,7 +344,7 @@ std::ostream& operator<<(std::ostream& outStream,
 
 
 std::ostream& operator<<(std::ostream& outStream,
-                         const MagFieldProbe::ZPlaneProbe& probe) {
+                         const MagFieldScanner::ZPlaneProbe& probe) {
   return outStream << "zPlane: zMin = " << probe.zMin
                    << " mm, zMax = " << probe.zMax
                    << " mm, rMax = " << probe.rMax
@@ -353,11 +353,11 @@ std::ostream& operator<<(std::ostream& outStream,
 
 
 std::ostream& operator<<(std::ostream& outStream,
-                         const MagFieldProbe::TubeProbe& probe) {
+                         const MagFieldScanner::TubeProbe& probe) {
   return outStream << "tube: zMin = " << probe.zMin
                    << " mm, zMax = " << probe.zMax
                    << " mm, r = " << probe.r << " mm";
 }
 
 
-DECLARE_COMPONENT(MagFieldProbe)
+DECLARE_COMPONENT(MagFieldScanner)

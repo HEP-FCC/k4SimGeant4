@@ -1,5 +1,5 @@
-#ifndef MAGFIELDPROBE_H
-#define MAGFIELDPROBE_H
+#ifndef MAGFIELDSCANNER_H
+#define MAGFIELDSCANNER_H
 
 // Gaudi
 #include "GaudiKernel/Service.h"
@@ -10,7 +10,7 @@
 #include "k4Interface/ISimG4MagneticFieldTool.h"
 
 
-/** @class MagFieldProbe Detector/DetComponents/src/MagFieldProbe.h MagFieldProbe.h
+/** @class MagFieldScanner Detector/DetComponents/src/MagFieldScanner.h MagFieldScanner.h
  *
  *  Service probes the Geant4 magnetic field on initialize.
  *  This service outputs a ROOT file containing resulting histograms.
@@ -24,13 +24,13 @@
  *  @date 2023-06-23
  */
 
-class MagFieldProbe : public Service {
+class MagFieldScanner : public Service {
 public:
-  explicit MagFieldProbe(const std::string& name, ISvcLocator* svcLoc);
+  explicit MagFieldScanner(const std::string& name, ISvcLocator* svcLoc);
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual ~MagFieldProbe(){};
+  virtual ~MagFieldScanner(){};
 
 private:
   /// Handle to the geometry service
@@ -42,7 +42,7 @@ private:
   /// Path to the output file
   Gaudi::Property<std::string> m_outFilePath{this,
                                              "outFilePath",
-                                             "magFieldProbe.root",
+                                             "magFieldProbes.root",
                                              "Output file path"};
 
   /// Probes
@@ -92,4 +92,4 @@ private:
                                   const TubeProbe& probe);
 };
 
-#endif /* MAGFIELDPROBE_H */
+#endif /* MAGFIELDSCANNER_H */
