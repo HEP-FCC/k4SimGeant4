@@ -8,6 +8,7 @@
 // ROOT
 #include "TH2D.h"
 #include "TFile.h"
+#include "TString.h"
 
 
 MagFieldScanner::MagFieldScanner(const std::string& name,
@@ -178,24 +179,22 @@ StatusCode MagFieldScanner::initialize() {
   std::vector<TH2D> zPlaneProbeHistosY;
   std::vector<TH2D> zPlaneProbeHistosZ;
   for (const auto& probe : zPlaneProbes) {
-    std::string histName = "zPlane_";
-    histName += std::to_string((int) probe.zMin) + "_";
-    histName += std::to_string((int) probe.zMax) + "_";
-    histName += std::to_string((int) probe.rMax) + "_";
-    histName += std::to_string((int) probe.phi) + "_bField";
-    std::string histTitle = "zPlane, phi = ";
-    histTitle += std::to_string((int) probe.phi) + ", bField";
+    TString histName;
+    histName.Form("zPlane_%i_%i_%i_%.3f_bField",
+                  (int)probe.zMin, (int)probe.zMax, (int)probe.rMax, probe.phi);
+    TString histTitle;
+    histTitle.Form("zPlane, phi = %.3f, bField", probe.phi);
 
-    auto histX = TH2D((histName + "_x").c_str(),
-                      (histTitle + "(x)").c_str(),
+    auto histX = TH2D((histName + "_x").Data(),
+                      (histTitle + "(x)").Data(),
                       500, probe.zMin, probe.zMax,
                       500, 0., probe.rMax);
     histX.GetXaxis()->SetTitle("z [mm]");
     histX.GetYaxis()->SetTitle("r [mm]");
     histX.GetZaxis()->SetTitle("B_{x} [T]");
 
-    auto histY = TH2D((histName + "_y").c_str(),
-                      (histTitle + "(y)").c_str(),
+    auto histY = TH2D((histName + "_y").Data(),
+                      (histTitle + "(y)").Data(),
                       500, probe.zMin, probe.zMax,
                       500, 0., probe.rMax);
     histY.GetXaxis()->SetTitle("z [mm]");
@@ -203,8 +202,8 @@ StatusCode MagFieldScanner::initialize() {
     histY.GetZaxis()->SetTitle("B_{y} [T]");
 
 
-    auto histZ = TH2D((histName + "_z").c_str(),
-                      (histTitle + "(z)").c_str(),
+    auto histZ = TH2D((histName + "_z").Data(),
+                      (histTitle + "(z)").Data(),
                       500, probe.zMin, probe.zMax,
                       500, 0., probe.rMax);
     histZ.GetXaxis()->SetTitle("z [mm]");
