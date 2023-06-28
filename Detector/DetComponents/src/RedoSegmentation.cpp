@@ -77,8 +77,16 @@ StatusCode RedoSegmentation::initialize() {
   info() << "Old bitfield:\t" << m_oldDecoder->fieldDescription() << endmsg;
   info() << "New bitfield:\t" << m_segmentation->decoder()->fieldDescription() << endmsg;
   info() << "New segmentation is of type:\t" << m_segmentation->type() << endmsg;
+  if (m_segmentation->type() == "FCCSWGridModuleThetaMerged")
+    m_segmentationType=2;
+  else
+    m_segmentationType=0;
   m_oldSegmentation = m_geoSvc->lcdd()->readout(m_oldReadoutName).segmentation().segmentation();
   info() << "Old segmentation is of type:\t" << m_oldSegmentation->type() << endmsg;
+  if (m_oldSegmentation->type() == "FCCSWGridModuleThetaMerged")
+    m_oldSegmentationType=2;
+  else
+    m_oldSegmentationType=0;
   return StatusCode::SUCCESS;
 }
 
@@ -99,7 +107,7 @@ StatusCode RedoSegmentation::execute() {
       debug() << "OLD: " << m_oldDecoder->valueString(cellId) << endmsg;
     }
     dd4hep::DDSegmentation::Vector3D position;
-    if (m_oldSegmentation->type() == "FCCSWGridModuleThetaMerged") {
+    if (m_oldSegmentationType == 2) {
       position = m_oldSegmentation->position(cellId);
     }
     else {
@@ -116,7 +124,7 @@ StatusCode RedoSegmentation::execute() {
     // initial module number with merged module number, we still want
     // to pass the initial module number to segmentation->cellID(..)
     // as part of the volume ID
-    if (m_segmentation->type() == "FCCSWGridModuleThetaMerged")
+    if (m_segmentationType == 2)
       m_segmentation->decoder()->set(vID, "module", m_oldDecoder->get(cellId, "module"));
     dd4hep::DDSegmentation::CellID newCellId = m_segmentation->cellID(position, position, vID);
     // now rewrite all other fields (detector ID)
