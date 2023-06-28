@@ -7,7 +7,7 @@ ApplicationMgr().EvtSel = 'NONE'
 ApplicationMgr().EvtMax = 2
 ApplicationMgr().OutputLevel = INFO
 
-from Configurables import k4DataSvc
+from Configurables import k4LegacyDataSvc
 podioevent = k4DataSvc("EventDataSvc")
 ApplicationMgr().ExtSvc += [podioevent]
 
