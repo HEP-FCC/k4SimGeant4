@@ -3,7 +3,6 @@
 ################################################################################
 
 
-
 file(GLOB _lib_sources src/*.cpp)
 gaudi_add_module(SimG4Components
                  SOURCES ${_lib_sources}
@@ -14,18 +13,23 @@ gaudi_add_module(SimG4Components
                       DD4hep::DDCore
                       DD4hep::DDG4
                       CLHEP::CLHEP
-                      SimG4Interface)
+                      SimG4Interface
+)
 
 add_test(NAME CrossingAngleBoost
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
          COMMAND bash -c "source k4simgeant4env.sh; k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/xAngleBoost.py"
-        )
+)
 
 add_test(NAME MagFieldFromMap
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
          COMMAND bash -c "source k4simgeant4env.sh;  k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldFromMap.py"
-        )
+)
 
+add_test(NAME MagFieldFromDD4hep
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMAND bash -c "source k4simgeant4env.sh;  k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldTool.py"
+)
 #gaudi_add_test(GeantFullSimGdml
 #               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 #               FRAMEWORK tests/options/geant_fullsim_gdml.py)

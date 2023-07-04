@@ -16,13 +16,19 @@ gaudi_add_module(DetComponents
                       DD4hep::DDCore
                       DD4hep::DDG4
                       DD4hep::DDRec
-                )
+)
 
 install(TARGETS DetComponents
-  EXPORT ${PROJECT_NAME}Targets
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
-  COMPONENT dev)
+        EXPORT ${PROJECT_NAME}Targets
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
+        COMPONENT dev
+)
+
+add_test(NAME MagFieldScanner
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMAND bash -c "source k4simgeant4env.sh; k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldScanner.py"
+)
 
 #
 #include(CTest)
