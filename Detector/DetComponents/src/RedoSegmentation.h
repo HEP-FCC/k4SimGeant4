@@ -63,7 +63,7 @@ private:
   uint64_t volumeID(uint64_t aCellId) const;
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
-  PodioDataSvc* m_podioDataSvc;
+  PodioLegacyDataSvc* m_podioDataSvc;
   ServiceHandle<IDataProviderSvc> m_eventDataSvc;
   /// Handle for the EDM positioned hits to be read
   DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
