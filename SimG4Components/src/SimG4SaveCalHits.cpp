@@ -48,7 +48,7 @@ StatusCode SimG4SaveCalHits::initialize() {
   }
 
   StatusCode sc = m_eventDataSvc.retrieve();
-  m_podioDataSvc = dynamic_cast<PodioDataSvc*>(m_eventDataSvc.get());
+  m_podioDataSvc = dynamic_cast<PodioLegacyDataSvc*>(m_eventDataSvc.get());
   if (sc == StatusCode::FAILURE) {
     error() << "Error retrieving Event Data Service" << endmsg;
     return StatusCode::FAILURE;

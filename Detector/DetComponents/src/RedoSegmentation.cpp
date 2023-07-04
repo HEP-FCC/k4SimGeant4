@@ -40,7 +40,7 @@ StatusCode RedoSegmentation::initialize() {
   // Take readout, bitfield from GeoSvc
   m_oldDecoder = m_geoSvc->lcdd()->readout(m_oldReadoutName).idSpec().decoder();
   StatusCode sc_dataSvc = m_eventDataSvc.retrieve();
-  m_podioDataSvc = dynamic_cast<PodioDataSvc*>(m_eventDataSvc.get());
+  m_podioDataSvc = dynamic_cast<PodioLegacyDataSvc*>(m_eventDataSvc.get());
   if (sc_dataSvc == StatusCode::FAILURE) {
     error() << "Error retrieving Event Data Service" << endmsg;
     return StatusCode::FAILURE;
