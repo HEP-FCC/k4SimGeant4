@@ -47,7 +47,7 @@ StatusCode SimG4FastSimCalorimeterRegion::create() {
   G4LogicalVolume* world =
       (*G4TransportationManager::GetTransportationManager()->GetWorldsIterator())->GetLogicalVolume();
   for (const auto& calorimeterName : m_volumeNames) {
-    for (int iter_region = 0; iter_region < world->GetNoDaughters(); ++iter_region) {
+    for (size_t iter_region = 0; iter_region < world->GetNoDaughters(); ++iter_region) {
       if (world->GetDaughter(iter_region)->GetName().find(calorimeterName) != std::string::npos) {
         /// all G4Region objects are deleted by the G4RegionStore
         m_g4regions.emplace_back(
