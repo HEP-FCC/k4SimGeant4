@@ -1,18 +1,21 @@
 #ifndef SIMG4COMPONENTS_G4SAVETRACKERHITS_H
 #define SIMG4COMPONENTS_G4SAVETRACKERHITS_H
 
+// STL
+#include <vector>
+#include <string>
+
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// FCCSW
+// k4FWCore
 #include "k4FWCore/DataHandle.h"
-#include "SimG4Interface/ISimG4SaveOutputTool.h"
-class IGeoSvc;
+#include "k4FWCore/MetaDataHandle.h"
+#include "k4Interface/IGeoSvc.h"
+#include "k4Interface/ISimG4SaveOutputTool.h"
 
-// datamodel
-namespace edm4hep {
-class SimTrackerHitCollection;
-}
+// EDM4hep
+#include "edm4hep/SimTrackerHitCollection.h"
 
 /** @class SimG4SaveTrackerHits SimG4Components/src/SimG4SaveTrackerHits.h SimG4SaveTrackerHits.h
  *
@@ -49,15 +52,18 @@ public:
 private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
-  /// Pointer to Podio and Event Data Services
-  PodioLegacyDataSvc* m_podioDataSvc;
-  ServiceHandle<IDataProviderSvc> m_eventDataSvc;
-  /// Handle for tracker hits
-  DataHandle<edm4hep::SimTrackerHitCollection> m_trackHits{"TrackerHits", Gaudi::DataHandle::Writer, this};
-  /// Handle for tracker hits including position information
-  /// Name of the readouts (hits collections) to save
-  Gaudi::Property<std::vector<std::string>> m_readoutNames{
-      this, "readoutNames", {}, "Name of the readouts (hits collections) to save"};
+  /// Handle for output tracker hits
+  DataHandle<edm4hep::SimTrackerHitCollection> m_trackHits {
+      "TrackerHits", Gaudi::DataHandle::Writer, this};
+  /// Output handle for cell ID encoding string
+  MetaDataHandle<std::string> m_cellIDEncoding {
+      m_trackHits, "CellIDEncodingString", Gaudi::DataHandle::Writer};
+  /// Names of the readouts (hits collections) to save
+  Gaudi::Property<std::vector<std::string>> m_readoutNames {
+      this, "readoutNames", {}, "[Deprecated] Name of the readouts (hits collections) to save"};
+  /// Name of the readout (hits collection) to save
+  Gaudi::Property<std::string> m_readoutName {
+      this, "readoutName", {}, "Name of the readout (hit collection) to save"};
 };
 
 #endif /* SIMG4COMPONENTS_G4SAVETRACKERHITS_H */

@@ -5,23 +5,18 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
-// FCCSW
+// k4FWCore
 #include "k4FWCore/DataHandle.h"
-class IGeoSvc;
+#include "k4FWCore/MetaDataHandle.h"
+#include "k4Interface/IGeoSvc.h"
 
 // DD4hep
 #include "DD4hep/Readout.h"
-namespace dd4hep {
-namespace DDSegmentation {
-class Segmentation;
-}
-}
+#include "DD4hep/Segmentations.h"
 
-// datamodel
-namespace edm4hep {
-class CalorimeterHitCollection;
-class SimCalorimeterHitCollection;
-}
+// EDM4hep
+#include "edm4hep/CalorimeterHitCollection.h"
+#include "edm4hep/SimCalorimeterHitCollection.h"
 
 /** @class RedoSegmentation Detector/DetComponents/src/RedoSegmentation.h RedoSegmentation.h
  *
@@ -63,12 +58,18 @@ private:
   uint64_t volumeID(uint64_t aCellId) const;
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
-  PodioLegacyDataSvc* m_podioDataSvc;
-  ServiceHandle<IDataProviderSvc> m_eventDataSvc;
   /// Handle for the EDM positioned hits to be read
-  DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
+  DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{
+      "hits/caloInHits", Gaudi::DataHandle::Reader, this};
+  /// Handle for the input hits cell id encoding
+  MetaDataHandle<std::string> m_inHitsCellIDEncoding{
+      m_inHits,"CellIDEncodingString", Gaudi::DataHandle::Reader};
   /// Handle for the EDM hits to be written
-  DataHandle<edm4hep::SimCalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
+  DataHandle<edm4hep::SimCalorimeterHitCollection> m_outHits{
+      "hits/caloOutHits", Gaudi::DataHandle::Writer, this};
+  /// Handle for the output hits cell id encoding
+  MetaDataHandle<std::string> m_outHitsCellIDEncoding{
+      m_outHits,"CellIDEncodingString", Gaudi::DataHandle::Writer};
   /// New segmentation
   dd4hep::DDSegmentation::Segmentation* m_segmentation;
   /// Name of the detector readout used in simulation
