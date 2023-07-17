@@ -1,4 +1,4 @@
-#include "MaterialScan.h"
+#include "MaterialScan_2D.h"
 #include "k4Interface/IGeoSvc.h"
 
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -16,10 +16,10 @@
 #include "TTree.h"
 #include "TVector3.h"
 
-MaterialScan::MaterialScan(const std::string& name, ISvcLocator* svcLoc) : Service(name, svcLoc),
+MaterialScan_2D::MaterialScan_2D(const std::string& name, ISvcLocator* svcLoc) : Service(name, svcLoc),
 m_geoSvc("GeoSvc", name) {}
 
-StatusCode MaterialScan::initialize() {
+StatusCode MaterialScan_2D::initialize() {
   if (Service::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
@@ -31,12 +31,7 @@ StatusCode MaterialScan::initialize() {
 
   SmartIF<IRndmGenSvc> randSvc;
   randSvc = service("RndmGenSvc");
-  StatusCode sc = m_flatPhiDist.initialize(randSvc, Rndm::Flat(0., M_PI / 2.));
-  if (sc == StatusCode::FAILURE) {
-    error() << "Unable to initialize random number generator." << endmsg;
-    return sc;
-  }
-  sc = m_flatAngleDist.initialize(randSvc, Rndm::Flat(0., m_angleBinning));
+  StatusCode sc = m_flatAngleDist.initialize(randSvc, Rndm::Flat(0., m_angleBinning));
   if (sc == StatusCode::FAILURE) {
     error() << "Unable to initialize random number generator." << endmsg;
     return sc;
@@ -58,7 +53,8 @@ StatusCode MaterialScan::initialize() {
   auto matDepthPtr = matDepth.get();
   auto materialPtr = material.get();
 
-  tree->Branch("angle", &angle);
+  tree->Branch("angle", &angleRndm);
+  tree->Branch("phi", &phi);
   tree->Branch("nMaterials", &nMaterials);
   tree->Branch("nX0", &nX0Ptr);
   tree->Branch("nLambda", &nLambdaPtr);
@@ -72,24 +68,25 @@ StatusCode MaterialScan::initialize() {
   std::array<Double_t, 3> pos = {0, 0, 0};
   std::array<Double_t, 3> dir = {0, 0, 0};
   TVector3 vec(0, 0, 0);
-  for (angle = m_angleMin; angle < m_angleMax; angle += m_angleBinning) {
-    nX0->clear();
-    nLambda->clear();
-    matDepth->clear();
-    material->clear();
 
-    std::map<dd4hep::Material, double> phiAveragedMaterialsBetween;
-    for (int iPhi = 0; iPhi < m_nPhiTrials; ++iPhi) {
-      std::cout << m_angleDef << ": " << angle << std::endl;      
-      phi = m_flatPhiDist();
-      angleRndm = angle + m_flatAngleDist();
+  for (angle = m_angleMin; angle < m_angleMax; angle += m_angleBinning) {
+    std::cout << m_angleDef << ": " << angle << std::endl;
+
+    for (int iPhi = 0; iPhi < m_nPhi; ++iPhi) {
+      nX0->clear();
+      nLambda->clear();
+      matDepth->clear();
+      material->clear();
+
+      std::map<dd4hep::Material, double> phiMaterialsBetween; // For phi scan
+
+      phi = -M_PI + (0.5+iPhi)/m_nPhi * 2 * M_PI;
+      angleRndm = angle+0.5*m_angleBinning;
 
       if(m_angleDef=="eta")
         vec.SetPtEtaPhi(1, angleRndm, phi);
       else if(m_angleDef=="theta")
         vec.SetPtThetaPhi(1, angleRndm/360.0*2*M_PI, phi);
-      else if(m_angleDef=="thetaRad")
-        vec.SetPtThetaPhi(1, angleRndm, phi);
       else if(m_angleDef=="cosTheta")
         vec.SetPtThetaPhi(1, acos(angleRndm), phi);
 
@@ -106,24 +103,25 @@ StatusCode MaterialScan::initialize() {
               << ") <=> " << m_angleDef << " = " << angle << ", phi =  " << phi << endmsg;
       const dd4hep::rec::MaterialVec& materials = matMgr.materialsBetween(beginning, end);
       for (unsigned i = 0, n_materials = materials.size(); i < n_materials; ++i) {
-        phiAveragedMaterialsBetween[materials[i].first] += materials[i].second / static_cast<double>(m_nPhiTrials);
+        phiMaterialsBetween[materials[i].first] += materials[i].second;
       }
+      nMaterials = phiMaterialsBetween.size();
+      for (auto matpair : phiMaterialsBetween) {
+        TGeoMaterial* mat = matpair.first->GetMaterial();
+        material->push_back(mat->GetName());
+        matDepth->push_back(matpair.second);
+        nX0->push_back(matpair.second / mat->GetRadLen());
+        nLambda->push_back(matpair.second / mat->GetIntLen());
+      }
+      tree->Fill();
     }
-    nMaterials = phiAveragedMaterialsBetween.size();
-    for (auto matpair : phiAveragedMaterialsBetween) {
-      TGeoMaterial* mat = matpair.first->GetMaterial();
-      material->push_back(mat->GetName());
-      matDepth->push_back(matpair.second);
-      nX0->push_back(matpair.second / mat->GetRadLen());
-      nLambda->push_back(matpair.second / mat->GetIntLen());
-    }
-    tree->Fill();
   }
   tree->Write();
   rootFile->Close();
+
   return StatusCode::SUCCESS;
 }
 
-StatusCode MaterialScan::finalize() { return StatusCode::SUCCESS; }
+StatusCode MaterialScan_2D::finalize() { return StatusCode::SUCCESS; }
 
-DECLARE_COMPONENT(MaterialScan)
+DECLARE_COMPONENT(MaterialScan_2D)

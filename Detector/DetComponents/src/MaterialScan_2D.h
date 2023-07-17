@@ -3,7 +3,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Service.h"
 
-/** @class MaterialScan Detector/DetComponents/src/MaterialScan.h MaterialScan.h
+/** @class MaterialScan_2D Detector/DetComponents/src/MaterialScan_2D.h MaterialScan_2D.h
  *
  *  Service that facilitates material scan on initialize
  *  This service outputs a ROOT file containing a TTree with radiation lengths and material thickness
@@ -12,13 +12,13 @@
  *  @author J. Lingemann
  */
 
-class MaterialScan : public Service {
+class MaterialScan_2D : public Service {
 public:
-  explicit MaterialScan(const std::string& name, ISvcLocator* svcLoc);
+  explicit MaterialScan_2D(const std::string& name, ISvcLocator* svcLoc);
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual ~MaterialScan(){};
+  virtual ~MaterialScan_2D(){};
 
 private:
   /// name of the output file
@@ -31,17 +31,15 @@ private:
   Gaudi::Property<double> m_angleMax{this, "angleMax", 6, "maximum eta/theta/cosTheta value"};
   /// Minimum eta/theta/cosTheta until which to scan
   Gaudi::Property<double> m_angleMin{this, "angleMin", -6, "minimum eta/theta/cosTheta value"};
-  /// number of random, uniformly distributed phi values to average over
-  Gaudi::Property<double> m_nPhiTrials{this, "nPhiTrials", 100,
-                                       "number of random, uniformly distributed phi values to average over"};
+  /// number of phi values to run over, evenly distributed from 0 to 2 pi
+  Gaudi::Property<double> m_nPhi{this, "nPhi", 100,
+                                       "number of phi values to run over, evenly distributed from 0 to 2 pi"};
   /// angle definition to use: eta, theta or cosTheta, default: eta
   Gaudi::Property<std::string> m_angleDef{this, "angleDef", "eta",
-                                       "angle definition to use: eta, theta, cosTheta or thetaRad, default: eta"};
+                                       "angle definition to use: eta, theta or cosTheta, default: eta"};
   /// Name of the envelope within which the material is measured (by default: world volume)
   Gaudi::Property<std::string> m_envelopeName{this, "envelopeName", "world",
                                               "name of the envelope within which the material is measured"};
-  /// Flat random number generator
-  Rndm::Numbers m_flatPhiDist;
   /// Flat random number generator
   Rndm::Numbers m_flatAngleDist;
 
