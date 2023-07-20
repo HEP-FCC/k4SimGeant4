@@ -11,7 +11,8 @@ class IGeoSvc;
 
 // datamodel
 namespace edm4hep {
-class SimCalorimeterHitCollection;
+  class CaloHitContributionCollection;
+  class SimCalorimeterHitCollection;
 }
 
 /** @class SimG4SaveCalHits SimG4Components/src/SimG4SaveCalHits.h SimG4SaveCalHits.h
@@ -51,7 +52,9 @@ private:
   /// Pointer to Podio and Event Data Services
   PodioLegacyDataSvc* m_podioDataSvc;
   ServiceHandle<IDataProviderSvc> m_eventDataSvc;
-  /// Handle for calo hits
+  /// Handle for calorimeter hit contributions
+  DataHandle<edm4hep::CaloHitContributionCollection> m_caloHitContribs{"CaloHitContributions", Gaudi::DataHandle::Writer, this};
+  /// Handle for calorimeter hits
   DataHandle<edm4hep::SimCalorimeterHitCollection> m_caloHits{"CaloHits", Gaudi::DataHandle::Writer, this};
   /// Name of the readouts (hits collections) to save
   Gaudi::Property<std::vector<std::string>> m_readoutNames{

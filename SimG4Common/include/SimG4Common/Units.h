@@ -39,5 +39,15 @@ namespace edm2papas {
 const double length = edmdefault::length / CLHEP::m;
 const double energy = edmdefault::energy / CLHEP::GeV;
 }
+namespace edm2d4h {
+// FIXME: these should be a constexpr, but CLHEP is only const
+const double length = edmdefault::length / CLHEP::cm;
+const double energy = edmdefault::energy / CLHEP::keV;
+}
+namespace d4h2edm {
+// FIXME: these should be a constexpr, but CLHEP is only const
+const double length = CLHEP::cm / edmdefault::length;
+const double energy = CLHEP::keV / edmdefault::energy;
+}
 }
 #endif /* SIMG4COMMON_UNITS_H */
