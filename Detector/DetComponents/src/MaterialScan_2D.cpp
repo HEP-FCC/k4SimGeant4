@@ -29,7 +29,8 @@ StatusCode MaterialScan_2D::initialize() {
     return StatusCode::FAILURE;
   }
 
-  if(m_angleDef not in ["eta", "theta", "thetaRad", "cosTheta"]){
+  std::list<std::string> allowed_angleDef = {"eta", "theta", "thetaRad", "cosTheta"};
+  if (std::find(allowed_angleDef.begin(), allowed_angleDef.end(), m_angleDef) == allowed_angleDef.end()){
     error() << "Non valid angleDef option given. Use either 'eta', 'theta', 'thetaRad' or 'cosTheta'!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -88,15 +89,14 @@ StatusCode MaterialScan_2D::initialize() {
       phi = -M_PI + (0.5+iPhi)/m_nPhi * 2 * M_PI;
       angleRndm = angle+0.5*m_angleBinning;
 
-      match m_angleDef:
-        case "eta":
-          vec.SetPtEtaPhi(1, angleRndm, phi);
-        case "theta":
-          vec.SetPtThetaPhi(1, angleRndm/360.0*2*M_PI, phi);
-        case "thetaRad":
-          vec.SetPtThetaPhi(1, angleRndm, phi);
-        case "cosTheta":
-          vec.SetPtThetaPhi(1, acos(angleRndm), phi);
+      if(m_angleDef=="eta")
+        vec.SetPtEtaPhi(1, angleRndm, phi);
+      else if(m_angleDef=="theta")
+        vec.SetPtThetaPhi(1, angleRndm/360.0*2*M_PI, phi);
+      else if(m_angleDef=="thetaRad")
+        vec.SetPtThetaPhi(1, angleRndm, phi);
+      else if(m_angleDef=="cosTheta")
+        vec.SetPtThetaPhi(1, acos(angleRndm), phi);
           
       auto n = vec.Unit();
       dir = {n.X(), n.Y(), n.Z()};

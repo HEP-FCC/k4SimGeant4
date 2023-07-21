@@ -15,6 +15,7 @@
 #include "TMath.h"
 #include "TTree.h"
 #include "TVector3.h"
+#include "algorithm"
 
 MaterialScan::MaterialScan(const std::string& name, ISvcLocator* svcLoc) : Service(name, svcLoc),
 m_geoSvc("GeoSvc", name) {}
@@ -29,7 +30,8 @@ StatusCode MaterialScan::initialize() {
     return StatusCode::FAILURE;
   }
 
-  if(m_angleDef not in ["eta", "theta", "thetaRad", "cosTheta"]){
+  std::list<std::string> allowed_angleDef = {"eta", "theta", "thetaRad", "cosTheta"};
+  if (std::find(allowed_angleDef.begin(), allowed_angleDef.end(), m_angleDef) == allowed_angleDef.end()){
     error() << "Non valid angleDef option given. Use either 'eta', 'theta', 'thetaRad' or 'cosTheta'!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -89,16 +91,15 @@ StatusCode MaterialScan::initialize() {
       phi = m_flatPhiDist();
       angleRndm = angle + m_flatAngleDist();
 
-      match m_angleDef:
-        case "eta":
-          vec.SetPtEtaPhi(1, angleRndm, phi);
-        case "theta":
-          vec.SetPtThetaPhi(1, angleRndm/360.0*2*M_PI, phi);
-        case "thetaRad":
-          vec.SetPtThetaPhi(1, angleRndm, phi);
-        case "cosTheta":
-          vec.SetPtThetaPhi(1, acos(angleRndm), phi);
-          
+      if(m_angleDef=="eta")
+        vec.SetPtEtaPhi(1, angleRndm, phi);
+      else if(m_angleDef=="theta")
+        vec.SetPtThetaPhi(1, angleRndm/360.0*2*M_PI, phi);
+      else if(m_angleDef=="thetaRad")
+        vec.SetPtThetaPhi(1, angleRndm, phi);
+      else if(m_angleDef=="cosTheta")
+        vec.SetPtThetaPhi(1, acos(angleRndm), phi);
+
       auto n = vec.Unit();
       dir = {n.X(), n.Y(), n.Z()};
       // if the start point (beginning) is inside the material-scan envelope (e.g. if envelope is world volume)
