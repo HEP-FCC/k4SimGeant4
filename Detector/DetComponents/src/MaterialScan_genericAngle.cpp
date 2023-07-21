@@ -15,6 +15,7 @@
 #include "TMath.h"
 #include "TTree.h"
 #include "TVector3.h"
+#include "algorithm"
 
 MaterialScan::MaterialScan(const std::string& name, ISvcLocator* svcLoc) : Service(name, svcLoc),
 m_geoSvc("GeoSvc", name) {}
@@ -29,6 +30,12 @@ StatusCode MaterialScan::initialize() {
     return StatusCode::FAILURE;
   }
 
+  std::list<std::string> allowed_angleDef = {"eta", "theta", "thetaRad", "cosTheta"};
+  if (std::find(allowed_angleDef.begin(), allowed_angleDef.end(), m_angleDef) == allowed_angleDef.end()){
+    error() << "Non valid angleDef option given. Use either 'eta', 'theta', 'thetaRad' or 'cosTheta'!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   SmartIF<IRndmGenSvc> randSvc;
   randSvc = service("RndmGenSvc");
   StatusCode sc = m_flatPhiDist.initialize(randSvc, Rndm::Flat(0., M_PI / 2.));
@@ -36,7 +43,7 @@ StatusCode MaterialScan::initialize() {
     error() << "Unable to initialize random number generator." << endmsg;
     return sc;
   }
-  sc = m_flatEtaDist.initialize(randSvc, Rndm::Flat(0., m_etaBinning));
+  sc = m_flatAngleDist.initialize(randSvc, Rndm::Flat(0., m_angleBinning));
   if (sc == StatusCode::FAILURE) {
     error() << "Unable to initialize random number generator." << endmsg;
     return sc;
@@ -45,9 +52,9 @@ StatusCode MaterialScan::initialize() {
   std::unique_ptr<TFile> rootFile(TFile::Open(m_filename.value().c_str(), "RECREATE"));
   // no smart pointers possible because TTree is owned by rootFile (root mem management FTW!)
   TTree* tree = new TTree("materials", "");
-  double eta = 0;
+  double angle = 0;
   double phi = 0;
-  double etaRndm = 0;
+  double angleRndm = 0;
   unsigned nMaterials = 0;
   std::unique_ptr<std::vector<double>> nX0(new std::vector<double>);
   std::unique_ptr<std::vector<double>> nLambda(new std::vector<double>);
@@ -58,7 +65,7 @@ StatusCode MaterialScan::initialize() {
   auto matDepthPtr = matDepth.get();
   auto materialPtr = material.get();
 
-  tree->Branch("eta", &eta);
+  tree->Branch("angle", &angle);
   tree->Branch("nMaterials", &nMaterials);
   tree->Branch("nX0", &nX0Ptr);
   tree->Branch("nLambda", &nLambdaPtr);
@@ -72,7 +79,7 @@ StatusCode MaterialScan::initialize() {
   std::array<Double_t, 3> pos = {0, 0, 0};
   std::array<Double_t, 3> dir = {0, 0, 0};
   TVector3 vec(0, 0, 0);
-  for (eta = -m_etaMax; eta < m_etaMax; eta += m_etaBinning) {
+  for (angle = m_angleMin; angle < m_angleMax; angle += m_angleBinning) {
     nX0->clear();
     nLambda->clear();
     matDepth->clear();
@@ -80,9 +87,19 @@ StatusCode MaterialScan::initialize() {
 
     std::map<dd4hep::Material, double> phiAveragedMaterialsBetween;
     for (int iPhi = 0; iPhi < m_nPhiTrials; ++iPhi) {
+      std::cout << m_angleDef << ": " << angle << std::endl;      
       phi = m_flatPhiDist();
-      etaRndm = eta + m_flatEtaDist();
-      vec.SetPtEtaPhi(1, etaRndm, phi);
+      angleRndm = angle + m_flatAngleDist();
+
+      if(m_angleDef=="eta")
+        vec.SetPtEtaPhi(1, angleRndm, phi);
+      else if(m_angleDef=="theta")
+        vec.SetPtThetaPhi(1, angleRndm/360.0*2*M_PI, phi);
+      else if(m_angleDef=="thetaRad")
+        vec.SetPtThetaPhi(1, angleRndm, phi);
+      else if(m_angleDef=="cosTheta")
+        vec.SetPtThetaPhi(1, acos(angleRndm), phi);
+
       auto n = vec.Unit();
       dir = {n.X(), n.Y(), n.Z()};
       // if the start point (beginning) is inside the material-scan envelope (e.g. if envelope is world volume)
@@ -93,7 +110,7 @@ StatusCode MaterialScan::initialize() {
       }
       dd4hep::rec::Vector3D end(dir[0] * distance, dir[1] * distance, dir[2] * distance);
       debug() << "Calculating material between 0 and (" << end.x() << ", " << end.y() << ", " << end.z()
-              << ") <=> eta = " << eta << ", phi =  " << phi << endmsg;
+              << ") <=> " << m_angleDef << " = " << angle << ", phi =  " << phi << endmsg;
       const dd4hep::rec::MaterialVec& materials = matMgr.materialsBetween(beginning, end);
       for (unsigned i = 0, n_materials = materials.size(); i < n_materials; ++i) {
         phiAveragedMaterialsBetween[materials[i].first] += materials[i].second / static_cast<double>(m_nPhiTrials);

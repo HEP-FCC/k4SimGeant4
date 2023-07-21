@@ -3,22 +3,23 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Service.h"
 
-/** @class MaterialScan_2D Detector/DetComponents/src/MaterialScan_2D.h MaterialScan_2D.h
+/** @class MaterialScan_2D_genericAngle Detector/DetComponents/src/MaterialScan_2D_genericAngle.h MaterialScan_2D_genericAngle.h
  *
  *  Service that facilitates material scan on initialize
  *  This service outputs a ROOT file containing a TTree with radiation lengths and material thickness
+ *  in both eta/theta (in degrees)/cos(theta)/theta (in radians) and in phi (2D material scan).
  *  For an example on how to read the file, see Examples/scripts/material_plots.py
  *
- *  @author J. Lingemann
+ *  @author J. Lingemann, A. Ilg
  */
 
-class MaterialScan_2D : public Service {
+class MaterialScan_2D_genericAngle : public Service {
 public:
-  explicit MaterialScan_2D(const std::string& name, ISvcLocator* svcLoc);
+  explicit MaterialScan_2_genericAngleD(const std::string& name, ISvcLocator* svcLoc);
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual ~MaterialScan_2D(){};
+  virtual ~MaterialScan_2D_genericAngle(){};
 
 private:
   /// name of the output file
