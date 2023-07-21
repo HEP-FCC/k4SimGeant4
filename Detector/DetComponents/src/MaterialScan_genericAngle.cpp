@@ -1,4 +1,4 @@
-#include "MaterialScan.h"
+#include "MaterialScan_genericAngle.h"
 #include "k4Interface/IGeoSvc.h"
 
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -17,10 +17,10 @@
 #include "TVector3.h"
 #include "algorithm"
 
-MaterialScan::MaterialScan(const std::string& name, ISvcLocator* svcLoc) : Service(name, svcLoc),
+MaterialScan_genericAngle::MaterialScan_genericAngle(const std::string& name, ISvcLocator* svcLoc) : Service(name, svcLoc),
 m_geoSvc("GeoSvc", name) {}
 
-StatusCode MaterialScan::initialize() {
+StatusCode MaterialScan_genericAngle::initialize() {
   if (Service::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
@@ -131,6 +131,6 @@ StatusCode MaterialScan::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MaterialScan::finalize() { return StatusCode::SUCCESS; }
+StatusCode MaterialScan_genericAngle::finalize() { return StatusCode::SUCCESS; }
 
-DECLARE_COMPONENT(MaterialScan)
+DECLARE_COMPONENT(MaterialScan_genericAngle)
