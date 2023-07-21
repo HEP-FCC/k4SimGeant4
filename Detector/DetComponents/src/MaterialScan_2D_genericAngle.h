@@ -15,7 +15,7 @@
 
 class MaterialScan_2D_genericAngle : public Service {
 public:
-  explicit MaterialScan_2_genericAngleD(const std::string& name, ISvcLocator* svcLoc);
+  explicit MaterialScan_2D_genericAngle(const std::string& name, ISvcLocator* svcLoc);
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
