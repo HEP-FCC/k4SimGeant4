@@ -7,8 +7,8 @@ ApplicationMgr().EvtSel = 'NONE'
 ApplicationMgr().EvtMax = 2
 ApplicationMgr().OutputLevel = INFO
 
-from Configurables import k4LegacyDataSvc
-podioevent = k4LegacyDataSvc("EventDataSvc")
+from Configurables import k4DataSvc
+podioevent = k4DataSvc("EventDataSvc")
 ApplicationMgr().ExtSvc += [podioevent]
 
 
@@ -45,8 +45,8 @@ xAngleBoost.OutputLevel = DEBUG
 ApplicationMgr().TopAlg += [xAngleBoost]
 
 
-from Configurables import PodioLegacyOutput
-output = PodioLegacyOutput("output")
+from Configurables import PodioOutput
+output = PodioOutput("output")
 output.filename = "output_xAngleBoost.root"
 output.outputCommands = ["keep *"]
 ApplicationMgr().TopAlg += [output]

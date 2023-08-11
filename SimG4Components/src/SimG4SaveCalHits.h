@@ -1,18 +1,21 @@
 #ifndef SIMG4COMPONENTS_G4SAVECALHITS_H
 #define SIMG4COMPONENTS_G4SAVECALHITS_H
 
+// STL
+#include <vector>
+#include <string>
+
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// FCCSW
+// k4FWCore
 #include "k4FWCore/DataHandle.h"
-#include "SimG4Interface/ISimG4SaveOutputTool.h"
-class IGeoSvc;
+#include "k4FWCore/MetaDataHandle.h"
+#include "k4Interface/IGeoSvc.h"
+#include "k4Interface/ISimG4SaveOutputTool.h"
 
-// datamodel
-namespace edm4hep {
-class SimCalorimeterHitCollection;
-}
+// EDM4hep
+#include "edm4hep/SimCalorimeterHitCollection.h"
 
 /** @class SimG4SaveCalHits SimG4Components/src/SimG4SaveCalHits.h SimG4SaveCalHits.h
  *
@@ -48,14 +51,18 @@ public:
 private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
-  /// Pointer to Podio and Event Data Services
-  PodioLegacyDataSvc* m_podioDataSvc;
-  ServiceHandle<IDataProviderSvc> m_eventDataSvc;
-  /// Handle for calo hits
-  DataHandle<edm4hep::SimCalorimeterHitCollection> m_caloHits{"CaloHits", Gaudi::DataHandle::Writer, this};
-  /// Name of the readouts (hits collections) to save
+  /// Output handle for calo hits
+  DataHandle<edm4hep::SimCalorimeterHitCollection> m_caloHits{
+      "CaloHits", Gaudi::DataHandle::Writer, this};
+  /// Output handle for cell ID encoding string
+  MetaDataHandle<std::string> m_cellIDEncoding{
+      m_caloHits, "CellIDEncodingString", Gaudi::DataHandle::Writer};
+  /// Name of the readouts (hits collections) to save, deprecated
   Gaudi::Property<std::vector<std::string>> m_readoutNames{
-      this, "readoutNames", {}, "Name of the readouts (hits collections) to save"};
+      this, "readoutNames", {}, "[Deprecated] Names of the readouts (hits collections) to save"};
+  /// Name of the readout (hits collection) to save
+  Gaudi::Property<std::string> m_readoutName {
+      this, "readoutName", {}, "Name of the readout (hits collection) to save"};
 };
 
 #endif /* SIMG4COMPONENTS_G4SAVECALHITS_H */
