@@ -40,5 +40,5 @@ std::unique_ptr<GVFlashShowerParameterisation> SimG4GflashSamplingCalo::parametr
       std::unique_ptr<GFlashSamplingShowerParameterisation>(new GFlashSamplingShowerParameterisation(
           nist->FindOrBuildMaterial(m_materialActive.value()), nist->FindOrBuildMaterial(m_materialPassive.value()),
           m_thicknessActive.value(), m_thicknessPassive.value()));
-  return std::move(parametrisation);
+  return parametrisation;
 }
