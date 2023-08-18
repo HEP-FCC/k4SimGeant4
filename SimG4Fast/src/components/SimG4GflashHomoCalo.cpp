@@ -39,5 +39,5 @@ std::unique_ptr<GVFlashShowerParameterisation> SimG4GflashHomoCalo::parametrisat
   // m_parametrisation = std::unique_ptr<GFlashSamplingShowerParameterisation>(new GFlashSamplingShowerParameterisation(
   //     nist->FindOrBuildMaterial("G4_lAr"),  nist->FindOrBuildMaterial("G4_Pb"), 6, 2));
 
-  return std::move(parametrisation);
+  return parametrisation;
 }

@@ -46,7 +46,7 @@ StatusCode SimG4UserLimitRegion::create() {
   // (b) if individiual volumenames are specified, try to find them and set limits for them.
   } else {
   for (const auto& volumeName : m_volumeNames) {
-      for (int iter_region = 0; iter_region < world->GetNoDaughters(); ++iter_region) {
+      for (size_t iter_region = 0; iter_region < world->GetNoDaughters(); ++iter_region) {
         if (world->GetDaughter(iter_region)->GetName().find(volumeName) != std::string::npos) {
           /// all G4Region objects are deleted by the G4RegionStore
           m_g4regions.emplace_back(
