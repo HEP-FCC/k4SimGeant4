@@ -42,3 +42,8 @@ G4VModularPhysicsList* SimG4OpticalPhysicsList::physicsList() {
 
   return physicsList;
 }
+
+void SimG4OpticalPhysicsList::SetCerenkov(bool b)           { G4OpticalParameters::Instance()->SetProcessActivation("Cerenkov",b);            }
+void SimG4OpticalPhysicsList::SetScintillation(bool b)      { G4OpticalParameters::Instance()->SetProcessActivation("Scintillation",b);       }
+void SimG4OpticalPhysicsList::SetTransitionRadiation(bool b){ G4OpticalParameters::Instance()->SetProcessActivation("TransitionRadiation",b); }
+  

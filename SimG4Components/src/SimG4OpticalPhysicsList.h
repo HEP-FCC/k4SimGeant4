@@ -16,7 +16,9 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
   virtual G4VModularPhysicsList* physicsList();
-
+  void    SetCerenkov(bool b);
+  void    SetScintillation(bool b);
+  void    SetTransitionRadiation(bool b);
 private:
   /// Handle for the full physics list tool
   ToolHandle<ISimG4PhysicsList> m_physicsListTool{"SimG4FtfpBert", this, true};
