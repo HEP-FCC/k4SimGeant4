@@ -16,9 +16,9 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
   virtual G4VModularPhysicsList* physicsList();
-  void    SetCerenkov(bool b);
-  void    SetScintillation(bool b);
-  void    SetTransitionRadiation(bool b);
+  Gaudi::Property<bool> SetCerenkov{this, "SetCerenkov", true, "Bool variable that enables Cerenkov process. Default true."};
+  Gaudi::Property<bool> SetScintillation{this, "SetScintillation", true, "Bool variable that enables Scintillation process.. Default true."};
+  Gaudi::Property<bool> SetTransitionRadiation{this, "SetTransitionRadiation", false, "Bool variable that enables transition_radiation process. . Default false."};
 private:
   /// Handle for the full physics list tool
   ToolHandle<ISimG4PhysicsList> m_physicsListTool{"SimG4FtfpBert", this, true};

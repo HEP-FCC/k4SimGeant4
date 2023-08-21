@@ -35,15 +35,12 @@ G4VModularPhysicsList* SimG4OpticalPhysicsList::physicsList() {
 
   auto* opticalParams = G4OpticalParameters::Instance();
   opticalParams->SetBoundaryInvokeSD(true);
-  opticalParams->SetProcessActivation("Cerenkov",true);
-  opticalParams->SetProcessActivation("Scintillation",true);
+  opticalParams->SetProcessActivation("Cerenkov",SetCerenkov);
+  opticalParams->SetProcessActivation("Scintillation",SetScintillation);
+  opticalParams->SetProcessActivation("TransitionRadiation",SetTransitionRadiation);
   opticalParams->SetCerenkovTrackSecondariesFirst(true);
   opticalParams->SetScintTrackSecondariesFirst(true);
 
   return physicsList;
 }
 
-void SimG4OpticalPhysicsList::SetCerenkov(bool b)           { G4OpticalParameters::Instance()->SetProcessActivation("Cerenkov",b);            }
-void SimG4OpticalPhysicsList::SetScintillation(bool b)      { G4OpticalParameters::Instance()->SetProcessActivation("Scintillation",b);       }
-void SimG4OpticalPhysicsList::SetTransitionRadiation(bool b){ G4OpticalParameters::Instance()->SetProcessActivation("TransitionRadiation",b); }
-  
