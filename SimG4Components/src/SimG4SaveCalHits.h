@@ -19,14 +19,26 @@
 
 /** @class SimG4SaveCalHits SimG4Components/src/SimG4SaveCalHits.h SimG4SaveCalHits.h
  *
- *  Save calorimeter hits tool.
- *  All collections passed in the job options will be saved (\b'readoutNames').
- *  Readout name is defined in DD4hep XML file as the attribute 'readout' of 'detector' tag.
- *  If (\b'readoutNames') contain no elements or names that do not correspond to any hit collection,
- *  tool will fail at initialization.
+ *  \brief Save calorimeter hits tool.
+ *
+ *  The tool expects one readout name and will produce one collection.
+ *
+ *  Readout name is defined in DD4hep compact file as the attribute `readout` of
+ *  a `detector` tag.
+ *
+ *  If readout name which does not correspond to any Geant4 hit collection is
+ *  provided, the tool will fail at initialization.
+ *
+ *  If both `readoutName` and `readoutNames` are provided, the tool will fail at
+ *  initialization.
+ *
+ *  If the readout name is provided through the deprecated `readoutNames`
+ *  parameter only the first name in that vector is considered.
+ *
  *  [For more information please see](@ref md_sim_doc_geant4fullsim).
  *
  *  @author Anna Zaborowska
+ *  @author Juraj Smiesko (deprecated `readoutNames`)
  */
 
 class SimG4SaveCalHits : public GaudiTool, virtual public ISimG4SaveOutputTool {
