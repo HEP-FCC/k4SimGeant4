@@ -29,11 +29,11 @@
  *  If readout name which does not correspond to any Geant4 hit collection is
  *  provided, the tool will fail at initialization.
  *
- *  If both `readoutName` and `readoutNames` are provided, the tool will fail at
- *  initialization.
+ *  If both `readoutName` and deprecated `readoutNames` are provided, the tool
+ *  will fail at initialization.
  *
- *  If the readout name is provided through the deprecated `readoutNames`
- *  parameter only the first name in that vector is considered.
+ *  If the more than one readout names is provided through the deprecated
+ *  `readoutNames` parameter, the tool will fail at initialization.
  *
  *  [For more information please see](@ref md_sim_doc_geant4fullsim).
  *
