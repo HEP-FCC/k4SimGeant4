@@ -58,7 +58,7 @@ private:
   /// Output handle for cell ID encoding string
   MetaDataHandle<std::string> m_cellIDEncoding {
       m_trackHits, "CellIDEncodingString", Gaudi::DataHandle::Writer};
-  /// Names of the readouts (hits collections) to save
+  /// Names of the readouts (hits collections) to save, deprecated
   Gaudi::Property<std::vector<std::string>> m_readoutNames {
       this, "readoutNames", {}, "[Deprecated] Name of the readouts (hits collections) to save"};
   /// Name of the readout (hits collection) to save
