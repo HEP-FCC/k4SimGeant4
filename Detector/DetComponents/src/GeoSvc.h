@@ -38,6 +38,7 @@ public:
   // receive DD4hep Geometry
   virtual dd4hep::DetElement getDD4HepGeo() override;
   virtual dd4hep::Detector* lcdd() override;
+  virtual std::string constantAsString(std::string const& name) override;
   // receive Geant4 Geometry
   virtual G4VUserDetectorConstruction* getGeant4Geo() override;
 

@@ -97,3 +97,7 @@ StatusCode GeoSvc::buildGeant4Geo() {
 }
 
 G4VUserDetectorConstruction* GeoSvc::getGeant4Geo() { return (m_geant4geo.get()); }
+
+std::string GeoSvc::constantAsString(std::string const& name) {
+  return m_dd4hepgeo->constantAsString(name);
+}
