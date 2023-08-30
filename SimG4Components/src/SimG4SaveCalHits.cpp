@@ -66,7 +66,7 @@ StatusCode SimG4SaveCalHits::initialize() {
     return StatusCode::FAILURE;
   }
 
-  auto lcdd = m_geoSvc->lcdd();
+  auto lcdd = m_geoSvc->getDetector();
   auto allReadouts = lcdd->readouts();
   if (allReadouts.find(m_readoutName) == allReadouts.end()) {
     error() << "Readout " << m_readoutName << " not found! "
