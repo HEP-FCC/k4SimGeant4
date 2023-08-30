@@ -46,13 +46,15 @@ StatusCode GeoSvc::initialize() {
   }
 
   // Build Geant4 Geometry
-  {
+  if(m_buildGeant4Geo) {
     StatusCode sc = buildGeant4Geo();
     if (sc.isFailure()) {
       error() << "Could not build Geant4 geometry!" << endmsg;
     } else {
       info() << "Geant4 geometry SUCCESSFULLY built." << endmsg;
     }
+  } else {
+    debug() << "Conversion to Geant4 Geometry is disabled" << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -87,6 +89,9 @@ dd4hep::Detector* GeoSvc::lcdd() { return (m_dd4hepgeo); }
 dd4hep::DetElement GeoSvc::getDD4HepGeo() { return (lcdd()->world()); }
 
 StatusCode GeoSvc::buildGeant4Geo() {
+  if (not m_buildGeant4Geo) {
+    return StatusCode::SUCCESS;
+  }
   std::shared_ptr<G4VUserDetectorConstruction> detector(new det::GeoConstruction(*lcdd(), m_sensitive_types));
   m_geant4geo = detector;
   if (nullptr != m_geant4geo) {

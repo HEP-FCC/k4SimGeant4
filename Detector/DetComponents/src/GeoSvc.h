@@ -51,6 +51,9 @@ private:
   Gaudi::Property<std::vector<std::string>> m_xmlFileNames{this, "detectors", {}, "Detector descriptions XML-files"};
   /// mapping of sensitive detector names
   Gaudi::Property<std::map<std::string, std::string>> m_sensitive_types{this, "sensitiveTypes", {{"tracker", "SimpleTrackerSD"}, {"calorimeter", "SimpleCalorimeterSD"}}};
+  /// Whether to create the geant4 geometry or not
+  Gaudi::Property<bool> m_buildGeant4Geo{this, "EnableGeant4Geo", true, "If True the DD4hep geometry is converted for Geant4 Simulations"};
+
 };
 
 #endif  // GEOSVC_H
