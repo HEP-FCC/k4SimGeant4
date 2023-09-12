@@ -37,7 +37,10 @@ public:
   StatusCode buildGeant4Geo();
   // receive DD4hep Geometry
   virtual dd4hep::DetElement getDD4HepGeo() override;
+  [[deprecated("Use getDetector() instead")]]
   virtual dd4hep::Detector* lcdd() override;
+  virtual dd4hep::Detector* getDetector() override;
+  virtual std::string constantAsString(std::string const& name) override;
   // receive Geant4 Geometry
   virtual G4VUserDetectorConstruction* getGeant4Geo() override;
 
@@ -50,6 +53,9 @@ private:
   Gaudi::Property<std::vector<std::string>> m_xmlFileNames{this, "detectors", {}, "Detector descriptions XML-files"};
   /// mapping of sensitive detector names
   Gaudi::Property<std::map<std::string, std::string>> m_sensitive_types{this, "sensitiveTypes", {{"tracker", "SimpleTrackerSD"}, {"calorimeter", "SimpleCalorimeterSD"}}};
+  /// Whether to create the geant4 geometry or not
+  Gaudi::Property<bool> m_buildGeant4Geo{this, "EnableGeant4Geo", true, "If True the DD4hep geometry is converted for Geant4 Simulations"};
+
 };
 
 #endif  // GEOSVC_H

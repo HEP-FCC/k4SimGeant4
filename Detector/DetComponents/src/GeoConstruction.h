@@ -24,7 +24,7 @@ namespace det {
 class GeoConstruction : public G4VUserDetectorConstruction {
 public:
   /// Constructor
-  GeoConstruction(dd4hep::Detector& lcdd, std::map<std::string, std::string> sensitive_types);
+  GeoConstruction(dd4hep::Detector& detector, std::map<std::string, std::string> sensitive_types);
   /// Default destructor
   virtual ~GeoConstruction();
   /// Geometry construction callback: Invoke the conversion to Geant4
@@ -35,7 +35,7 @@ public:
 
 private:
   /// Reference to geometry object
-  dd4hep::Detector& m_lcdd;
+  dd4hep::Detector& m_detector;
   std::map<std::string, std::string> m_sensitive_types;
 };
 }

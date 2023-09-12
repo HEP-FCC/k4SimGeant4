@@ -40,7 +40,7 @@ StatusCode EnergyInCaloLayers::initialize() {
   }
 
   // Check if readout exists
-  if (m_geoSvc->lcdd()->readouts().find(m_readoutName) == m_geoSvc->lcdd()->readouts().end()) {
+  if (m_geoSvc->getDetector()->readouts().find(m_readoutName) == m_geoSvc->getDetector()->readouts().end()) {
     error() << "Can't find readout <<" << m_readoutName << ">>!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -64,7 +64,7 @@ StatusCode EnergyInCaloLayers::initialize() {
 
 
 StatusCode EnergyInCaloLayers::execute() {
-  auto decoder = m_geoSvc->lcdd()->readout(m_readoutName).idSpec().decoder();
+  auto decoder = m_geoSvc->getDetector()->readout(m_readoutName).idSpec().decoder();
 
   // Initialize output variables
   std::vector<double>* energyInLayer = m_energyInLayer.createAndPut();

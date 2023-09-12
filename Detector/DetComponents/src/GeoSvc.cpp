@@ -46,13 +46,15 @@ StatusCode GeoSvc::initialize() {
   }
 
   // Build Geant4 Geometry
-  {
+  if(m_buildGeant4Geo) {
     StatusCode sc = buildGeant4Geo();
     if (sc.isFailure()) {
       error() << "Could not build Geant4 geometry!" << endmsg;
     } else {
       info() << "Geant4 geometry SUCCESSFULLY built." << endmsg;
     }
+  } else {
+    debug() << "Conversion to Geant4 Geometry is disabled" << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -82,13 +84,17 @@ StatusCode GeoSvc::buildDD4HepGeo() {
   return StatusCode::SUCCESS;
 }
 
-dd4hep::Detector* GeoSvc::lcdd() { return (m_dd4hepgeo); }
+dd4hep::Detector* GeoSvc::lcdd() { return m_dd4hepgeo; }
 
-dd4hep::DetElement GeoSvc::getDD4HepGeo() { return (lcdd()->world()); }
+dd4hep::Detector* GeoSvc::getDetector() { return m_dd4hepgeo; }
+
+dd4hep::DetElement GeoSvc::getDD4HepGeo() { return m_dd4hepgeo->world(); }
 
 StatusCode GeoSvc::buildGeant4Geo() {
-  std::shared_ptr<G4VUserDetectorConstruction> detector(new det::GeoConstruction(*lcdd(), m_sensitive_types));
-  m_geant4geo = detector;
+  if (not m_buildGeant4Geo) {
+    return StatusCode::SUCCESS;
+  }
+  m_geant4geo = std::make_shared<det::GeoConstruction>(*m_dd4hepgeo, m_sensitive_types);
   if (nullptr != m_geant4geo) {
     return StatusCode::SUCCESS;
   }
@@ -97,3 +103,7 @@ StatusCode GeoSvc::buildGeant4Geo() {
 }
 
 G4VUserDetectorConstruction* GeoSvc::getGeant4Geo() { return (m_geant4geo.get()); }
+
+std::string GeoSvc::constantAsString(std::string const& name) {
+  return m_dd4hepgeo->constantAsString(name);
+}

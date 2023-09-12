@@ -1,7 +1,9 @@
 #include "InspectHitsCollectionsTool.h"
 
+// k4FWCore
+#include "k4Interface/IGeoSvc.h"
+
 // FCCSW
-#include "SimG4Interface/IGeoSvc.h"
 #include "SimG4Common/Geant4CaloHit.h"
 #include "SimG4Common/Geant4PreDigiTrackHit.h"
 

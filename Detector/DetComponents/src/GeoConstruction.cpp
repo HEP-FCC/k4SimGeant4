@@ -15,7 +15,7 @@
 
 namespace det {
   
-GeoConstruction::GeoConstruction(dd4hep::Detector& lcdd, std::map<std::string, std::string> sensitive_types) : m_lcdd(lcdd), m_sensitive_types(sensitive_types) {}
+GeoConstruction::GeoConstruction(dd4hep::Detector& detector, std::map<std::string, std::string> sensitive_types) : m_detector(detector), m_sensitive_types(sensitive_types) {}
 
 GeoConstruction::~GeoConstruction() {}
 
@@ -35,15 +35,15 @@ void GeoConstruction::ConstructSDandField() {
       typ = m_sensitive_types[typ];
     }
     // Sensitive detectors are deleted in ~G4SDManager
-    G4VSensitiveDetector* g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_lcdd);
+    G4VSensitiveDetector* g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_detector);
     if (g4sd == nullptr) {
       std::string tmp = typ;
       tmp[0] = ::toupper(tmp[0]);
       typ = "Geant4" + tmp;
-      g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_lcdd);
+      g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_detector);
       if (g4sd == nullptr) {
         dd4hep::PluginDebug dbg;
-        g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_lcdd);
+        g4sd = dd4hep::PluginService::Create<G4VSensitiveDetector*>(typ, nam, &m_detector);
         if (g4sd == nullptr) {
           throw std::runtime_error("ConstructSDandField: FATAL Failed to "
                                    "create Geant4 sensitive detector " +
@@ -70,14 +70,14 @@ void GeoConstruction::ConstructSDandField() {
 // method borrowed from dd4hep::sim::Geant4DetectorConstruction::Construct()
 G4VPhysicalVolume* GeoConstruction::Construct() {
   dd4hep::sim::Geant4Mapping& g4map = dd4hep::sim::Geant4Mapping::instance();
-  dd4hep::DetElement world = m_lcdd.world();
-  dd4hep::sim::Geant4Converter conv(m_lcdd, dd4hep::DEBUG);
+  dd4hep::DetElement world = m_detector.world();
+  dd4hep::sim::Geant4Converter conv(m_detector, dd4hep::DEBUG);
   dd4hep::sim::Geant4GeometryInfo* geo_info = conv.create(world).detach();
   g4map.attach(geo_info);
   // All volumes are deleted in ~G4PhysicalVolumeStore()
   G4VPhysicalVolume* m_world = geo_info->world();
-  if(not m_lcdd.volumeManager().isValid()) {
-    m_lcdd.apply("DD4hepVolumeManager", 0, 0);
+  if(not m_detector.volumeManager().isValid()) {
+    m_detector.apply("DD4hepVolumeManager", 0, 0);
   }
   // Create Geant4 volume manager
   g4map.volumeManager();

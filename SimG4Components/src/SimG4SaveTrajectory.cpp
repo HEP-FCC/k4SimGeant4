@@ -1,7 +1,9 @@
 #include "SimG4SaveTrajectory.h"
 
+// k4FwCore
+#include "k4Interface/IGeoSvc.h"
+
 // FCCSW
-#include "SimG4Interface/IGeoSvc.h"
 #include "SimG4Common/Units.h"
 
 // Geant4

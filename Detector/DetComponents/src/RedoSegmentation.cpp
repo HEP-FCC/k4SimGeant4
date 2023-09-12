@@ -21,16 +21,16 @@ StatusCode RedoSegmentation::initialize() {
     return StatusCode::FAILURE;
   }
   // check if readouts exist
-  if (m_geoSvc->lcdd()->readouts().find(m_oldReadoutName) == m_geoSvc->lcdd()->readouts().end()) {
+  if (m_geoSvc->getDetector()->readouts().find(m_oldReadoutName) == m_geoSvc->getDetector()->readouts().end()) {
     error() << "Readout <<" << m_oldReadoutName << ">> does not exist." << endmsg;
     return StatusCode::FAILURE;
   }
-  if (m_geoSvc->lcdd()->readouts().find(m_newReadoutName) == m_geoSvc->lcdd()->readouts().end()) {
+  if (m_geoSvc->getDetector()->readouts().find(m_newReadoutName) == m_geoSvc->getDetector()->readouts().end()) {
     error() << "Readout <<" << m_newReadoutName << ">> does not exist." << endmsg;
     return StatusCode::FAILURE;
   }
   // Take readout, bitfield from GeoSvc
-  m_oldDecoder = m_geoSvc->lcdd()->readout(m_oldReadoutName).idSpec().decoder();
+  m_oldDecoder = m_geoSvc->getDetector()->readout(m_oldReadoutName).idSpec().decoder();
   // segmentation identifiers to be overwritten
   if (m_oldIdentifiers.size() == 0) {
     // it is not an error, maybe no segmentation was used previously
@@ -45,7 +45,7 @@ StatusCode RedoSegmentation::initialize() {
     }
   }
   // Take new segmentation from geometry service
-  m_segmentation = m_geoSvc->lcdd()->readout(m_newReadoutName).segmentation().segmentation();
+  m_segmentation = m_geoSvc->getDetector()->readout(m_newReadoutName).segmentation().segmentation();
   // check if detector identifiers (old and new) agree
   std::vector<std::string> newFields;
   for (uint itField = 0; itField < m_segmentation->decoder()->size(); itField++) {

@@ -67,7 +67,7 @@ StatusCode MaterialScan_2D_genericAngle::initialize() {
   tree->Branch("matDepth", &matDepthPtr);
   tree->Branch("material", &materialPtr);
 
-  auto lcdd = m_geoSvc->lcdd();
+  auto lcdd = m_geoSvc->getDetector();
   dd4hep::rec::MaterialManager matMgr(lcdd->detector(m_envelopeName).volume());
   dd4hep::rec::Vector3D beginning(0, 0, 0);
   auto boundaryVol = lcdd->detector(m_envelopeName).volume()->GetShape();
