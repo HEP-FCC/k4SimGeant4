@@ -56,7 +56,7 @@ StatusCode SimG4MagneticFieldTool::initialize() {
   }
 
   info() << "Adding following field(s):" << endmsg;
-  dd4hep::Detector* detDescription = m_geoSvc->lcdd();
+  dd4hep::Detector* detDescription = m_geoSvc->getDetector();
   auto fields = detDescription->fields();
   for (const auto& field : fields) {
     info() << "  - " << field.first << ": " << field.second->type << endmsg;

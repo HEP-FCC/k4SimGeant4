@@ -32,7 +32,7 @@ StatusCode SamplingFractionInLayers::initialize() {
     return StatusCode::FAILURE;
   }
   // check if readouts exist
-  if (m_geoSvc->lcdd()->readouts().find(m_readoutName) == m_geoSvc->lcdd()->readouts().end()) {
+  if (m_geoSvc->getDetector()->readouts().find(m_readoutName) == m_geoSvc->getDetector()->readouts().end()) {
     error() << "Readout <<" << m_readoutName << ">> does not exist." << endmsg;
     return StatusCode::FAILURE;
   }
@@ -78,7 +78,7 @@ StatusCode SamplingFractionInLayers::initialize() {
 }
 
 StatusCode SamplingFractionInLayers::execute() {
-  auto decoder = m_geoSvc->lcdd()->readout(m_readoutName).idSpec().decoder();
+  auto decoder = m_geoSvc->getDetector()->readout(m_readoutName).idSpec().decoder();
   double sumE = 0.;
   std::vector<double> sumElayers;
   double sumEactive = 0.;

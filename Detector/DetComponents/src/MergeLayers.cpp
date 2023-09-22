@@ -37,11 +37,11 @@ StatusCode MergeLayers::initialize() {
     return StatusCode::FAILURE;
   }
   // check if readout exists
-  if (m_geoSvc->lcdd()->readouts().find(m_readoutName) == m_geoSvc->lcdd()->readouts().end()) {
+  if (m_geoSvc->getDetector()->readouts().find(m_readoutName) == m_geoSvc->getDetector()->readouts().end()) {
     error() << "Readout <<" << m_readoutName << ">> does not exist." << endmsg;
     return StatusCode::FAILURE;
   }
-  auto readout = m_geoSvc->lcdd()->readout(m_readoutName);
+  auto readout = m_geoSvc->getDetector()->readout(m_readoutName);
   m_descriptor = readout.idSpec();
   // check if identifier exists in the decoder
   auto itIdentifier = std::find_if(m_descriptor.fields().begin(),

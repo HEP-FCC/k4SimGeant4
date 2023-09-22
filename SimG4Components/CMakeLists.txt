@@ -8,6 +8,7 @@ gaudi_add_module(SimG4Components
                  SOURCES ${_lib_sources}
                  LINK Gaudi::GaudiAlgLib
                       k4FWCore::k4FWCore
+                      k4FWCore::k4Interface
                       SimG4Common
                       EDM4HEP::edm4hep
                       DD4hep::DDCore
