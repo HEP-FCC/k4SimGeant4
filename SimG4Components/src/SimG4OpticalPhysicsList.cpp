@@ -31,6 +31,7 @@ G4VModularPhysicsList* SimG4OpticalPhysicsList::physicsList() {
   G4VModularPhysicsList* physicsList = m_physicsListTool->physicsList();
 
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(); // deleted in ~G4VModularPhysicsList()
+  opticalPhysics->SetVerboseLevel (2);
   physicsList->RegisterPhysics(opticalPhysics);
 
   auto* opticalParams = G4OpticalParameters::Instance();
