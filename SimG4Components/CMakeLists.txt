@@ -31,6 +31,12 @@ add_test(NAME MagFieldFromDD4hep
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
          COMMAND bash -c "source k4simgeant4env.sh;  k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/magFieldTool.py"
 )
+add_test(NAME OpticalPhysicsTest
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMAND bash -c "source k4simgeant4env.sh;  k4run ${CMAKE_CURRENT_LIST_DIR}/tests/options/optical_physics_test.py"
+)
+SET_TESTS_PROPERTIES( OpticalPhysicsTest PROPERTIES FAIL_REGULAR_EXPRESSION " Exception;EXCEPTION;ERROR;Error" )
+SET_TESTS_PROPERTIES( OpticalPhysicsTest PROPERTIES PASS_REGULAR_EXPRESSION " Cerenkov process active:               1;  Scintillation process active:          1;  Rayleigh process active:               1;  Absorption process active:             1")
 #gaudi_add_test(GeantFullSimGdml
 #               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 #               FRAMEWORK tests/options/geant_fullsim_gdml.py)
