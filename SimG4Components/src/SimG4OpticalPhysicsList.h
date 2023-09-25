@@ -8,6 +8,18 @@
 // FCCSW
 #include "k4Interface/ISimG4PhysicsList.h"
 
+/** @class SimG4OpticalPhysicsList SimG4Components/src/SimG4OpticalPhysicsList.h SimG4OpticalPhysicsList.h
+ *
+ *  FTFP_BERT physics list + Optical photons physics lists tool.
+ *  
+ *  When instantiating the tool three booleans can be passed as arguments:
+ *  --SetCerenkov, default true, to enable Cerenkov process
+ *  --SetScintillation, default true, to enable Scintillation process
+ *  --SetTransitionRadiation, default true, to enable Transition Radiation process
+ *
+ *  @author Alvaro Tolosa-Delgado
+ */
+
 class SimG4OpticalPhysicsList : public AlgTool, virtual public ISimG4PhysicsList {
 public:
   explicit SimG4OpticalPhysicsList(const std::string& aType, const std::string& aName, const IInterface* aParent);
