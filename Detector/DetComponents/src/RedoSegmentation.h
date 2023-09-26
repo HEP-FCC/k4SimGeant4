@@ -72,9 +72,13 @@ private:
       m_outHits,"CellIDEncodingString", Gaudi::DataHandle::Writer};
   /// New segmentation
   dd4hep::DDSegmentation::Segmentation* m_segmentation;
+  int m_segmentationType; // use enum instead? defined in some namespace?
   /// Name of the detector readout used in simulation
   Gaudi::Property<std::string> m_oldReadoutName{this, "oldReadoutName", "",
                                                 "Name of the detector readout used in simulation"};
+  /// Old segmentation
+  dd4hep::DDSegmentation::Segmentation* m_oldSegmentation;
+  int m_oldSegmentationType; // use enum instead? defined in some namespace?
   /// Name of the new detector readout
   Gaudi::Property<std::string> m_newReadoutName{this, "newReadoutName", "", "Name of the new detector readout"};
   /// Old bitfield decoder
