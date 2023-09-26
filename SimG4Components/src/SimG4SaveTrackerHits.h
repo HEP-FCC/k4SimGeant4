@@ -19,15 +19,27 @@
 
 /** @class SimG4SaveTrackerHits SimG4Components/src/SimG4SaveTrackerHits.h SimG4SaveTrackerHits.h
  *
- *  Save tracker hits tool.
- *  All collections passed in the job options will be saved (\b'readoutNames').
- *  Readout name is defined in DD4hep XML file as the attribute 'readout' of 'detector' tag.
- *  If (\b'readoutNames') contain no elements or names that do not correspond to any hit collection,
- *  tool will fail at initialization.
+ *  \brief Save tracker hits tool.
+ *
+ *  The tool expects one readout name and will produce one collection.
+ *
+ *  Readout name is defined in DD4hep compact file as the attribute `readout` of
+ *  a `detector` tag.
+ *
+ *  If readout name which does not correspond to any Geant4 hit collection is
+ *  provided, the tool will fail at initialization.
+ *
+ *  If both `readoutName` and deprecated `readoutNames` are provided, the tool
+ *  will fail at initialization.
+ *
+ *  If the more than one readout names is provided through the deprecated
+ *  `readoutNames` parameter, the tool will fail at initialization.
+ *
  *  [For more information please see](@ref md_sim_doc_geant4fullsim).
  *
  *  @author Anna Zaborowska
  *  @author Valentin Volkl (extended with Digi Info)
+ *  @author Juraj Smiesko (deprecated `readoutNames`)
  */
 
 class SimG4SaveTrackerHits : public GaudiTool, virtual public ISimG4SaveOutputTool {
@@ -58,7 +70,7 @@ private:
   /// Output handle for cell ID encoding string
   MetaDataHandle<std::string> m_cellIDEncoding {
       m_trackHits, "CellIDEncodingString", Gaudi::DataHandle::Writer};
-  /// Names of the readouts (hits collections) to save
+  /// Names of the readouts (hits collections) to save, deprecated
   Gaudi::Property<std::vector<std::string>> m_readoutNames {
       this, "readoutNames", {}, "[Deprecated] Name of the readouts (hits collections) to save"};
   /// Name of the readout (hits collection) to save
