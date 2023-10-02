@@ -5,14 +5,14 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Key4HEP
+#include "k4Interface/IGeoSvc.h"
 #include "k4FWCore/DataHandle.h"
-class IGeoSvc;
 
-// EDM4HEP
-namespace edm4hep {
-  class CalorimeterHitCollection;
-  class MCParticleCollection;
-}
+// EDM4hep & Podio
+#include "edm4hep/CalorimeterHitCollection.h"
+#include "edm4hep/MCParticleCollection.h"
+#include "podio/UserDataCollection.h"
+
 
 /** @class EnergyInCaloLayers EnergyInCaloLayers.h
  *
@@ -51,11 +51,11 @@ private:
   /// Handle for the particle
   DataHandle<edm4hep::MCParticleCollection> m_particle{"det/particles", Gaudi::DataHandle::Reader, this};
   /// Handle for vector with energy deposited in every layer
-  DataHandle<std::vector<double>> m_energyInLayer {"energyInLayer", Gaudi::DataHandle::Writer, this};
+  DataHandle<podio::UserDataCollection<double>> m_energyInLayer {"energyInLayer", Gaudi::DataHandle::Writer, this};
   /// Handle for vector with energy deposited in cryostat and in its parts
-  DataHandle<std::vector<double>> m_energyInCryo {"energyInCryo", Gaudi::DataHandle::Writer, this};
+  DataHandle<podio::UserDataCollection<double>> m_energyInCryo {"energyInCryo", Gaudi::DataHandle::Writer, this};
   /// Handle for initial particle vector
-  DataHandle<std::vector<double>> m_particleVec {"particleVec", Gaudi::DataHandle::Writer, this};
+  DataHandle<podio::UserDataCollection<double>> m_particleVec {"particleVec", Gaudi::DataHandle::Writer, this};
 
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;

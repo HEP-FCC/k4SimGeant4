@@ -1,11 +1,8 @@
 #include "EnergyInCaloLayers.h"
 
-// Key4HEP
-#include "k4Interface/IGeoSvc.h"
-
-// EDM4HEP
-#include "edm4hep/CalorimeterHitCollection.h"
-#include "edm4hep/MCParticleCollection.h"
+// std
+#include <cstddef>
+#include <podio/UserDataCollection.h>
 
 // DD4hep
 #include "DD4hep/Detector.h"
@@ -67,12 +64,12 @@ StatusCode EnergyInCaloLayers::execute() {
   auto decoder = m_geoSvc->getDetector()->readout(m_readoutName).idSpec().decoder();
 
   // Initialize output variables
-  std::vector<double>* energyInLayer = m_energyInLayer.createAndPut();
-  energyInLayer->assign(m_numLayers, 0.);
-  std::vector<double>* energyInCryo = m_energyInCryo.createAndPut();
-  energyInCryo->assign(6, 0.);
-  std::vector<double>* particleVec = m_particleVec.createAndPut();
-  particleVec->assign(4, 0.);
+  auto* energyInLayerColl = m_energyInLayer.createAndPut();
+  energyInLayerColl->vec().assign(m_numLayers, 0.);
+  auto* energyInCryoColl = m_energyInCryo.createAndPut();
+  energyInCryoColl->vec().assign(6, 0.);
+  auto* particleVecColl = m_particleVec.createAndPut();
+  particleVecColl->vec().assign(4, 0.);
 
   // Fill particle vector
   const auto particles = m_particle.get();
@@ -83,10 +80,10 @@ StatusCode EnergyInCaloLayers::execute() {
   if (particles->size() > 1) {
     warning() << "Found more than one initial particle!" << endmsg;
   }
-  particleVec->at(0) = particles->at(0).getMass();
-  particleVec->at(1) = particles->at(0).getMomentum().x;
-  particleVec->at(2) = particles->at(0).getMomentum().y;
-  particleVec->at(3) = particles->at(0).getMomentum().z;
+  particleVecColl->vec().at(0) = particles->at(0).getMass();
+  particleVecColl->vec().at(1) = particles->at(0).getMomentum().x;
+  particleVecColl->vec().at(2) = particles->at(0).getMomentum().y;
+  particleVecColl->vec().at(3) = particles->at(0).getMomentum().z;
 
   // Calculate particle theta
   double rxy = std::sqrt(std::pow(particles->at(0).getMomentum().x, 2) + std::pow(particles->at(0).getMomentum().y, 2));
@@ -100,23 +97,23 @@ StatusCode EnergyInCaloLayers::execute() {
     size_t cryoID = decoder->get(cellID, "cryo");
     if (cryoID == 0) {
       size_t layerID = decoder->get(cellID, "layer");
-      energyInLayer->at(layerID) += hit.getEnergy();
+      energyInLayerColl->vec().at(layerID) += hit.getEnergy();
     } else {
       size_t cryoTypeID = decoder->get(cellID, "type");
-      energyInCryo->at(0) += hit.getEnergy();
-      energyInCryo->at(cryoTypeID) += hit.getEnergy();
+      energyInCryoColl->vec().at(0) += hit.getEnergy();
+      energyInCryoColl->vec().at(cryoTypeID) += hit.getEnergy();
     }
   }
 
   // Calibrate energy in the calorimeter layers
-  for (size_t i = 0; i < energyInLayer->size(); ++i) {
-    energyInLayer->at(i) /= m_samplingFractions[i];
+  for (size_t i = 0; i < energyInLayerColl->size(); ++i) {
+    energyInLayerColl->vec().at(i) /= m_samplingFractions[i];
   }
 
   // Energy deposited in the whole calorimeter
   double energyInCalo = 0.;
-  for (size_t i = 0; i < energyInLayer->size(); ++i) {
-    energyInCalo += energyInLayer->at(i);
+  for (size_t i = 0; i < energyInLayerColl->size(); ++i) {
+    energyInCalo += energyInLayerColl->vec().at(i);
   }
 
   // Printouts
@@ -124,24 +121,24 @@ StatusCode EnergyInCaloLayers::execute() {
   verbose() << "Particle theta: " << particleTheta << " deg" << endmsg << endmsg;
 
   verbose() << "Energy in layers:" << endmsg;
-  for (size_t i = 0; i < energyInLayer->size(); ++i) {
-    verbose() << "  * layer " << i << ": " << energyInLayer->at(i) << " GeV" << endmsg;
+  for (size_t i = 0; i < energyInLayerColl->size(); ++i) {
+    verbose() << "  * layer " << i << ": " << energyInLayerColl->vec().at(i) << " GeV" << endmsg;
   }
   verbose() << endmsg;
 
   verbose() << "Energy in calorimeter: " << energyInCalo << " GeV" << endmsg;
-  verbose() << "Energy in cryostat: " << energyInCryo->at(0) << " GeV" << endmsg;
-  verbose() << "Energy in cryostat front: " << energyInCryo->at(1) << " GeV" << endmsg;
-  verbose() << "Energy in cryostat back: " << energyInCryo->at(2) << " GeV" << endmsg;
-  verbose() << "Energy in cryostat sides: " << energyInCryo->at(3) << " GeV" << endmsg;
-  verbose() << "Energy in cryostat LAr bath front: " << energyInCryo->at(4) << " GeV" << endmsg;
-  verbose() << "Energy in cryostat LAr bath back: " << energyInCryo->at(5) << " GeV" << endmsg << endmsg;
+  verbose() << "Energy in cryostat: " << energyInCryoColl->vec().at(0) << " GeV" << endmsg;
+  verbose() << "Energy in cryostat front: " << energyInCryoColl->vec().at(1) << " GeV" << endmsg;
+  verbose() << "Energy in cryostat back: " << energyInCryoColl->vec().at(2) << " GeV" << endmsg;
+  verbose() << "Energy in cryostat sides: " << energyInCryoColl->vec().at(3) << " GeV" << endmsg;
+  verbose() << "Energy in cryostat LAr bath front: " << energyInCryoColl->vec().at(4) << " GeV" << endmsg;
+  verbose() << "Energy in cryostat LAr bath back: " << energyInCryoColl->vec().at(5) << " GeV" << endmsg << endmsg;
 
   verbose() << "Energy in calorimeter and in the cryostat front: "
-            << energyInCalo + energyInCryo->at(1) + energyInCryo->at(4) << " GeV" << endmsg;
+            << energyInCalo + energyInCryoColl->vec().at(1) + energyInCryoColl->vec().at(4) << " GeV" << endmsg;
   verbose() << "Energy in calorimeter and in the cryostat back: "
-            << energyInCalo + energyInCryo->at(2) + energyInCryo->at(5) << " GeV" << endmsg;
-  verbose() << "Energy in calorimeter and in the cryostat: " << energyInCalo + energyInCryo->at(0) << " GeV" << endmsg;
+            << energyInCalo + energyInCryoColl->vec().at(2) + energyInCryoColl->vec().at(5) << " GeV" << endmsg;
+  verbose() << "Energy in calorimeter and in the cryostat: " << energyInCalo + energyInCryoColl->vec().at(0) << " GeV" << endmsg;
 
   return StatusCode::SUCCESS;
 }
