@@ -51,10 +51,11 @@ StatusCode SimG4SaveTrackerHits::initialize() {
 
   if (!m_readoutNames.empty()) {
     warning() << "Providing multiple readout names deprecated." << endmsg;
-    warning() << "Please use \"readoutName\" parameter instead." << endmsg;
+    warning() << "Please, use \"readoutName\" property instead." << endmsg;
 
     if (m_readoutNames.size() > 1) {
       error() << "More than one readout name provided. Exiting..." << endmsg;
+      return StatusCode::FAILURE;
     }
 
     m_readoutName = m_readoutNames[0];
@@ -97,7 +98,7 @@ StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
     edm4hep::SimTrackerHitCollection* edmHits = m_trackHits.createAndPut();
     for (int iter_coll = 0; iter_coll < collections->GetNumberOfCollections(); iter_coll++) {
       collect = collections->GetHC(iter_coll);
-      if (std::find(m_readoutNames.begin(), m_readoutNames.end(), collect->GetName()) != m_readoutNames.end()) {
+      if (m_readoutName == collect->GetName()) {
         size_t n_hit = collect->GetSize();
         verbose() << "\t" << n_hit << " hits are stored in a tracker collection #" << iter_coll << ": "
                << collect->GetName() << endmsg;
