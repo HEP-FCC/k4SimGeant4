@@ -20,13 +20,12 @@ StatusCode SimG4Alg::initialize() {
     error() << "Unable to locate Geant Simulation Service" << endmsg;
     return StatusCode::FAILURE;
   }
-  for (auto& toolname : m_saveToolNames) {
-    m_saveTools.push_back(tool<ISimG4SaveOutputTool>(toolname));
-    // FIXME: check StatusCode once the m_saveTools is a ToolHandleArray
-    // if (!) {
-    //   error() << "Unable to retrieve the output saving tool." << endmsg;
-    //   return StatusCode::FAILURE;
-    // }
+  for (auto& saveTool : m_saveTools) {
+    if(!saveTool.retrieve()) {
+      error() << "Unable to retrieve the output saving tool " << saveTool
+              << endmsg;
+      return StatusCode::FAILURE;
+    }
   }
   if (!m_eventTool.retrieve()) {
     error() << "Unable to retrieve the G4Event provider " << m_eventTool << endmsg;
