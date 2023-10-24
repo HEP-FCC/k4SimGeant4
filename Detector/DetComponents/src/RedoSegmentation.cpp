@@ -67,7 +67,7 @@ StatusCode RedoSegmentation::initialize() {
     m_segmentationType=2;
   else
     m_segmentationType=0;
-  m_oldSegmentation = m_geoSvc->lcdd()->readout(m_oldReadoutName).segmentation().segmentation();
+  m_oldSegmentation = m_geoSvc->getDetector()->readout(m_oldReadoutName).segmentation().segmentation();
   info() << "Old segmentation is of type:\t" << m_oldSegmentation->type() << endmsg;
   if (m_oldSegmentation->type() == "FCCSWGridModuleThetaMerged")
     m_oldSegmentationType=2;
