@@ -34,8 +34,7 @@ StatusCode InspectHitsCollectionsTool::initialize() {
             << "Make sure you have GeoSvc and SimSvc in the right order in the configuration." << endmsg;
     return StatusCode::FAILURE;
   }
-  auto lcdd = m_geoSvc->getDetector();
-  auto allReadouts = lcdd->readouts();
+  auto allReadouts = m_geoSvc->getDetector()->readouts();
   for (auto& readoutName : m_readoutNames) {
     if (allReadouts.find(readoutName) == allReadouts.end()) {
       error() << "Readout " << readoutName << " not found! Please check tool configuration." << endmsg;
