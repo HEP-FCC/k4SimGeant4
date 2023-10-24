@@ -34,8 +34,7 @@ StatusCode InspectHitsCollectionsTool::initialize() {
             << "Make sure you have GeoSvc and SimSvc in the right order in the configuration." << endmsg;
     return StatusCode::FAILURE;
   }
-  auto lcdd = m_geoSvc->lcdd();
-  auto allReadouts = lcdd->readouts();
+  auto allReadouts = m_geoSvc->getDetector()->readouts();
   for (auto& readoutName : m_readoutNames) {
     if (allReadouts.find(readoutName) == allReadouts.end()) {
       error() << "Readout " << readoutName << " not found! Please check tool configuration." << endmsg;
@@ -62,7 +61,7 @@ StatusCode InspectHitsCollectionsTool::saveOutput(const G4Event& aEvent) {
         info() << "\tcollection #: " << iter_coll << "\tname: " << collect->GetName()
                << "\tsize: " << collect->GetSize() << endmsg;
         size_t n_hit = collect->GetSize();
-        auto decoder = m_geoSvc->lcdd()->readout(collect->GetName()).idSpec().decoder();
+        auto decoder = m_geoSvc->getDetector()->readout(collect->GetName()).idSpec().decoder();
         for (size_t iter_hit = 0; iter_hit < n_hit; iter_hit++) {
           hitT = dynamic_cast<k4::Geant4PreDigiTrackHit*>(collect->GetHit(iter_hit));
           if (hitT) {
