@@ -16,6 +16,7 @@
 
 // EDM4hep
 #include "edm4hep/SimCalorimeterHitCollection.h"
+#include "edm4hep/Constants.h"
 
 /** @class SimG4SaveCalHits SimG4Components/src/SimG4SaveCalHits.h SimG4SaveCalHits.h
  *
@@ -68,7 +69,7 @@ private:
       "CaloHits", Gaudi::DataHandle::Writer, this};
   /// Output handle for cell ID encoding string
   MetaDataHandle<std::string> m_cellIDEncoding{
-      m_caloHits, "CellIDEncodingString", Gaudi::DataHandle::Writer};
+      m_caloHits, edm4hep::CellIDEncoding, Gaudi::DataHandle::Writer};
   /// Name of the readouts (hits collections) to save, deprecated
   Gaudi::Property<std::vector<std::string>> m_readoutNames{
       this, "readoutNames", {}, "[Deprecated] Names of the readouts (hits collections) to save"};

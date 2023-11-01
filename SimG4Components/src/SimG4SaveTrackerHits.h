@@ -16,6 +16,7 @@
 
 // EDM4hep
 #include "edm4hep/SimTrackerHitCollection.h"
+#include "edm4hep/Constants.h"
 
 /** @class SimG4SaveTrackerHits SimG4Components/src/SimG4SaveTrackerHits.h SimG4SaveTrackerHits.h
  *
@@ -69,7 +70,7 @@ private:
       "TrackerHits", Gaudi::DataHandle::Writer, this};
   /// Output handle for cell ID encoding string
   MetaDataHandle<std::string> m_cellIDEncoding {
-      m_trackHits, "CellIDEncodingString", Gaudi::DataHandle::Writer};
+      m_trackHits, edm4hep::CellIDEncoding, Gaudi::DataHandle::Writer};
   /// Names of the readouts (hits collections) to save, deprecated
   Gaudi::Property<std::vector<std::string>> m_readoutNames {
       this, "readoutNames", {}, "[Deprecated] Name of the readouts (hits collections) to save"};
