@@ -64,7 +64,7 @@ private:
   /// Handle for the EDM hits to be written
   DataHandle<edm4hep::SimCalorimeterHitCollection> m_outHits{
       "hits/caloOutHits", Gaudi::DataHandle::Writer, this};
-  /// Handle for the output hits cell id encoding
+  /// Handle for the output hits cell id encoding. The name MUST be "CellIDEncoding"
   MetaDataHandle<std::string> m_outHitsCellIDEncoding{
       m_outHits,"CellIDEncoding", Gaudi::DataHandle::Writer};
   /// New segmentation
