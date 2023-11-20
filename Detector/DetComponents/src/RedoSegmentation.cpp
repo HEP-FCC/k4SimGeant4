@@ -104,6 +104,8 @@ StatusCode RedoSegmentation::execute() {
       // factor 10 to convert mm to cm
       position = dd4hep::DDSegmentation::Vector3D (pos.x / 10., pos.y / 10., pos.z / 10.);
     }
+    // debug
+    debug() << "x = " << position.x() << " y = " << position.y() << " z = " << position.z() << endmsg;
 
     // first calculate proper segmentation fields
     // pass volumeID: we need layer / module information
@@ -113,9 +115,14 @@ StatusCode RedoSegmentation::execute() {
     // initial module number with merged module number, we still want
     // to pass the initial module number to segmentation->cellID(..)
     // as part of the volume ID
-    if (m_segmentationType == 2)
+    dd4hep::DDSegmentation::CellID newCellId;
+    if (m_segmentationType == 2) {
       m_segmentation->decoder()->set(vID, "module", m_oldDecoder->get(cellId, "module"));
-    dd4hep::DDSegmentation::CellID newCellId = m_segmentation->cellID(position, position, vID);
+      newCellId = m_segmentation->cellID(position, position, vID);
+    }
+    else {
+      newCellId = m_segmentation->cellID(position, position, 0);
+    }
     // now rewrite all other fields (detector ID)
     for (const auto& detectorField : m_detectorIdentifiers) {
       oldid = m_oldDecoder->get(cellId, detectorField);
