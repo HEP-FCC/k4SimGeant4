@@ -54,7 +54,7 @@ StatusCode SimG4CrossingAngleBoost::execute() {
   debug() << "Input particle collection size: " << inParticles->size()
           << endmsg;
 
-  double alpha = m_alpha;
+  double alpha = -m_alpha;
   double gamma = std::sqrt(1 + std::pow(std::tan(alpha), 2));
   double betagamma = std::tan(alpha);
 
@@ -89,6 +89,8 @@ StatusCode SimG4CrossingAngleBoost::execute() {
     float py = outParticle.getMomentum().y;
     float pz = outParticle.getMomentum().z;
 
+    debug() << "  - energy: " << std::sqrt(e2) << endmsg;
+
     outParticle.setTime(t);
     outParticle.setVertex({x, y, z});
     outParticle.setMomentum({px, py, pz});
@@ -108,6 +110,11 @@ StatusCode SimG4CrossingAngleBoost::execute() {
     debug() << "    - px: " << outParticle.getMomentum().x << endmsg;
     debug() << "    - py: " << outParticle.getMomentum().y << endmsg;
     debug() << "    - pz: " << outParticle.getMomentum().z << endmsg;
+    double e2b = pow(outParticle.getMomentum().x, 2) +
+                pow(outParticle.getMomentum().y, 2) +
+                pow(outParticle.getMomentum().z, 2) +
+                pow(outParticle.getMass(), 2);
+    debug() << "  - energy: " << std::sqrt(e2b) << endmsg;
 
     outParticles->push_back(outParticle);
   }
