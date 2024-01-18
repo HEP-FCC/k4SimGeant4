@@ -3,12 +3,9 @@
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/ToolHandle.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
-#include "SimG4Interface/ISimG4SaveOutputTool.h"
-#include "SimG4Interface/ISimG4ParticleSmearTool.h"
 
 // datamodel
 namespace edm4hep {

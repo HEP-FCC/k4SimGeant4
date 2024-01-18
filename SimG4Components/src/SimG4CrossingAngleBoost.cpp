@@ -1,20 +1,10 @@
 #include "SimG4CrossingAngleBoost.h"
 
-// k4SimGeant4
-#include "SimG4Common/ParticleInformation.h"
-#include "SimG4Common/Units.h"
-
-// Geant4
-#include "G4Event.hh"
-
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
 // EDM4HEP
 #include "edm4hep/MCParticleCollection.h"
-
-// DD4hep
-#include "DD4hep/Segmentations.h"
 
 
 DECLARE_COMPONENT(SimG4CrossingAngleBoost)
@@ -61,39 +51,40 @@ StatusCode SimG4CrossingAngleBoost::execute() {
   for (auto const& inParticle: *inParticles) {
     auto outParticle = inParticle.clone();
 
+    double e = std::sqrt(std::pow(inParticle.getMomentum().x, 2) +
+                         std::pow(inParticle.getMomentum().y, 2) +
+                         std::pow(inParticle.getMomentum().z, 2) +
+                         std::pow(inParticle.getMass(), 2));
+
     debug() << "---------------------------------------------------" << endmsg;
     debug() << "Particle:" << endmsg;
-    debug() << "  - PDG ID: " << outParticle.getPDG() << endmsg;
-    debug() << "  - time: " << outParticle.getTime() << endmsg;
+    debug() << "  - PDG ID: " << inParticle.getPDG() << endmsg;
+    debug() << "  - mass: " << inParticle.getMass() << endmsg;
     debug() << "  - vertex: " << endmsg;
-    debug() << "    - x: " << outParticle.getVertex().x << endmsg;
-    debug() << "    - y: " << outParticle.getVertex().y << endmsg;
-    debug() << "    - z: " << outParticle.getVertex().z << endmsg;
+    debug() << "    - x: " << inParticle.getVertex().x << endmsg;
+    debug() << "    - y: " << inParticle.getVertex().y << endmsg;
+    debug() << "    - z: " << inParticle.getVertex().z << endmsg;
     debug() << "  - momentum: " << endmsg;
-    debug() << "    - px: " << outParticle.getMomentum().x << endmsg;
-    debug() << "    - py: " << outParticle.getMomentum().y << endmsg;
-    debug() << "    - pz: " << outParticle.getMomentum().z << endmsg;
+    debug() << "    - px: " << inParticle.getMomentum().x << endmsg;
+    debug() << "    - py: " << inParticle.getMomentum().y << endmsg;
+    debug() << "    - pz: " << inParticle.getMomentum().z << endmsg;
+    debug() << "  - energy: " << e << endmsg;
 
-    double t = gamma * outParticle.getTime() +
-               betagamma * outParticle.getVertex().x / CLHEP::c_light;
-    double x = gamma * outParticle.getVertex().x +
-               betagamma * CLHEP::c_light * outParticle.getTime();
-    double y = outParticle.getVertex().y;
-    double z = outParticle.getVertex().z;
+    double x = gamma * inParticle.getVertex().x +
+               betagamma * CLHEP::c_light * inParticle.getTime();
+    double y = inParticle.getVertex().y;
+    double z = inParticle.getVertex().z;
 
-    double e2 = pow(outParticle.getMomentum().x, 2) +
-                pow(outParticle.getMomentum().y, 2) +
-                pow(outParticle.getMomentum().z, 2) +
-                pow(outParticle.getMass(), 2);
-    float px = betagamma * std::sqrt(e2) + gamma * outParticle.getMomentum().x;
-    float py = outParticle.getMomentum().y;
-    float pz = outParticle.getMomentum().z;
+    float px = betagamma * e + gamma * inParticle.getMomentum().x;
+    float py = inParticle.getMomentum().y;
+    float pz = inParticle.getMomentum().z;
 
-    debug() << "  - energy: " << std::sqrt(e2) << endmsg;
-
-    outParticle.setTime(t);
     outParticle.setVertex({x, y, z});
     outParticle.setMomentum({px, py, pz});
+    double eb = std::sqrt(std::pow(outParticle.getMomentum().x, 2) +
+                          std::pow(outParticle.getMomentum().y, 2) +
+                          std::pow(outParticle.getMomentum().z, 2) +
+                          std::pow(outParticle.getMass(), 2));
 
     debug() << "" << endmsg;
     debug() << "~~~ BOOST ~~~" << endmsg;
@@ -101,7 +92,7 @@ StatusCode SimG4CrossingAngleBoost::execute() {
 
     debug() << "Particle:" << endmsg;
     debug() << "  - PDG ID: " << outParticle.getPDG() << endmsg;
-    debug() << "  - time: " << outParticle.getTime() << endmsg;
+    debug() << "  - mass: " << outParticle.getMass() << endmsg;
     debug() << "  - vertex: " << endmsg;
     debug() << "    - x: " << outParticle.getVertex().x << endmsg;
     debug() << "    - y: " << outParticle.getVertex().y << endmsg;
@@ -110,11 +101,7 @@ StatusCode SimG4CrossingAngleBoost::execute() {
     debug() << "    - px: " << outParticle.getMomentum().x << endmsg;
     debug() << "    - py: " << outParticle.getMomentum().y << endmsg;
     debug() << "    - pz: " << outParticle.getMomentum().z << endmsg;
-    double e2b = pow(outParticle.getMomentum().x, 2) +
-                pow(outParticle.getMomentum().y, 2) +
-                pow(outParticle.getMomentum().z, 2) +
-                pow(outParticle.getMass(), 2);
-    debug() << "  - energy: " << std::sqrt(e2b) << endmsg;
+    debug() << "  - energy: " << eb << endmsg;
 
     outParticles->push_back(outParticle);
   }
