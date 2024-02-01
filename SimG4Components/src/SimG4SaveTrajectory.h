@@ -9,10 +9,14 @@
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 class IGeoSvc;
 
-// datamodel
+#if __has_include("edm4hep/TrackerHit3DCollection.h")
+#include "edm4hep/TrackerHit3DCollection.h"
+#else
+#include "edm4hep/TrackerHitCollection.h"
 namespace edm4hep {
-class TrackerHitCollection;
+  using TrackerHit3DCollection = edm4hep::TrackerHitCollection;
 }
+#endif
 
 /** @class SimG4SaveTrajectory SimG4Components/src/SimG4SaveTrajectory.h SimG4SaveTrajectory.h
  *
@@ -43,7 +47,7 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for trajectory hits including position information
-  DataHandle<edm4hep::TrackerHitCollection> m_trackHits{"Hits/Trajectory",
+  DataHandle<edm4hep::TrackerHit3DCollection> m_trackHits{"Hits/Trajectory",
                                                                       Gaudi::DataHandle::Writer, this};
 };
 

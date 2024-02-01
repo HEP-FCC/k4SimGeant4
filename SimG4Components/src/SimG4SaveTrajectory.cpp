@@ -12,9 +12,6 @@
 #include "G4VTrajectory.hh"
 
 
-// datamodel
-#include "edm4hep/TrackerHitCollection.h"
-
 DECLARE_COMPONENT(SimG4SaveTrajectory)
 
 SimG4SaveTrajectory::SimG4SaveTrajectory(const std::string& aType, const std::string& aName,
