@@ -37,6 +37,8 @@ public:
   StatusCode buildGeant4Geo();
   // receive DD4hep Geometry
   virtual dd4hep::DetElement getDD4HepGeo() override;
+  [[deprecated("Use getDetector() instead")]]
+  virtual dd4hep::Detector* lcdd() override;
   virtual dd4hep::Detector* getDetector() override;
   virtual std::string constantAsString(std::string const& name) override;
   // receive Geant4 Geometry
