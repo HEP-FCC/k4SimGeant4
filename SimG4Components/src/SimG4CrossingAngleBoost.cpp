@@ -44,7 +44,7 @@ StatusCode SimG4CrossingAngleBoost::execute() {
   debug() << "Input particle collection size: " << inParticles->size()
           << endmsg;
 
-  double alpha = -m_alpha;
+  double alpha = m_alpha;
   double gamma = std::sqrt(1 + std::pow(std::tan(alpha), 2));
   double betagamma = std::tan(alpha);
 
