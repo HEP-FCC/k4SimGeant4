@@ -84,6 +84,8 @@ StatusCode GeoSvc::buildDD4HepGeo() {
   return StatusCode::SUCCESS;
 }
 
+dd4hep::Detector* GeoSvc::lcdd() { return m_dd4hepgeo; }
+
 dd4hep::Detector* GeoSvc::getDetector() { return m_dd4hepgeo; }
 
 dd4hep::DetElement GeoSvc::getDD4HepGeo() { return m_dd4hepgeo->world(); }
