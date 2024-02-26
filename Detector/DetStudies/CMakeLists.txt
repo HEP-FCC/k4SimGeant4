@@ -5,21 +5,20 @@
 
 find_package(ROOT COMPONENTS MathCore GenVector Geom Tree)
 
-find_package(CLHEP)
-
-
 #--- Add main module
 file(GLOB _sources src/components/*.cpp)
 gaudi_add_module(DetStudies
                  SOURCES ${_sources}
-                 LINK k4FWCore::k4FWCore
+                 LINK
+                      DD4hep::DDCore
+                      DD4hep::DDG4
+                      k4FWCore::k4FWCore
                       k4FWCore::k4Interface
                       Gaudi::GaudiAlgLib
                       Gaudi::GaudiKernel
                       EDM4HEP::edm4hep
                       ROOT::Core
                       ROOT::Hist
-                      DD4hep::DDCore
                 )
 
 install(TARGETS DetStudies
