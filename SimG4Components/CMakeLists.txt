@@ -6,15 +6,17 @@
 file(GLOB _lib_sources src/*.cpp)
 gaudi_add_module(SimG4Components
                  SOURCES ${_lib_sources}
-                 LINK Gaudi::GaudiAlgLib
-                      k4FWCore::k4FWCore
-                      k4FWCore::k4Interface
-                      SimG4Common
-                      EDM4HEP::edm4hep
+                 LINK
+                      CLHEP::CLHEP
                       DD4hep::DDCore
                       DD4hep::DDG4
-                      CLHEP::CLHEP
+                      ${Geant4_LIBRARIES}
+                      SimG4Common
                       SimG4Interface
+                      k4FWCore::k4FWCore
+                      k4FWCore::k4Interface
+                      EDM4HEP::edm4hep
+                      Gaudi::GaudiAlgLib
 )
 
 add_test(NAME CrossingAngleBoost
