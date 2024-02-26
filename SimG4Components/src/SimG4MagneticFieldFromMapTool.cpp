@@ -197,26 +197,26 @@ StatusCode SimG4MagneticFieldFromMapTool::loadRootMap() {
     by *= tesla;
     bz *= tesla;
 
-    if (m_fieldMaxR.value() > 0 && abs(x) > m_fieldMaxR.value()) {
+    if (m_fieldMaxR.value() > 0 && std::abs(x) > m_fieldMaxR.value()) {
       continue;
     }
 
-    if (m_fieldMaxR.value() > 0 && abs(y) > m_fieldMaxR.value()) {
+    if (m_fieldMaxR.value() > 0 && std::abs(y) > m_fieldMaxR.value()) {
       continue;
     }
 
-    if (m_fieldMaxZ.value() > 0 && abs(z) > m_fieldMaxZ.value()) {
+    if (m_fieldMaxZ.value() > 0 && std::abs(z) > m_fieldMaxZ.value()) {
       continue;
     }
 
     double r = std::sqrt(std::pow(x, 2) + std::pow(y, 2));
 
     if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() > 0) {
-      if(r < m_addFieldMaxR.value() && abs(z) < m_addFieldMaxZ.value()) {
+      if(r < m_addFieldMaxR.value() && std::abs(z) < m_addFieldMaxZ.value()) {
         bz += m_addFieldBz.value();
       }
     } else if (m_addFieldMaxR.value() <= 0 && m_addFieldMaxZ.value() > 0) {
-      if (abs(z) < m_addFieldMaxZ.value()) {
+      if (std::abs(z) < m_addFieldMaxZ.value()) {
         bz += m_addFieldBz.value();
       }
     } else if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() <= 0) {
@@ -312,16 +312,16 @@ StatusCode SimG4MagneticFieldFromMapTool::loadComsolMap() {
       continue;
     }
 
-    if (m_fieldMaxZ.value() > 0 && abs(z) > m_fieldMaxZ.value()) {
+    if (m_fieldMaxZ.value() > 0 && std::abs(z) > m_fieldMaxZ.value()) {
       continue;
     }
 
     if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() > 0) {
-      if(r < m_addFieldMaxR.value() && abs(z) < m_addFieldMaxZ.value()) {
+      if(r < m_addFieldMaxR.value() && std::abs(z) < m_addFieldMaxZ.value()) {
         Bz += m_addFieldBz.value();
       }
     } else if (m_addFieldMaxR.value() <= 0 && m_addFieldMaxZ.value() > 0) {
-      if (abs(z) < m_addFieldMaxZ.value()) {
+      if (std::abs(z) < m_addFieldMaxZ.value()) {
         Bz += m_addFieldBz.value();
       }
     } else if (m_addFieldMaxR.value() > 0 && m_addFieldMaxZ.value() <= 0) {
