@@ -6,16 +6,17 @@
 file(GLOB _sources src/*.cpp)
 gaudi_add_module(DetComponents
                  SOURCES ${_sources}
-                 LINK k4FWCore::k4FWCore
+                 LINK
+                      DD4hep::DDCore
+                      DD4hep::DDG4
+                      DD4hep::DDRec
+                      k4FWCore::k4FWCore
                       k4FWCore::k4Interface
                       Gaudi::GaudiAlgLib
                       Gaudi::GaudiKernel
                       EDM4HEP::edm4hep
                       ROOT::Core
                       ROOT::Hist
-                      DD4hep::DDCore
-                      DD4hep::DDG4
-                      DD4hep::DDRec
 )
 
 install(TARGETS DetComponents
