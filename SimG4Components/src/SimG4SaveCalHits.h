@@ -69,7 +69,7 @@ private:
       "CaloHits", Gaudi::DataHandle::Writer, this};
   /// Output handle for cell ID encoding string
   MetaDataHandle<std::string> m_cellIDEncoding{
-      m_caloHits, edm4hep::CellIDEncoding, Gaudi::DataHandle::Writer};
+      m_caloHits, edm4hep::labels::CellIDEncoding, Gaudi::DataHandle::Writer};
   /// Name of the readouts (hits collections) to save, deprecated
   Gaudi::Property<std::vector<std::string>> m_readoutNames{
       this, "readoutNames", {}, "[Deprecated] Names of the readouts (hits collections) to save"};
