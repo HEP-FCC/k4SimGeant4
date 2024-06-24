@@ -67,7 +67,7 @@ private:
       "hits/caloOutHits", Gaudi::DataHandle::Writer, this};
   /// Handle for the output hits cell id encoding.
   MetaDataHandle<std::string> m_outHitsCellIDEncoding{
-      m_outHits, edm4hep::CellIDEncoding, Gaudi::DataHandle::Writer};
+      m_outHits, edm4hep::labels::CellIDEncoding, Gaudi::DataHandle::Writer};
   /// New segmentation
   dd4hep::DDSegmentation::Segmentation* m_segmentation;
   int m_segmentationType; // use enum instead? defined in some namespace?
