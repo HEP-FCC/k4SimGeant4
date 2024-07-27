@@ -8,4 +8,4 @@ find_dependency(k4FWCore REQUIRED)
 include("${CMAKE_CURRENT_LIST_DIR}/k4SimGeant4Targets.cmake")
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(k4Gen  DEFAULT_MSG CMAKE_CURRENT_LIST_FILE)
+find_package_handle_standard_args(k4SimGeant4  DEFAULT_MSG CMAKE_CURRENT_LIST_FILE)
