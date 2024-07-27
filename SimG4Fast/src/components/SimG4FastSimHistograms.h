@@ -2,7 +2,7 @@
 #define SIMG4FAST_G4FASTSIMHISTOGRAMS_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -25,7 +25,7 @@ class TH1F;
  *  @author Anna Zaborowska
  */
 
-class SimG4FastSimHistograms : public GaudiAlgorithm {
+class SimG4FastSimHistograms : public Gaudi::Algorithm {
 public:
   explicit SimG4FastSimHistograms(const std::string&, ISvcLocator*);
   virtual ~SimG4FastSimHistograms();
@@ -36,7 +36,7 @@ public:
   /**  Fills the histograms.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
    *   @return status code
    */
@@ -44,7 +44,7 @@ public:
 
 private:
   /// Handle for the EDM particles and MC particles associations to be read
-  DataHandle<edm4hep::MCRecoParticleAssociationCollection> m_particlesMCparticles{"ParticlesMCparticles",
+  mutable DataHandle<edm4hep::MCRecoParticleAssociationCollection> m_particlesMCparticles{"ParticlesMCparticles",
                                                                                   Gaudi::DataHandle::Reader, this};
   /// Pointer to the interface of histogram service
   SmartIF<ITHistSvc> m_histSvc;

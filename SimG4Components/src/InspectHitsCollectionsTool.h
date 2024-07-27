@@ -2,7 +2,7 @@
 #define TESTDD4HEP_INSPECTHITSCOLLECTIONSTOOL_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
@@ -16,7 +16,7 @@ class IGeoSvc;
  *  @author Anna Zaborowska
  */
 
-class InspectHitsCollectionsTool : public GaudiTool, virtual public ISimG4SaveOutputTool {
+class InspectHitsCollectionsTool : public AlgTool, virtual public ISimG4SaveOutputTool {
 public:
   /// Constructor.
   explicit InspectHitsCollectionsTool(const std::string& type, const std::string& name, const IInterface* parent);

@@ -20,13 +20,13 @@ DECLARE_COMPONENT(SimG4PrimariesFromEdmTool)
 SimG4PrimariesFromEdmTool::SimG4PrimariesFromEdmTool(const std::string& type,
                                                      const std::string& name,
                                                      const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareProperty("GenParticles", m_genParticles, "Handle for the EDM MC particles to be read");
 }
 
 SimG4PrimariesFromEdmTool::~SimG4PrimariesFromEdmTool() {}
 
-StatusCode SimG4PrimariesFromEdmTool::initialize() { return GaudiTool::initialize(); }
+StatusCode SimG4PrimariesFromEdmTool::initialize() { return AlgTool::initialize(); }
 
 G4Event* SimG4PrimariesFromEdmTool::g4Event() {
   auto theEvent = new G4Event();

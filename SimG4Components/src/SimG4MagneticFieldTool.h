@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4MAGNETICFIELDTOOL_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // k4FWCore
 #include "k4Interface/ISimG4MagneticFieldTool.h"
@@ -27,7 +27,7 @@ class G4MagIntegratorStepper;
 *  @date   2023-06-21
 */
 
-class SimG4MagneticFieldTool : public GaudiTool, virtual public ISimG4MagneticFieldTool {
+class SimG4MagneticFieldTool : public AlgTool, virtual public ISimG4MagneticFieldTool {
 public:
   /// Standard constructor
   SimG4MagneticFieldTool(const std::string& type,

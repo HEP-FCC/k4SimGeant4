@@ -24,7 +24,7 @@ DECLARE_COMPONENT(SimG4SingleParticleGeneratorTool)
 SimG4SingleParticleGeneratorTool::SimG4SingleParticleGeneratorTool(const std::string& type,
                                                                    const std::string& nam,
                                                                    const IInterface* parent)
-    : GaudiTool(type, nam, parent) {
+    : AlgTool(type, nam, parent) {
   declareInterface<ISimG4EventProviderTool>(this);
   declareProperty("GenParticles", m_genParticlesHandle, "Handle for the genparticles to be written");
 }
@@ -32,7 +32,7 @@ SimG4SingleParticleGeneratorTool::SimG4SingleParticleGeneratorTool(const std::st
 SimG4SingleParticleGeneratorTool::~SimG4SingleParticleGeneratorTool() {}
 
 StatusCode SimG4SingleParticleGeneratorTool::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (!G4ParticleTable::GetParticleTable()->contains(m_particleName.value())) {

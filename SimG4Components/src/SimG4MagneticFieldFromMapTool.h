@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4MAGNETICFIELDFROMMAPTOOL_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4MagneticFieldTool.h"
@@ -31,7 +31,7 @@ namespace sim {
 *  @date   2022-11-29
 */
 
-class SimG4MagneticFieldFromMapTool : public GaudiTool, virtual public ISimG4MagneticFieldTool {
+class SimG4MagneticFieldFromMapTool : public AlgTool, virtual public ISimG4MagneticFieldTool {
 public:
   /// Standard constructor
   SimG4MagneticFieldFromMapTool(const std::string& type, const std::string& name, const IInterface* parent);

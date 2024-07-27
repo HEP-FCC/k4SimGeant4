@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4DD4HEPDETECTOR_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4DetectorConstruction.h"
@@ -16,7 +16,7 @@ class IGeoSvc;
  *  @author Anna Zaborowska
  */
 
-class SimG4DD4hepDetector : public GaudiTool, virtual public ISimG4DetectorConstruction {
+class SimG4DD4hepDetector : public AlgTool, virtual public ISimG4DetectorConstruction {
 public:
   explicit SimG4DD4hepDetector(const std::string& aType, const std::string& aName, const IInterface* aParent);
   virtual ~SimG4DD4hepDetector();

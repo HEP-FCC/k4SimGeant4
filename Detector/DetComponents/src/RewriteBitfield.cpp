@@ -12,7 +12,7 @@
 
 DECLARE_COMPONENT(RewriteBitfield)
 
-RewriteBitfield::RewriteBitfield(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
+RewriteBitfield::RewriteBitfield(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
   declareProperty("inhits", m_inHits, "Hit collection with old segmentation (input)");
   declareProperty("outhits", m_outHits, "Hit collection with modified segmentation (output)");
 }
@@ -20,7 +20,7 @@ RewriteBitfield::RewriteBitfield(const std::string& aName, ISvcLocator* aSvcLoc)
 RewriteBitfield::~RewriteBitfield() {}
 
 StatusCode RewriteBitfield::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
   
   if (!m_geoSvc) {
     error() << "Unable to locate Geometry Service. "
@@ -71,7 +71,7 @@ StatusCode RewriteBitfield::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RewriteBitfield::execute() {
+StatusCode RewriteBitfield::execute(const EventContext&) const {
   const auto inHits = m_inHits.get();
   auto outHits = m_outHits.createAndPut();
   // loop over positioned hits to get the energy deposits: position and cellID
@@ -101,4 +101,4 @@ StatusCode RewriteBitfield::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RewriteBitfield::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode RewriteBitfield::finalize() { return Gaudi::Algorithm::finalize(); }

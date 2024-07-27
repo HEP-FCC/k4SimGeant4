@@ -17,7 +17,7 @@
 
 DECLARE_COMPONENT(MergeLayers)
 
-MergeLayers::MergeLayers(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
+MergeLayers::MergeLayers(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
   declareProperty("inhits", m_inHits, "Hit collection to merge (input)");
   declareProperty("outhits", m_outHits, "Merged hit collection (output)");
 }
@@ -25,7 +25,7 @@ MergeLayers::MergeLayers(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi
 MergeLayers::~MergeLayers() {}
 
 StatusCode MergeLayers::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
   if (m_idToMerge.empty()) {
     error() << "No identifier to merge specified." << endmsg;
     return StatusCode::FAILURE;
@@ -61,7 +61,7 @@ StatusCode MergeLayers::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MergeLayers::execute() {
+StatusCode MergeLayers::execute(const EventContext&) const {
   const auto inHits = m_inHits.get();
   auto outHits = new edm4hep::CalorimeterHitCollection();
 
@@ -109,4 +109,4 @@ StatusCode MergeLayers::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MergeLayers::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode MergeLayers::finalize() { return Gaudi::Algorithm::finalize(); }

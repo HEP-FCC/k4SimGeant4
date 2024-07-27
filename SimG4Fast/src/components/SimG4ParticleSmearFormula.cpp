@@ -15,14 +15,14 @@ DECLARE_COMPONENT(SimG4ParticleSmearFormula)
 
 SimG4ParticleSmearFormula::SimG4ParticleSmearFormula(const std::string& type, const std::string& name,
                                                      const IInterface* parent)
-    : GaudiTool(type, name, parent), m_resolutionMomentum() {
+    : AlgTool(type, name, parent), m_resolutionMomentum() {
   declareInterface<ISimG4ParticleSmearTool>(this);
 }
 
 SimG4ParticleSmearFormula::~SimG4ParticleSmearFormula() {}
 
 StatusCode SimG4ParticleSmearFormula::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   m_randSvc = service("RndmGenSvc");
@@ -39,7 +39,7 @@ StatusCode SimG4ParticleSmearFormula::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4ParticleSmearFormula::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4ParticleSmearFormula::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4ParticleSmearFormula::smearMomentum(CLHEP::Hep3Vector& aMom, int /*aPdg*/) {
   if (!m_resolutionMomentum.IsValid()) {

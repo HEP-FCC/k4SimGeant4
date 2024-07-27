@@ -17,7 +17,7 @@
 DECLARE_COMPONENT(SamplingFractionInLayers)
 
 SamplingFractionInLayers::SamplingFractionInLayers(const std::string& aName, ISvcLocator* aSvcLoc)
-    : GaudiAlgorithm(aName, aSvcLoc),
+    : Gaudi::Algorithm(aName, aSvcLoc),
       m_histSvc("THistSvc", "SamplingFractionInLayers"),
       m_geoSvc("GeoSvc", "SamplingFractionInLayers"),
       m_totalEnergy(nullptr),
@@ -28,7 +28,7 @@ SamplingFractionInLayers::SamplingFractionInLayers(const std::string& aName, ISv
 SamplingFractionInLayers::~SamplingFractionInLayers() {}
 
 StatusCode SamplingFractionInLayers::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) {
+  if (Gaudi::Algorithm::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   // check if readouts exist
@@ -77,7 +77,7 @@ StatusCode SamplingFractionInLayers::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SamplingFractionInLayers::execute() {
+StatusCode SamplingFractionInLayers::execute(const EventContext&) const {
   auto decoder = m_geoSvc->getDetector()->readout(m_readoutName).idSpec().decoder();
   double sumE = 0.;
   std::vector<double> sumElayers;
@@ -124,4 +124,4 @@ StatusCode SamplingFractionInLayers::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SamplingFractionInLayers::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode SamplingFractionInLayers::finalize() { return Gaudi::Algorithm::finalize(); }

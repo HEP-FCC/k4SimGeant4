@@ -12,7 +12,7 @@ DECLARE_COMPONENT(SimG4CrossingAngleBoost)
 
 SimG4CrossingAngleBoost::SimG4CrossingAngleBoost(
     const std::string& aName,
-    ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc) {
+    ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
   declareProperty("InParticles", m_inParticles,
                   "Handle for the input particles");
   declareProperty("OutParticles", m_outParticles,
@@ -26,7 +26,7 @@ StatusCode SimG4CrossingAngleBoost::initialize() {
   if (m_alpha != 0.) {
     debug() << "Boosting particle according to the crossing angle alpha = "
             << m_alpha << "rad" << endmsg;
-    sc = GaudiAlgorithm::initialize();
+    sc = Gaudi::Algorithm::initialize();
   } else {
     warning() << "Crossing angle alpha = " << m_alpha.value() << " rad." << endmsg;
     warning() << "There is no need to run this algorithm." << endmsg;
@@ -36,7 +36,7 @@ StatusCode SimG4CrossingAngleBoost::initialize() {
 }
 
 
-StatusCode SimG4CrossingAngleBoost::execute() {
+StatusCode SimG4CrossingAngleBoost::execute(const EventContext&) const {
 
   auto outParticles = m_outParticles.createAndPut();
   auto inParticles = m_inParticles.get();
@@ -114,5 +114,5 @@ StatusCode SimG4CrossingAngleBoost::execute() {
 
 
 StatusCode SimG4CrossingAngleBoost::finalize() {
-  return GaudiAlgorithm::finalize();
+  return Gaudi::Algorithm::finalize();
 }

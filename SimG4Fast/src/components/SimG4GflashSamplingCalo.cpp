@@ -8,12 +8,12 @@ DECLARE_COMPONENT(SimG4GflashSamplingCalo)
 
 SimG4GflashSamplingCalo::SimG4GflashSamplingCalo(const std::string& type, const std::string& name,
                                                  const IInterface* parent)
-    : GaudiTool(type, name, parent) {}
+    : AlgTool(type, name, parent) {}
 
 SimG4GflashSamplingCalo::~SimG4GflashSamplingCalo() {}
 
 StatusCode SimG4GflashSamplingCalo::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (m_thicknessActive == 0 || m_thicknessPassive == 0) {
@@ -32,7 +32,7 @@ StatusCode SimG4GflashSamplingCalo::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4GflashSamplingCalo::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4GflashSamplingCalo::finalize() { return AlgTool::finalize(); }
 
 std::unique_ptr<GVFlashShowerParameterisation> SimG4GflashSamplingCalo::parametrisation() {
   G4NistManager* nist = G4NistManager::Instance();

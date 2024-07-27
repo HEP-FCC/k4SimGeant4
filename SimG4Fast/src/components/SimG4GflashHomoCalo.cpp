@@ -7,12 +7,12 @@
 DECLARE_COMPONENT(SimG4GflashHomoCalo)
 
 SimG4GflashHomoCalo::SimG4GflashHomoCalo(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {}
+    : AlgTool(type, name, parent) {}
 
 SimG4GflashHomoCalo::~SimG4GflashHomoCalo() {}
 
 StatusCode SimG4GflashHomoCalo::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (m_material.empty()) {
@@ -27,7 +27,7 @@ StatusCode SimG4GflashHomoCalo::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4GflashHomoCalo::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4GflashHomoCalo::finalize() { return AlgTool::finalize(); }
 
 std::unique_ptr<GVFlashShowerParameterisation> SimG4GflashHomoCalo::parametrisation() {
   G4NistManager* nist = G4NistManager::Instance();

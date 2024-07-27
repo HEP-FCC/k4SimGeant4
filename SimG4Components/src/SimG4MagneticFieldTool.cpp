@@ -30,7 +30,7 @@ DECLARE_COMPONENT(SimG4MagneticFieldTool)
 SimG4MagneticFieldTool::SimG4MagneticFieldTool(const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent)
-    : GaudiTool(type, name, parent), m_geoSvc("GeoSvc", name), m_field(nullptr) {
+    : AlgTool(type, name, parent), m_geoSvc("GeoSvc", name), m_field(nullptr) {
   declareInterface<ISimG4MagneticFieldTool>(this);
 }
 
@@ -38,7 +38,7 @@ SimG4MagneticFieldTool::~SimG4MagneticFieldTool() {}
 
 StatusCode SimG4MagneticFieldTool::initialize() {
   {
-    StatusCode sc = GaudiTool::initialize();
+    StatusCode sc = AlgTool::initialize();
     if (!sc.isSuccess()) {
       return sc;
     }
@@ -88,7 +88,7 @@ StatusCode SimG4MagneticFieldTool::initialize() {
 
 
 StatusCode SimG4MagneticFieldTool::finalize() {
-  StatusCode sc = GaudiTool::finalize();
+  StatusCode sc = AlgTool::finalize();
 
   return sc;
 }

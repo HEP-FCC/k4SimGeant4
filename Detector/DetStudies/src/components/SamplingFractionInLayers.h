@@ -2,7 +2,7 @@
 #define DETSTUDIES_SAMPLINGFRACTIONINLAYERS_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ServiceHandle.h"
 
 // FCCSW
@@ -26,7 +26,7 @@ class ITHistSvc;
  *  @author Anna Zaborowska
  */
 
-class SamplingFractionInLayers : public GaudiAlgorithm {
+class SamplingFractionInLayers : public Gaudi::Algorithm {
 public:
   explicit SamplingFractionInLayers(const std::string&, ISvcLocator*);
   virtual ~SamplingFractionInLayers();
@@ -37,7 +37,7 @@ public:
   /**  Fills the histograms.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
    *   @return status code
    */
@@ -49,7 +49,7 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for the energy deposits
-  DataHandle<edm4hep::SimCalorimeterHitCollection> m_deposits{"rec/caloHits", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::SimCalorimeterHitCollection> m_deposits{"rec/caloHits", Gaudi::DataHandle::Reader, this};
   /// Name of the active field
   Gaudi::Property<std::string> m_activeFieldName{this, "activeFieldName", "", "Identifier of active material"};
   /// Value of the active material

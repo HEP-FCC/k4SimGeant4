@@ -1,5 +1,7 @@
 #include "MergeCells.h"
 
+#include "GaudiKernel/EventContext.h"
+
 // FCCSW
 #include "k4Interface/IGeoSvc.h"
 
@@ -8,13 +10,12 @@
 
 // DD4hep
 #include "DD4hep/Detector.h"
-#include "DD4hep/BitFieldCoder.h"
 
 using dd4hep::DDSegmentation::CellID;
 
 DECLARE_COMPONENT(MergeCells)
 
-MergeCells::MergeCells(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
+MergeCells::MergeCells(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
   declareProperty("inhits", m_inHits, "Hit collection to merge (input)");
   declareProperty("outhits", m_outHits, "Merged hit collection (output)");
 }
@@ -22,7 +23,7 @@ MergeCells::MergeCells(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAl
 MergeCells::~MergeCells() {}
 
 StatusCode MergeCells::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
   if (m_idToMerge.empty()) {
     error() << "No identifier to merge specified." << endmsg;
     return StatusCode::FAILURE;
@@ -72,7 +73,7 @@ StatusCode MergeCells::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MergeCells::execute() {
+StatusCode MergeCells::execute(const EventContext&) const {
   const auto inHits = m_inHits.get();
   auto outHits = new edm4hep::CalorimeterHitCollection();
 
@@ -116,4 +117,4 @@ StatusCode MergeCells::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MergeCells::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode MergeCells::finalize() { return Gaudi::Algorithm::finalize(); }

@@ -5,7 +5,7 @@
 
 DECLARE_COMPONENT(RedoSegmentation)
 
-RedoSegmentation::RedoSegmentation(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
+RedoSegmentation::RedoSegmentation(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
   declareProperty("inhits", m_inHits, "Hit collection with old segmentation (input)");
   declareProperty("outhits", m_outHits, "Hit collection with modified segmentation (output)");
 }
@@ -13,7 +13,7 @@ RedoSegmentation::RedoSegmentation(const std::string& aName, ISvcLocator* aSvcLo
 RedoSegmentation::~RedoSegmentation() {}
 
 StatusCode RedoSegmentation::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
 
   if (!m_geoSvc) {
     error() << "Unable to locate Geometry Service. "
@@ -79,7 +79,7 @@ StatusCode RedoSegmentation::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RedoSegmentation::execute() {
+StatusCode RedoSegmentation::execute(const EventContext&) const {
   const auto inHits = m_inHits.get();
   auto outHits = m_outHits.createAndPut();
   // loop over positioned hits to get the energy deposits: position and cellID
@@ -140,7 +140,7 @@ StatusCode RedoSegmentation::execute() {
 
 StatusCode RedoSegmentation::finalize() {
   info() << "RedoSegmentation finalize! " << endmsg;
-   return GaudiAlgorithm::finalize(); }
+   return Gaudi::Algorithm::finalize(); }
 
 uint64_t RedoSegmentation::volumeID(uint64_t aCellId) const {
   dd4hep::DDSegmentation::CellID cID = aCellId;

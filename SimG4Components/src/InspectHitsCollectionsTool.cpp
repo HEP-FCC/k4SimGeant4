@@ -18,14 +18,14 @@ DECLARE_COMPONENT(InspectHitsCollectionsTool)
 
 InspectHitsCollectionsTool::InspectHitsCollectionsTool(const std::string& aType, const std::string& aName,
                                                        const IInterface* aParent)
-    : GaudiTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
+    : AlgTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
   declareInterface<ISimG4SaveOutputTool>(this);
 }
 
 InspectHitsCollectionsTool::~InspectHitsCollectionsTool() {}
 
 StatusCode InspectHitsCollectionsTool::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     error() << "Unable to initialize Service()" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -46,7 +46,7 @@ StatusCode InspectHitsCollectionsTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode InspectHitsCollectionsTool::finalize() { return GaudiTool::finalize(); }
+StatusCode InspectHitsCollectionsTool::finalize() { return AlgTool::finalize(); }
 
 StatusCode InspectHitsCollectionsTool::saveOutput(const G4Event& aEvent) {
   G4HCofThisEvent* collections = aEvent.GetHCofThisEvent();

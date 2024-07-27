@@ -2,7 +2,7 @@
 #define SIMG4FAST_G4PARTICLESMEARSIMPLE_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 class IRndmGenSvc;
 
@@ -19,7 +19,7 @@ class IRndmGenSvc;
  *  @author Anna Zaborowska
  */
 
-class SimG4ParticleSmearSimple : public GaudiTool, virtual public ISimG4ParticleSmearTool {
+class SimG4ParticleSmearSimple : public AlgTool, virtual public ISimG4ParticleSmearTool {
 public:
   explicit SimG4ParticleSmearSimple(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4ParticleSmearSimple();

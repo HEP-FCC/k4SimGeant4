@@ -19,14 +19,14 @@ DECLARE_COMPONENT(SimG4ParticleSmearRootFile)
 
 SimG4ParticleSmearRootFile::SimG4ParticleSmearRootFile(const std::string& type, const std::string& name,
                                                        const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<ISimG4ParticleSmearTool>(this);
 }
 
 SimG4ParticleSmearRootFile::~SimG4ParticleSmearRootFile() {}
 
 StatusCode SimG4ParticleSmearRootFile::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   m_randSvc = service("RndmGenSvc");
@@ -41,7 +41,7 @@ StatusCode SimG4ParticleSmearRootFile::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4ParticleSmearRootFile::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4ParticleSmearRootFile::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4ParticleSmearRootFile::smearMomentum(CLHEP::Hep3Vector& aMom, int /*aPdg*/) {
   double res = resolution(aMom.pseudoRapidity(), aMom.mag() / CLHEP::GeV);

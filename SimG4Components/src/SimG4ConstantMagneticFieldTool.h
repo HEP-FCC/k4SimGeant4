@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4CONSTANTMAGNETICFIELDTOOL_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4MagneticFieldTool.h"
@@ -28,7 +28,7 @@ class ConstantField;
 *  @date   2016-02-22
 */
 
-class SimG4ConstantMagneticFieldTool : public GaudiTool, virtual public ISimG4MagneticFieldTool {
+class SimG4ConstantMagneticFieldTool : public AlgTool, virtual public ISimG4MagneticFieldTool {
 public:
   /// Standard constructor
   SimG4ConstantMagneticFieldTool(const std::string& type, const std::string& name, const IInterface* parent);

@@ -3,7 +3,7 @@
 
 // from Gaudi
 #include "k4FWCore/DataHandle.h"
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 #include "SimG4Interface/ISimG4EventProviderTool.h"
 
@@ -15,7 +15,7 @@ namespace edm4hep {
 class MCParticleCollection;
 }
 
-class SimG4GeantinosFromEdmTool : public GaudiTool, virtual public ISimG4EventProviderTool {
+class SimG4GeantinosFromEdmTool : public AlgTool, virtual public ISimG4EventProviderTool {
 public:
   /// Standard constructor
   SimG4GeantinosFromEdmTool(const std::string& type, const std::string& name, const IInterface* parent);
@@ -30,7 +30,7 @@ public:
 
 private:
   /// Handle for the EDM MC particles to be read
-  DataHandle<edm4hep::MCParticleCollection> m_genParticles{"GenParticles", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_genParticles{"GenParticles", Gaudi::DataHandle::Reader, this};
 };
 
 #endif

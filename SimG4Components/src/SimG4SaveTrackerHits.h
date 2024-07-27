@@ -6,7 +6,7 @@
 #include <string>
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // k4FWCore
 #include "k4FWCore/DataHandle.h"
@@ -43,7 +43,7 @@
  *  @author Juraj Smiesko (deprecated `readoutNames`)
  */
 
-class SimG4SaveTrackerHits : public GaudiTool, virtual public ISimG4SaveOutputTool {
+class SimG4SaveTrackerHits : public AlgTool, virtual public ISimG4SaveOutputTool {
 public:
   explicit SimG4SaveTrackerHits(const std::string& aType, const std::string& aName, const IInterface* aParent);
   virtual ~SimG4SaveTrackerHits();
@@ -66,7 +66,7 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for output tracker hits
-  DataHandle<edm4hep::SimTrackerHitCollection> m_trackHits {
+  mutable DataHandle<edm4hep::SimTrackerHitCollection> m_trackHits {
       "TrackerHits", Gaudi::DataHandle::Writer, this};
   /// Output handle for cell ID encoding string
   MetaDataHandle<std::string> m_cellIDEncoding {
