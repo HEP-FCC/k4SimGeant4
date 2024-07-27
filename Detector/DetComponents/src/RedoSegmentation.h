@@ -2,7 +2,7 @@
 #define DETCOMPONENTS_REDOSEGMENTATION_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
 // k4FWCore
@@ -34,7 +34,7 @@
  *  @author Anna Zaborowska
  */
 
-class RedoSegmentation : public GaudiAlgorithm {
+class RedoSegmentation : public Gaudi::Algorithm {
 public:
   explicit RedoSegmentation(const std::string&, ISvcLocator*);
   virtual ~RedoSegmentation();
@@ -45,7 +45,7 @@ public:
   /**  Execute.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
    *   @return status code
    */
@@ -60,10 +60,10 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for the EDM positioned hits to be read
-  DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{
+  mutable DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{
       "hits/caloInHits", Gaudi::DataHandle::Reader, this};
   /// Handle for the EDM hits to be written
-  DataHandle<edm4hep::SimCalorimeterHitCollection> m_outHits{
+  mutable DataHandle<edm4hep::SimCalorimeterHitCollection> m_outHits{
       "hits/caloOutHits", Gaudi::DataHandle::Writer, this};
   /// Handle for the output hits cell id encoding.
   MetaDataHandle<std::string> m_outHitsCellIDEncoding{

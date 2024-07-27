@@ -17,7 +17,7 @@ DECLARE_COMPONENT(SimG4SaveCalHits)
 SimG4SaveCalHits::SimG4SaveCalHits(const std::string& aType,
                                    const std::string& aName,
                                    const IInterface* aParent) :
-      GaudiTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
+      AlgTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
   declareInterface<ISimG4SaveOutputTool>(this);
   declareProperty("CaloHits", m_caloHits, "Handle for calo hits");
   declareProperty("GeoSvc", m_geoSvc);
@@ -26,7 +26,7 @@ SimG4SaveCalHits::SimG4SaveCalHits(const std::string& aType,
 SimG4SaveCalHits::~SimG4SaveCalHits() {}
 
 StatusCode SimG4SaveCalHits::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
 
@@ -88,7 +88,7 @@ StatusCode SimG4SaveCalHits::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4SaveCalHits::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4SaveCalHits::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4SaveCalHits::saveOutput(const G4Event& aEvent) {
   G4HCofThisEvent* collections = aEvent.GetHCofThisEvent();

@@ -22,13 +22,13 @@ DECLARE_COMPONENT(SimG4GeantinosFromEdmTool)
 SimG4GeantinosFromEdmTool::SimG4GeantinosFromEdmTool(const std::string& type,
                                                      const std::string& name,
                                                      const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareProperty("GenParticles", m_genParticles, "Handle for the EDM MC particles to be read");
 }
 
 SimG4GeantinosFromEdmTool::~SimG4GeantinosFromEdmTool() {}
 
-StatusCode SimG4GeantinosFromEdmTool::initialize() { return GaudiTool::initialize(); }
+StatusCode SimG4GeantinosFromEdmTool::initialize() { return AlgTool::initialize(); }
 
 G4Event* SimG4GeantinosFromEdmTool::g4Event() {
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();

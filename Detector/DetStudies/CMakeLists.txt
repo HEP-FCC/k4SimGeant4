@@ -14,7 +14,6 @@ gaudi_add_module(DetStudies
                       DD4hep::DDG4
                       k4FWCore::k4FWCore
                       k4FWCore::k4Interface
-                      Gaudi::GaudiAlgLib
                       Gaudi::GaudiKernel
                       EDM4HEP::edm4hep
                       ROOT::Core

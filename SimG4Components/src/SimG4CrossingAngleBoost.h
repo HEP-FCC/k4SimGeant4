@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_CROSSINGANGLEBOOST_H
 
 // Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -19,7 +19,7 @@ class MCParticleCollection;
  *  @author Juraj Smiesko, Gerri Ganis
  */
 
-class SimG4CrossingAngleBoost : public GaudiAlgorithm {
+class SimG4CrossingAngleBoost : public Gaudi::Algorithm {
  public:
   SimG4CrossingAngleBoost(const std::string& aName, ISvcLocator* svcLoc);
   /**  Initialize.
@@ -35,13 +35,13 @@ class SimG4CrossingAngleBoost : public GaudiAlgorithm {
    *   @param[in] aEvent Event with data to save.
    *   @return status code
    */
-  StatusCode execute();
+  StatusCode execute(const EventContext&) const;
 
  private:
   /// Handle for the particles to be read
-  DataHandle<edm4hep::MCParticleCollection> m_inParticles{"InParticles", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_inParticles{"InParticles", Gaudi::DataHandle::Reader, this};
   /// Handle for the particles to be written
-  DataHandle<edm4hep::MCParticleCollection> m_outParticles{"OutParticles", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_outParticles{"OutParticles", Gaudi::DataHandle::Writer, this};
   /// Value of the crossing angle in radians
   Gaudi::Property<double> m_alpha{this, "CrossingAngle", 0., "Crossing angle (alpha) in radians"};
 };

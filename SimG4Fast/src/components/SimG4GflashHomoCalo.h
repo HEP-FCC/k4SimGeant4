@@ -2,7 +2,7 @@
 #define SIMG4FAST_SIMG4GFLASHHOMOCALO_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4GflashTool.h"
@@ -16,7 +16,7 @@
  *  @author Anna Zaborowska
 */
 
-class SimG4GflashHomoCalo : public GaudiTool, virtual public ISimG4GflashTool {
+class SimG4GflashHomoCalo : public AlgTool, virtual public ISimG4GflashTool {
 public:
   explicit SimG4GflashHomoCalo(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4GflashHomoCalo();

@@ -13,7 +13,7 @@ DECLARE_COMPONENT(EnergyInCaloLayers)
 
 
 EnergyInCaloLayers::EnergyInCaloLayers(const std::string& aName, ISvcLocator* aSvcLoc)
-    : GaudiAlgorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
+    : Gaudi::Algorithm(aName, aSvcLoc), m_geoSvc("GeoSvc", aName) {
   declareProperty("deposits", m_deposits, "Energy deposits (input)");
   declareProperty("particle", m_particle, "Generated single-particle event (input)");
 
@@ -27,7 +27,7 @@ EnergyInCaloLayers::~EnergyInCaloLayers() {}
 
 
 StatusCode EnergyInCaloLayers::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
 
   // Check geometry service
   if (!m_geoSvc) {
@@ -60,7 +60,7 @@ StatusCode EnergyInCaloLayers::initialize() {
 }
 
 
-StatusCode EnergyInCaloLayers::execute() {
+StatusCode EnergyInCaloLayers::execute(const EventContext&) const {
   auto decoder = m_geoSvc->getDetector()->readout(m_readoutName).idSpec().decoder();
 
   // Initialize output variables
@@ -145,5 +145,5 @@ StatusCode EnergyInCaloLayers::execute() {
 
 
 StatusCode EnergyInCaloLayers::finalize() {
-  return GaudiAlgorithm::finalize();
+  return Gaudi::Algorithm::finalize();
 }

@@ -6,8 +6,7 @@
 file(GLOB _lib_sources src/*.cpp)
 gaudi_add_library(SimG4Common
                   SOURCES ${_lib_sources}
-                  LINK Gaudi::GaudiAlgLib
-                       k4FWCore::k4FWCore
+                  LINK k4FWCore::k4FWCore
                        ${Geant4_LIBRARIES}
                        EDM4HEP::edm4hep
                        DD4hep::DDCore

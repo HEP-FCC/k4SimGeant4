@@ -8,14 +8,14 @@
 
 DECLARE_COMPONENT(SimG4Alg)
 
-SimG4Alg::SimG4Alg(const std::string& aName, ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc),
+SimG4Alg::SimG4Alg(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc),
 m_geantSvc("SimG4Svc", aName) {
   declareProperty("eventProvider", m_eventTool, "Handle for tool that creates the G4Event");
 }
 SimG4Alg::~SimG4Alg() {}
 
 StatusCode SimG4Alg::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
   if (!m_geantSvc) {
     error() << "Unable to locate Geant Simulation Service" << endmsg;
     return StatusCode::FAILURE;
@@ -34,7 +34,7 @@ StatusCode SimG4Alg::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4Alg::execute() {
+StatusCode SimG4Alg::execute(const EventContext&) const {
   // first translate the event
   G4Event* event = m_eventTool->g4Event();
 
@@ -52,4 +52,4 @@ StatusCode SimG4Alg::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4Alg::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode SimG4Alg::finalize() { return Gaudi::Algorithm::finalize(); }

@@ -2,7 +2,7 @@
 #define DETSTUDIES_ENERGYINCALOLAYERS_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 // Key4HEP
 #include "k4Interface/IGeoSvc.h"
@@ -28,7 +28,7 @@
  *  @author Juraj Smiesko
  */
 
-class EnergyInCaloLayers : public GaudiAlgorithm {
+class EnergyInCaloLayers : public Gaudi::Algorithm {
 public:
   explicit EnergyInCaloLayers(const std::string&, ISvcLocator*);
   virtual ~EnergyInCaloLayers();
@@ -39,7 +39,7 @@ public:
   /**  Fills the histograms.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
    *   @return status code
    */
@@ -47,15 +47,15 @@ public:
 
 private:
   /// Handle for the energy deposits
-  DataHandle<edm4hep::CalorimeterHitCollection> m_deposits{"det/caloDeposits", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::CalorimeterHitCollection> m_deposits{"det/caloDeposits", Gaudi::DataHandle::Reader, this};
   /// Handle for the particle
-  DataHandle<edm4hep::MCParticleCollection> m_particle{"det/particles", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_particle{"det/particles", Gaudi::DataHandle::Reader, this};
   /// Handle for vector with energy deposited in every layer
-  DataHandle<podio::UserDataCollection<double>> m_energyInLayer {"energyInLayer", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<podio::UserDataCollection<double>> m_energyInLayer {"energyInLayer", Gaudi::DataHandle::Writer, this};
   /// Handle for vector with energy deposited in cryostat and in its parts
-  DataHandle<podio::UserDataCollection<double>> m_energyInCryo {"energyInCryo", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<podio::UserDataCollection<double>> m_energyInCryo {"energyInCryo", Gaudi::DataHandle::Writer, this};
   /// Handle for initial particle vector
-  DataHandle<podio::UserDataCollection<double>> m_particleVec {"particleVec", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<podio::UserDataCollection<double>> m_particleVec {"particleVec", Gaudi::DataHandle::Writer, this};
 
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;

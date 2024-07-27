@@ -13,7 +13,7 @@ DECLARE_COMPONENT(SimG4FullSimDCHRegion)
 
 SimG4FullSimDCHRegion::SimG4FullSimDCHRegion(const std::string& type, const std::string& name,
                                                      const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<ISimG4RegionTool>(this);
 
 }
@@ -25,7 +25,7 @@ SimG4FullSimDCHRegion::~SimG4FullSimDCHRegion()
 
 StatusCode SimG4FullSimDCHRegion::initialize() {
   std::cout << "nalipourTest: SimG4FullSimDCHRegion ---> initialize" << std::endl;
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (m_volumeNames.size() == 0) {
@@ -42,7 +42,7 @@ StatusCode SimG4FullSimDCHRegion::initialize() {
 StatusCode SimG4FullSimDCHRegion::finalize() 
 {
   std::cout << "nalipourTest: SimG4FullSimDCHRegion ---> finalize" << std::endl; 
-  return GaudiTool::finalize(); 
+  return AlgTool::finalize(); 
 }
 
 StatusCode SimG4FullSimDCHRegion::create() {

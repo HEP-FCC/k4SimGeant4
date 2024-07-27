@@ -18,7 +18,7 @@ DECLARE_COMPONENT(SimG4SaveSmearedParticles)
 
 SimG4SaveSmearedParticles::SimG4SaveSmearedParticles(const std::string& aType, const std::string& aName,
                                                      const IInterface* aParent)
-    : GaudiTool(aType, aName, aParent) {
+    : AlgTool(aType, aName, aParent) {
   declareInterface<ISimG4SaveOutputTool>(this);
   declareProperty("RecParticles", m_particles, "Handle for the particles to be written");
   declareProperty("MCRecoParticleAssoc", m_particlesMCparticles,
@@ -27,9 +27,9 @@ SimG4SaveSmearedParticles::SimG4SaveSmearedParticles(const std::string& aType, c
 
 SimG4SaveSmearedParticles::~SimG4SaveSmearedParticles() {}
 
-StatusCode SimG4SaveSmearedParticles::initialize() { return GaudiTool::initialize(); }
+StatusCode SimG4SaveSmearedParticles::initialize() { return AlgTool::initialize(); }
 
-StatusCode SimG4SaveSmearedParticles::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4SaveSmearedParticles::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4SaveSmearedParticles::saveOutput(const G4Event& aEvent) {
   auto particles = m_particles.createAndPut();

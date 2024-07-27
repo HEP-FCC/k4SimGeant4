@@ -16,7 +16,6 @@ gaudi_add_module(SimG4Components
                       k4FWCore::k4FWCore
                       k4FWCore::k4Interface
                       EDM4HEP::edm4hep
-                      Gaudi::GaudiAlgLib
 )
 
 add_test(NAME CrossingAngleBoost

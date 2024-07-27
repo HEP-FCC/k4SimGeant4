@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4SINGLEPARTICLEGENERATORTOOL_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -29,7 +29,7 @@ class MCParticleCollection;
 *  @date   2014-10-01
 */
 
-class SimG4SingleParticleGeneratorTool : public GaudiTool, virtual public ISimG4EventProviderTool {
+class SimG4SingleParticleGeneratorTool : public AlgTool, virtual public ISimG4EventProviderTool {
 public:
   /// Standard constructor
   SimG4SingleParticleGeneratorTool(const std::string& type, const std::string& name, const IInterface* parent);
@@ -69,7 +69,7 @@ private:
   /// Flag whether to save primary particle to EDM, set with saveEdm
   Gaudi::Property<bool> m_saveEdm{this, "saveEdm", false};
   /// Handle for the genparticles to be written
-  DataHandle<edm4hep::MCParticleCollection> m_genParticlesHandle{"GenParticles", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_genParticlesHandle{"GenParticles", Gaudi::DataHandle::Writer, this};
 };
 
 #endif

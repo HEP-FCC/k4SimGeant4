@@ -14,7 +14,7 @@ DECLARE_COMPONENT(SimG4FastSimCalorimeterRegion)
 
 SimG4FastSimCalorimeterRegion::SimG4FastSimCalorimeterRegion(const std::string& type, const std::string& name,
                                                              const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<ISimG4RegionTool>(this);
   declareProperty("parametrisation", m_parametrisationTool,
                   "Pointer to a parametrisation tool, to retrieve calorimeter parametrisation");
@@ -23,7 +23,7 @@ SimG4FastSimCalorimeterRegion::SimG4FastSimCalorimeterRegion(const std::string& 
 SimG4FastSimCalorimeterRegion::~SimG4FastSimCalorimeterRegion() {}
 
 StatusCode SimG4FastSimCalorimeterRegion::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (m_volumeNames.size() == 0) {
@@ -41,7 +41,7 @@ StatusCode SimG4FastSimCalorimeterRegion::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4FastSimCalorimeterRegion::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4FastSimCalorimeterRegion::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4FastSimCalorimeterRegion::create() {
   G4LogicalVolume* world =

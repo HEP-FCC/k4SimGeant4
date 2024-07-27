@@ -27,7 +27,7 @@ DECLARE_COMPONENT(SimG4ConstantMagneticFieldTool)
 
 SimG4ConstantMagneticFieldTool::SimG4ConstantMagneticFieldTool(const std::string& type, const std::string& name,
                                                                const IInterface* parent)
-    : GaudiTool(type, name, parent), m_field(nullptr) {
+    : AlgTool(type, name, parent), m_field(nullptr) {
   declareInterface<ISimG4MagneticFieldTool>(this);
 }
 
@@ -36,7 +36,7 @@ SimG4ConstantMagneticFieldTool::~SimG4ConstantMagneticFieldTool() {
 }
 
 StatusCode SimG4ConstantMagneticFieldTool::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
   if (m_fieldOn) {
@@ -64,7 +64,7 @@ StatusCode SimG4ConstantMagneticFieldTool::initialize() {
 }
 
 StatusCode SimG4ConstantMagneticFieldTool::finalize() {
-  StatusCode sc = GaudiTool::finalize();
+  StatusCode sc = AlgTool::finalize();
   return sc;
 }
 

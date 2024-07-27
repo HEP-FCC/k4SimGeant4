@@ -2,7 +2,7 @@
 #define SIMG4FAST_G4PARTICLESMEARFORMULA_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 class IRndmGenSvc;
 class IRndmGen;
@@ -23,7 +23,7 @@ class IRndmGen;
  *  @author Anna Zaborowska
  */
 
-class SimG4ParticleSmearFormula : public GaudiTool, virtual public ISimG4ParticleSmearTool {
+class SimG4ParticleSmearFormula : public AlgTool, virtual public ISimG4ParticleSmearTool {
 public:
   explicit SimG4ParticleSmearFormula(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4ParticleSmearFormula();

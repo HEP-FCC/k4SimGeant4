@@ -15,7 +15,7 @@
 
 DECLARE_COMPONENT(SimG4SmearGenParticles)
 
-SimG4SmearGenParticles::SimG4SmearGenParticles(const std::string& aName,ISvcLocator* aSvcLoc) : GaudiAlgorithm(aName, aSvcLoc) {
+SimG4SmearGenParticles::SimG4SmearGenParticles(const std::string& aName,ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
   declareProperty("inParticles", m_inParticles, "Handle for the input particles");
   declareProperty("smearedParticles", m_particles, "Handle for the particles to be written");
   declareProperty("smearTool", m_smearTool, "Handle to smear generated particles tool");
@@ -23,7 +23,7 @@ SimG4SmearGenParticles::SimG4SmearGenParticles(const std::string& aName,ISvcLoca
 
 StatusCode SimG4SmearGenParticles::initialize() { 
 
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = Gaudi::Algorithm::initialize();
   // Use smearing tool                                                                                                                                                                                     
   if (!m_smearTool.retrieve()) {
     info() << "Generated particles will not be smeared!!!" << endmsg;
@@ -32,7 +32,7 @@ StatusCode SimG4SmearGenParticles::initialize() {
   return sc;
 }
 
-StatusCode SimG4SmearGenParticles::execute() {
+StatusCode SimG4SmearGenParticles::execute(const EventContext&) const {
 
   auto particles = m_particles.createAndPut();
   const edm4hep::MCParticleCollection* coll = m_inParticles.get();
@@ -80,4 +80,4 @@ StatusCode SimG4SmearGenParticles::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4SmearGenParticles::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode SimG4SmearGenParticles::finalize() { return Gaudi::Algorithm::finalize(); }

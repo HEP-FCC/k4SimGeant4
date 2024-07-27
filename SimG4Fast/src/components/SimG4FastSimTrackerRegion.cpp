@@ -12,7 +12,7 @@ DECLARE_COMPONENT(SimG4FastSimTrackerRegion)
 
 SimG4FastSimTrackerRegion::SimG4FastSimTrackerRegion(const std::string& type, const std::string& name,
                                                      const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<ISimG4RegionTool>(this);
   declareProperty("smearing", m_smearTool,
                   "Pointer to a smearing tool, to retrieve tracker configuration (names of volumes)");
@@ -21,7 +21,7 @@ SimG4FastSimTrackerRegion::SimG4FastSimTrackerRegion(const std::string& type, co
 SimG4FastSimTrackerRegion::~SimG4FastSimTrackerRegion() {}
 
 StatusCode SimG4FastSimTrackerRegion::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (m_volumeNames.size() == 0) {
@@ -43,7 +43,7 @@ StatusCode SimG4FastSimTrackerRegion::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4FastSimTrackerRegion::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4FastSimTrackerRegion::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4FastSimTrackerRegion::create() {
   G4LogicalVolume* world =

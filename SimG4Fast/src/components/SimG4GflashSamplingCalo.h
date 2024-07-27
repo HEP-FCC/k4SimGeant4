@@ -2,7 +2,7 @@
 #define SIMG4FAST_SIMG4GFLASHSAMPLINGCALO_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4GflashTool.h"
@@ -18,7 +18,7 @@
  *  @author Anna Zaborowska
 */
 
-class SimG4GflashSamplingCalo : public GaudiTool, virtual public ISimG4GflashTool {
+class SimG4GflashSamplingCalo : public AlgTool, virtual public ISimG4GflashTool {
 public:
   explicit SimG4GflashSamplingCalo(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4GflashSamplingCalo();

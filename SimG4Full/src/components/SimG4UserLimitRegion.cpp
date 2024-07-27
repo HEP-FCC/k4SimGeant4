@@ -10,7 +10,7 @@
 DECLARE_COMPONENT(SimG4UserLimitRegion)
 
 SimG4UserLimitRegion::SimG4UserLimitRegion(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<ISimG4RegionTool>(this);
 }
 
@@ -18,7 +18,7 @@ SimG4UserLimitRegion::~SimG4UserLimitRegion() {}
 
 
 StatusCode SimG4UserLimitRegion::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (m_volumeNames.size() == 0) {
@@ -28,7 +28,7 @@ StatusCode SimG4UserLimitRegion::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4UserLimitRegion::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4UserLimitRegion::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4UserLimitRegion::create() {
   G4LogicalVolume* world =

@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_SIMG4SAVEPARTICLEHISTORY_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -28,7 +28,7 @@ class EventInformation;
  *  @author V. Volkl
  */
 
-class SimG4SaveParticleHistory : public GaudiTool, virtual public ISimG4SaveOutputTool {
+class SimG4SaveParticleHistory : public AlgTool, virtual public ISimG4SaveOutputTool {
 public:
   explicit SimG4SaveParticleHistory(const std::string& aType, const std::string& aName, const IInterface* aParent);
   virtual ~SimG4SaveParticleHistory() = default;
@@ -42,7 +42,7 @@ public:
 
 private:
   /// Handle for collection of MC particles to create
-  DataHandle<edm4hep::MCParticleCollection> m_mcParticles{"SimParticleSecondaries", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_mcParticles{"SimParticleSecondaries", Gaudi::DataHandle::Writer, this};
   /// Pointer to the particle collection, ownership should be handled in a algorithm / tool
   edm4hep::MCParticleCollection* m_mcParticleColl;
 };

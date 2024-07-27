@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4SIMALG_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -28,7 +28,7 @@ class G4Event;
  *  @author Anna Zaborowska
  */
 
-class SimG4Alg : public GaudiAlgorithm {
+class SimG4Alg : public Gaudi::Algorithm {
 public:
   explicit SimG4Alg(const std::string&, ISvcLocator*);
   virtual ~SimG4Alg();
@@ -43,7 +43,7 @@ public:
    *   Finally, the event is terminated.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
    *   @return status code
    */
@@ -53,10 +53,10 @@ private:
   /// Pointer to the interface of Geant simulation service
   ServiceHandle<ISimG4Svc> m_geantSvc;
   /// Handle to the tools saving the output
-  PublicToolHandleArray<ISimG4SaveOutputTool> m_saveTools {
+  mutable PublicToolHandleArray<ISimG4SaveOutputTool> m_saveTools {
       this, "outputs", {}};
   /// Handle for the tool that creates the G4Event
-  ToolHandle<ISimG4EventProviderTool> m_eventTool{
+  mutable ToolHandle<ISimG4EventProviderTool> m_eventTool{
       "SimG4PrimariesFromEdmTool", this};
 };
 #endif /* SIMG4COMPONENTS_G4SIMALG_H */

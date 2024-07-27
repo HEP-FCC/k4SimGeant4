@@ -14,14 +14,14 @@
 DECLARE_COMPONENT(SimG4FastSimHistograms)
 
 SimG4FastSimHistograms::SimG4FastSimHistograms(const std::string& aName, ISvcLocator* aSvcLoc)
-    : GaudiAlgorithm(aName, aSvcLoc) {
+    : Gaudi::Algorithm(aName, aSvcLoc) {
   declareProperty("particlesMCparticles", m_particlesMCparticles,
                   "Handle for the EDM particles and MC particles associations to be read");
 }
 SimG4FastSimHistograms::~SimG4FastSimHistograms() {}
 
 StatusCode SimG4FastSimHistograms::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
   m_histSvc = service("THistSvc");
   if (!m_histSvc) {
     error() << "Unable to locate Histogram Service" << endmsg;
@@ -46,7 +46,7 @@ StatusCode SimG4FastSimHistograms::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4FastSimHistograms::execute() {
+StatusCode SimG4FastSimHistograms::execute(const EventContext&) const {
   const auto associations = m_particlesMCparticles.get();
   for (const auto& assoc : *associations) {
     auto mom_edm = assoc.getRec().getMomentum();
@@ -61,4 +61,4 @@ StatusCode SimG4FastSimHistograms::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4FastSimHistograms::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode SimG4FastSimHistograms::finalize() { return Gaudi::Algorithm::finalize(); }

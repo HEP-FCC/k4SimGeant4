@@ -2,7 +2,7 @@
 #define SIMG4FAST_SIMG4FASTSIMCALORIMETERREGION_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToolHandle.h"
 
@@ -28,7 +28,7 @@ class G4Region;
  *  @author Anna Zaborowska
 */
 
-class SimG4FastSimCalorimeterRegion : public GaudiTool, virtual public ISimG4RegionTool {
+class SimG4FastSimCalorimeterRegion : public AlgTool, virtual public ISimG4RegionTool {
 public:
   explicit SimG4FastSimCalorimeterRegion(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4FastSimCalorimeterRegion();

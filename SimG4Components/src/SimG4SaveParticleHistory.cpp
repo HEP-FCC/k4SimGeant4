@@ -17,7 +17,7 @@ DECLARE_COMPONENT(SimG4SaveParticleHistory)
 
 SimG4SaveParticleHistory::SimG4SaveParticleHistory(const std::string& aType, const std::string& aName,
                                                    const IInterface* aParent)
-    : GaudiTool(aType, aName, aParent) {
+    : AlgTool(aType, aName, aParent) {
   declareInterface<ISimG4SaveOutputTool>(this);
   declareProperty("GenParticles", m_mcParticles, "Handle to the secondary particles");
 }

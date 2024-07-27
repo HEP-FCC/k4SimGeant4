@@ -2,7 +2,7 @@
 #define SIMG4FAST_SIMG4FASTSIMTRACKERREGION_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolHandle.h"
 
 // FCCSW
@@ -24,7 +24,7 @@ class G4Region;
  *  @author Anna Zaborowska
 */
 
-class SimG4FastSimTrackerRegion : public GaudiTool, virtual public ISimG4RegionTool {
+class SimG4FastSimTrackerRegion : public AlgTool, virtual public ISimG4RegionTool {
 public:
   explicit SimG4FastSimTrackerRegion(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4FastSimTrackerRegion();

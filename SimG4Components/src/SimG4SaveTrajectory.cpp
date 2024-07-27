@@ -16,7 +16,7 @@ DECLARE_COMPONENT(SimG4SaveTrajectory)
 
 SimG4SaveTrajectory::SimG4SaveTrajectory(const std::string& aType, const std::string& aName,
                                            const IInterface* aParent)
-    : GaudiTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
+    : AlgTool(aType, aName, aParent), m_geoSvc("GeoSvc", aName) {
   declareInterface<ISimG4SaveOutputTool>(this);
   declareProperty("TrajectoryPoints", m_trackHits, "Handle for trajectory hits");
 }
@@ -24,13 +24,13 @@ SimG4SaveTrajectory::SimG4SaveTrajectory(const std::string& aType, const std::st
 SimG4SaveTrajectory::~SimG4SaveTrajectory() {}
 
 StatusCode SimG4SaveTrajectory::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4SaveTrajectory::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4SaveTrajectory::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4SaveTrajectory::saveOutput(const G4Event& aEvent) {
   auto edmPositions = m_trackHits.createAndPut();

@@ -2,7 +2,7 @@
 #define DETCOMPONENTS_MERGELAYERS_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -34,7 +34,7 @@ class CalorimeterHitCollection;
  *  @author Anna Zaborowska
  */
 
-class MergeLayers : public GaudiAlgorithm {
+class MergeLayers : public Gaudi::Algorithm {
 public:
   explicit MergeLayers(const std::string&, ISvcLocator*);
   virtual ~MergeLayers();
@@ -45,7 +45,7 @@ public:
   /**  Execute.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
 
    *   @return status code
@@ -56,9 +56,9 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for the EDM Hits to be read
-  DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
   /// Handle for the EDM Hits to be written
-  DataHandle<edm4hep::CalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::CalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
   // Handle to the detector ID descriptor
   dd4hep::IDDescriptor m_descriptor;
   /// Name of the detector readout

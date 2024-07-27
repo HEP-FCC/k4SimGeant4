@@ -2,7 +2,7 @@
 #define SIMG4FAST_SIMG4FULLSIMDCHREGION_H
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolHandle.h"
 
 // FCCSW
@@ -25,7 +25,7 @@ class G4Region;
  *  @author nalipour
 */
 
-class SimG4FullSimDCHRegion : public GaudiTool, virtual public ISimG4RegionTool {
+class SimG4FullSimDCHRegion : public AlgTool, virtual public ISimG4RegionTool {
 public:
   explicit SimG4FullSimDCHRegion(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~SimG4FullSimDCHRegion();

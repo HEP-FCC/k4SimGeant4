@@ -2,7 +2,7 @@
 #define DETCOMPONENTS_REWRITEBITFIELD_H
 
 // GAUDI
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
 // FCCSW
@@ -36,7 +36,7 @@ class CalorimeterHitCollection;
  *  @author Anna Zaborowska
  */
 
-class RewriteBitfield : public GaudiAlgorithm {
+class RewriteBitfield : public Gaudi::Algorithm {
 public:
   explicit RewriteBitfield(const std::string&, ISvcLocator*);
   virtual ~RewriteBitfield();
@@ -47,7 +47,7 @@ public:
   /**  Execute.
    *   @return status code
    */
-  virtual StatusCode execute() final;
+  virtual StatusCode execute(const EventContext&) const final;
   /**  Finalize.
    *   @return status code
    */
@@ -57,9 +57,9 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for the EDM hits to be read
-  DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::CalorimeterHitCollection> m_inHits{"hits/caloInHits", Gaudi::DataHandle::Reader, this};
   /// Handle for the EDM hits to be written
-  DataHandle<edm4hep::CalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::CalorimeterHitCollection> m_outHits{"hits/caloOutHits", Gaudi::DataHandle::Writer, this};
   /// Name of the detector readout used in simulation
   Gaudi::Property<std::string> m_oldReadoutName{this, "oldReadoutName", "",
                                                 "Name of the detector readout used in simulation"};

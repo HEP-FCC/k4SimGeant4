@@ -2,7 +2,7 @@
 #define SIMG4COMPONENTS_G4SAVETRAJECTORY
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 // FCCSW
 #include "k4FWCore/DataHandle.h"
@@ -25,7 +25,7 @@ namespace edm4hep {
  *
  */
 
-class SimG4SaveTrajectory : public GaudiTool, virtual public ISimG4SaveOutputTool {
+class SimG4SaveTrajectory : public AlgTool, virtual public ISimG4SaveOutputTool {
 public:
   explicit SimG4SaveTrajectory(const std::string& aType, const std::string& aName, const IInterface* aParent);
   virtual ~SimG4SaveTrajectory();
@@ -47,7 +47,7 @@ private:
   /// Pointer to the geometry service
   ServiceHandle<IGeoSvc> m_geoSvc;
   /// Handle for trajectory hits including position information
-  DataHandle<edm4hep::TrackerHit3DCollection> m_trackHits{"Hits/Trajectory",
+  mutable DataHandle<edm4hep::TrackerHit3DCollection> m_trackHits{"Hits/Trajectory",
                                                                       Gaudi::DataHandle::Writer, this};
 };
 

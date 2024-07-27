@@ -16,7 +16,7 @@ DECLARE_COMPONENT(SimG4SaveTrackerHits)
 SimG4SaveTrackerHits::SimG4SaveTrackerHits(const std::string& aType,
                                            const std::string& aName,
                                            const IInterface* aParent)
-    : GaudiTool(aType, aName, aParent),
+    : AlgTool(aType, aName, aParent),
       m_geoSvc("GeoSvc", aName) {
   declareInterface<ISimG4SaveOutputTool>(this);
   declareProperty("SimTrackHits", m_trackHits, "Handle for tracker hits");
@@ -26,7 +26,7 @@ SimG4SaveTrackerHits::SimG4SaveTrackerHits(const std::string& aType,
 SimG4SaveTrackerHits::~SimG4SaveTrackerHits() {}
 
 StatusCode SimG4SaveTrackerHits::initialize() {
-  if (GaudiTool::initialize().isFailure()) {
+  if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
   if (!m_geoSvc) {
@@ -88,7 +88,7 @@ StatusCode SimG4SaveTrackerHits::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimG4SaveTrackerHits::finalize() { return GaudiTool::finalize(); }
+StatusCode SimG4SaveTrackerHits::finalize() { return AlgTool::finalize(); }
 
 StatusCode SimG4SaveTrackerHits::saveOutput(const G4Event& aEvent) {
   G4HCofThisEvent* collections = aEvent.GetHCofThisEvent();
