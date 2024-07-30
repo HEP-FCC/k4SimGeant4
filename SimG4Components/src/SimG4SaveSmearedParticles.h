@@ -8,10 +8,11 @@
 #include "k4FWCore/DataHandle.h"
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 
+#include "edm4hep/MCRecoParticleAssociationCollection.h"
+
 // datamodel
 namespace edm4hep {
 class ReconstructedParticleCollection;
-class MCRecoParticleAssociationCollection;
 }
 
 /** @class SimG4SaveSmearedParticles SimG4Components/src/SimG4SaveSmearedParticles.h SimG4SaveSmearedParticles.h
