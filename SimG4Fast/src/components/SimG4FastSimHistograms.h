@@ -8,10 +8,11 @@
 #include "k4FWCore/DataHandle.h"
 class ITHistSvc;
 
+#include "edm4hep/MCRecoParticleAssociationCollection.h"
+
 // datamodel
 namespace edm4hep {
 class ReconstructedParticleCollection;
-class MCRecoParticleAssociationCollection;
 }
 
 class TH1F;
