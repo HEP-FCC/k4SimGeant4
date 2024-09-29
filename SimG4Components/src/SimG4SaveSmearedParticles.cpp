@@ -9,7 +9,7 @@
 
 // datamodel
 #include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/MCRecoParticleAssociationCollection.h"
+#include "edm4hep/RecoMCParticleLinkCollection.h"
 
 // DD4hep
 #include "DD4hep/Segmentations.h"
@@ -43,8 +43,8 @@ StatusCode SimG4SaveSmearedParticles::saveOutput(const G4Event& aEvent) {
         auto & MCparticle = info->mcParticle();
         auto particle = particles->create();
         auto association = associations->create();
-        association.setRec(particle);
-        association.setSim(MCparticle);
+        association.setFrom(particle);
+        association.setTo(MCparticle);
         particle.setCharge(g4particle->GetCharge());
         particle.setMomentum({
           (float) (info->endMomentum().x() * sim::g42edm::energy),
