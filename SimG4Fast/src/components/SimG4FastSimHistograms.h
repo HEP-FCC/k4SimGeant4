@@ -8,7 +8,7 @@
 #include "k4FWCore/DataHandle.h"
 class ITHistSvc;
 
-#include "edm4hep/MCRecoParticleAssociationCollection.h"
+#include "edm4hep/RecoMCParticleLinkCollection.h"
 
 // datamodel
 namespace edm4hep {
@@ -45,7 +45,7 @@ public:
 
 private:
   /// Handle for the EDM particles and MC particles associations to be read
-  mutable DataHandle<edm4hep::MCRecoParticleAssociationCollection> m_particlesMCparticles{"ParticlesMCparticles",
+  mutable DataHandle<edm4hep::RecoMCParticleLinkCollection> m_particlesMCparticles{"ParticlesMCparticles",
                                                                                   Gaudi::DataHandle::Reader, this};
   /// Pointer to the interface of histogram service
   SmartIF<ITHistSvc> m_histSvc;

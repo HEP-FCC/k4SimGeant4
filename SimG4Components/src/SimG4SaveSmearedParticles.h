@@ -8,7 +8,7 @@
 #include "k4FWCore/DataHandle.h"
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 
-#include "edm4hep/MCRecoParticleAssociationCollection.h"
+#include "edm4hep/RecoMCParticleLinkCollection.h"
 
 // datamodel
 namespace edm4hep {
@@ -45,7 +45,7 @@ private:
   /// Handle for the particles to be written
   mutable DataHandle<edm4hep::ReconstructedParticleCollection> m_particles{"RecParticlesSmeared", Gaudi::DataHandle::Writer, this};
   /// Handle for the associations between particles and MC particles to be written
-  mutable DataHandle<edm4hep::MCRecoParticleAssociationCollection> m_particlesMCparticles{"SmearedParticlesToParticles",
+  mutable DataHandle<edm4hep::RecoMCParticleLinkCollection> m_particlesMCparticles{"SmearedParticlesToParticles",
                                                                                   Gaudi::DataHandle::Writer, this};
 };
 
