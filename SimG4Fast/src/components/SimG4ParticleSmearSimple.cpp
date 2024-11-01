@@ -1,9 +1,5 @@
 #include "SimG4ParticleSmearSimple.h"
 
-// Gaudi
-
-#include "GaudiKernel/IRndmGenSvc.h"
-
 // CLHEP
 #include "CLHEP/Vector/ThreeVector.h"
 
@@ -19,10 +15,6 @@ SimG4ParticleSmearSimple::~SimG4ParticleSmearSimple() {}
 
 StatusCode SimG4ParticleSmearSimple::initialize() {
   if (AlgTool::initialize().isFailure()) {
-    return StatusCode::FAILURE;
-  }
-  if (service("RndmGenSvc", m_randSvc).isFailure()) {
-    error() << "Couldn't get RndmGenSvc" << endmsg;
     return StatusCode::FAILURE;
   }
   m_gauss.initialize(m_randSvc, Rndm::Gauss(1, m_sigma)).ignore();
