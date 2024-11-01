@@ -14,6 +14,13 @@ SimG4ParticleSmearSimple::SimG4ParticleSmearSimple(const std::string& type, cons
 SimG4ParticleSmearSimple::~SimG4ParticleSmearSimple() {}
 
 StatusCode SimG4ParticleSmearSimple::initialize() {
+
+  m_randSvc = service("RndmGenSvc", false);
+  if (!m_randSvc) {
+    error() << "Couldn't get RndmGenSvc" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   if (AlgTool::initialize().isFailure()) {
     return StatusCode::FAILURE;
   }
