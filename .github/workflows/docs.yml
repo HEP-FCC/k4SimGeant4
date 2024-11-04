@@ -1,5 +1,5 @@
 # Workflow for deploying doxygen generated reference documentation
-name: Deploy reference documentation to GitHub Pages
+name: Reference Documentation
 
 on:
   # Runs on pushes targeting the default branch

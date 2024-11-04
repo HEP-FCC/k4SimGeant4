@@ -1,4 +1,4 @@
-name: Key4hep build
+name: Key4hep Build
 
 on:
   push:
