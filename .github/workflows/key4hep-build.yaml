@@ -6,13 +6,19 @@ on:
     - main
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: '52 4 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     strategy:
       matrix:
         build_type: ["release", "nightly"]
-        image: ["alma9", "ubuntu22", "centos7"]
+        image: ["alma9", "ubuntu22"]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
