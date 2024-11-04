@@ -4,7 +4,7 @@
 // Gaudi
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
-class IRndmGenSvc;
+#include "GaudiKernel/IRndmGenSvc.h"
 
 // FCCSW
 #include "SimG4Interface/ISimG4ParticleSmearTool.h"
@@ -51,7 +51,7 @@ public:
 
 private:
   /// Random Number Service
-  IRndmGenSvc* m_randSvc;
+  SmartIF<IRndmGenSvc> m_randSvc;
   /// Gaussian random number generator used for smearing with a constant resolution (m_sigma)
   Rndm::Numbers m_gauss;
   /// Constant resolution for the smearing (set by job options)
