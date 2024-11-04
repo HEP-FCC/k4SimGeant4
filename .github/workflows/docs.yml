@@ -4,7 +4,8 @@ name: Deploy reference documentation to GitHub Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches:
+      - main
 
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -27,24 +28,22 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: cvmfs-contrib/github-action-cvmfs@v2
+      - uses: cvmfs-contrib/github-action-cvmfs@v4
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Start container
         run: |
           docker run -it --name CI_container \
                      -v ${GITHUB_WORKSPACE}:/Package \
                      -v /cvmfs:/cvmfs:shared \
-                     -d ghcr.io/aidasoft/centos7:latest /bin/bash
+                     -d ghcr.io/key4hep/key4hep-images/alma9:latest /bin/bash
       - name: Configure
         run: |
-          docker exec CI_container /bin/bash -c 'cd Package
-            mkdir -p build
+          docker exec CI_container /bin/bash -c 'cd ./Package
             source /cvmfs/sw.hsf.org/key4hep/setup.sh
+            mkdir -p build
             cd build
-            cmake -DCMAKE_CXX_STANDARD=17 \
-                  -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
-                  -G Ninja ..'
+            cmake -G Ninja ..'
       - name: Build docs
         run: |
           docker exec CI_container /bin/bash -c 'cd ./Package
@@ -52,11 +51,11 @@ jobs:
             cd build
             ninja -k0 doc'
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: './build/doxygen/html'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4

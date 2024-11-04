@@ -1,6 +1,9 @@
 # k4SimGeant4
 
-Gaudi Components for Geant4 Simulation in the Key4HEP software framework.
+[![key4hep-build](https://github.com/HEP-FCC/k4SimGeant4/actions/workflows/key4hep-build.yaml/badge.svg)](https://github.com/HEP-FCC/k4SimGeant4/actions/workflows/key4hep-build.yaml)
+[![docs](https://github.com/HEP-FCC/k4SimGeant4/actions/workflows/docs.yml/badge.svg)](https://github.com/HEP-FCC/k4SimGeant4/actions/workflows/docs.yml)
+
+Gaudi Components for Geant4 Simulation in the Key4hep software framework.
 See the [FCC Tutorials](https://hep-fcc.github.io/fcc-tutorials/) for
 documentation on the usage in FCC.
 
@@ -24,8 +27,10 @@ xdg-open doxygen/html/index.html
 
 ## Dependencies
 
-* Gaudi (=>v35r0)
-* k4FWCore (=>1.0)
+* Gaudi
+* k4FWCore
 * Geant4
 * DD4hep
-* EDM4HEP
+* EDM4hep
+* ROOT
+* CLHEP
