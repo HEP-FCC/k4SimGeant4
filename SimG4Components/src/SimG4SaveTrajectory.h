@@ -9,14 +9,7 @@
 #include "SimG4Interface/ISimG4SaveOutputTool.h"
 class IGeoSvc;
 
-#if __has_include("edm4hep/TrackerHit3DCollection.h")
 #include "edm4hep/TrackerHit3DCollection.h"
-#else
-#include "edm4hep/TrackerHitCollection.h"
-namespace edm4hep {
-  using TrackerHit3DCollection = edm4hep::TrackerHitCollection;
-}
-#endif
 
 /** @class SimG4SaveTrajectory SimG4Components/src/SimG4SaveTrajectory.h SimG4SaveTrajectory.h
  *
