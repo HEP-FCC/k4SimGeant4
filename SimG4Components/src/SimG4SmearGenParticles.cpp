@@ -55,7 +55,6 @@ StatusCode SimG4SmearGenParticles::execute(const EventContext&) const {
       particle.setSimulatorStatus(j.getSimulatorStatus());
       particle.setMomentumAtEndpoint(j.getMomentumAtEndpoint());
       particle.setSpin(j.getSpin());
-      particle.setColorFlow(j.getColorFlow());
       particle.setVertex(j.getVertex());
 
 
