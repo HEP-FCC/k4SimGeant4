@@ -13,10 +13,10 @@ find_package(ROOT COMPONENTS RIO Tree)
 # Load macros and functions for Gaudi-based projects
 find_package(Gaudi)
 find_package(k4FWCore)
-find_package(EDM4HEP 0.10.1)
 find_package(Geant4)
 find_package(DD4hep)
 find_package(CLHEP)
+find_package(EDM4HEP 0.99)
 #---------------------------------------------------------------
 
 include(GNUInstallDirs)
